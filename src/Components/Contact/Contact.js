@@ -1,6 +1,6 @@
-import React from "react"
-import HeadTitle from "../../Common/HeadTitle/HeadTitle"
-import ContactFrom from "./ContactFrom"
+import React from "react";
+import HeadTitle from "../../Common/HeadTitle/HeadTitle";
+import ContactFrom from "./ContactFrom";
 
 const Contact = () => {
   return (
@@ -8,7 +8,7 @@ const Contact = () => {
       <HeadTitle />
       <ContactFrom />
     </>
-  )
-}
+  );
+};
 
-export default Contact
+export default Contact;

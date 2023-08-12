@@ -1,0 +1,27 @@
+.wrapper {
+  display: flex;
+  margin-top: 100px;
+}
+.preview-img {
+  width: 100%;
+  height: 100%;
+  max-width: 1000px;
+  margin: 0 30px;
+  max-height: 500px;
+}
+//item
+.item-infor {
+  margin: 0 30px;
+}
+.img-item {
+  width: 1000px;
+  height: 500px;
+  object-fit: cover;
+}
+.item-text-item {
+  margin: 30px 20px;
+}
+.item-text {
+  font-weight: 500;
+  font-size: 20px;
+}

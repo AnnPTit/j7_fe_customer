@@ -6,7 +6,7 @@ const PopularData = [
     name: "Hotel Valle",
     price: "$300.00",
   },
-  {
+  { 
     id: 2,
     image: "images/popular2.jpg",
     country: "Mexico",

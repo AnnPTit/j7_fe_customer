@@ -52,7 +52,7 @@
 .popular .cards h2 {
   font-weight: 500;
   font-size: 20px;
-  color: #31b675;
+  color: #000000;
   position: relative;
   margin-bottom: 30px;
 }
@@ -75,7 +75,7 @@
   background: black;
 }
 .popular .cards h3 {
-  color: #31b675;
+  color: #000000;
   font-weight: 500;
 }
 .popular .cards h3 span {
@@ -107,7 +107,7 @@
 }
 .popular .control-btn .prev i:hover,
 .popular .control-btn .next i:hover {
-  background: #31b675;
+  background: #000000;
   color: white;
 }
 /*----- control btn -------*/

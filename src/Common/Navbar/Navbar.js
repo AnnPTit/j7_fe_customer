@@ -17,6 +17,17 @@ const Navbar = () => {
 
           <ul className={click ? "nav-menu active" : "nav-menu"}>
             <li>
+              <img
+                className="logo"
+                // style={{
+                //   width: 50,
+                //   height: 50,
+                //   borderRadius: 1000,
+                // }}
+                src="https://j7v1.s3.amazonaws.com/logo.png"
+              />
+            </li>
+            <li>
               <Link to="/" onClick={closeMobileMenu}>
                 Home
               </Link>
@@ -64,16 +75,17 @@ const Navbar = () => {
                 <i className="far fa-chevron-right"></i>Register
               </Link>
             </li>
-            <li>
+
+            {/* <li>
               <Link to="/contact">
                 <button className="primary-btn">Request a Quote</button>
               </Link>
-            </li>
+            </li> */}
           </div>
         </div>
       </nav>
 
-      <header>
+      {/* <header>
         <div className="container flex_space">
           <div className="logo">
             <img src="images/logo.png" alt="" />
@@ -109,7 +121,7 @@ const Navbar = () => {
             </div>
           </div>
         </div>
-      </header>
+      </header> */}
     </>
   );
 };

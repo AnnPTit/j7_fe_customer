@@ -1,10 +1,17 @@
 .navbar {
-  background: #222222;
+  background: #000000;
   position: sticky;
   top: 0;
   z-index: 999;
   height: 10vh;
   line-height: 10vh;
+  /* padding-top: 30px !important; */
+  padding-bottom: 100px !important;
+}
+.logo {
+  width: 100px;
+  height: 100px;
+  border-radius: 10000px;
 }
 
 nav ul li {
@@ -20,9 +27,12 @@ nav ul li a {
   letter-spacing: 1px;
   transition: all 0.2s ease-out;
   opacity: 0.8;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: 500;
 }
 nav ul li a:hover {
-  color: #31b675;
+  color: #000000;
 }
 
 .nav-links-mobile {
@@ -37,6 +47,7 @@ nav i {
 }
 .login-area {
   color: white;
+  margin-bottom: 20px;
 }
 
 .login-area a {
@@ -44,6 +55,10 @@ nav i {
   opacity: 0.8;
   font-size: 13px;
   color: #fff;
+  text-decoration: none;
+}
+.login-area :hover {
+  color: #44db83;
 }
 .login-area i {
   margin: 0 5px 0 15px;
@@ -76,7 +91,7 @@ nav i {
     display: block;
   }
   nav ul.active {
-    background: #31b675;
+    background: #000000;
     left: 0;
     opacity: 1;
     transition: all 0.5s ease;
@@ -113,7 +128,7 @@ header a {
 }
 header i {
   font-size: 40px;
-  color: #31b675;
+  color: #000000;
   margin-right: 15px;
 }
 header .text {
