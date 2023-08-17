@@ -9,27 +9,14 @@ import "slick-carousel/slick/slick-theme.css";
 const cx = classNames.bind(style);
 const Cards = () => {
   const [pageNumber, setPageNumber] = useState(0);
-  const [floorChose, setFloorChose] = useState("");
-  const [typeRoomChose, setTypeRoomChose] = useState("");
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
   const [dataChange, setDataChange] = useState(false);
-  const [textSearch, setTextSearch] = useState("");
   const [data, setData] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let Api = `http://localhost:2003/api/home/room/loadAndSearch1?current_page=${pageNumber}`;
-
-        if (textSearch !== "") {
-          Api = Api + `&key=${textSearch}`;
-        }
-        if (floorChose !== "") {
-          Api = Api + `&floorId=${floorChose}`;
-        }
-        if (typeRoomChose !== "") {
-          Api = Api + `&typeRoomId=${typeRoomChose}`;
-        }
+        let Api = `http://localhost:2003/api/home/room/loadByBook?current_page=${pageNumber}`;
         // console.warn(Api);
         const response = await axios.get(Api); // Thay đổi URL API của bạn tại đây
         console.log(response.data);
@@ -52,7 +39,7 @@ const Cards = () => {
     };
 
     fetchData();
-  }, [pageNumber, dataChange, textSearch, floorChose, typeRoomChose]);
+  }, [pageNumber, dataChange]);
 
   return (
     <>
@@ -66,12 +53,9 @@ const Cards = () => {
                   <Link to={detailUrl}>
                     <img
                       className={cx("image-item")}
-                      src={`${value.photoList[0].url}`}
+                      src={value.photoList?.[0]?.url ?? ""}
                       alt=""
                     />
-                    <i className="fas fa-map-marker-alt">
-                      <label>{value.typeRoom.typeRoomName}</label>
-                    </i>
                   </Link>
                 </div>
                 <div className="rate">
@@ -83,9 +67,28 @@ const Cards = () => {
                 </div>
                 <div className="details">
                   <h2>{value.roomName}</h2>
-                  <div className="boarder"> {value.note}</div>
+                  <i
+                    className="fas fa-map-marker-alt"
+                    style={{
+                      color: "red",
+                    }}
+                  ></i>
+                  <label>{value.typeRoom?.typeRoomName}</label>
                   <h3>
-                    {value.typeRoom.pricePerDay} / <span>Per Day</span>
+                    {value && (
+                      <span
+                        style={{
+                          color: "red",
+                          fontWeight: 700,
+                        }}
+                      >
+                        {value.typeRoom?.pricePerDay?.toLocaleString("vi-VN", {
+                          style: "currency",
+                          currency: "VND",
+                        })}{" "}
+                        / <span>Per Day</span>
+                      </span>
+                    )}
                   </h3>
                 </div>
               </div>

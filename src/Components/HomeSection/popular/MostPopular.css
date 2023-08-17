@@ -65,15 +65,7 @@
   width: 30px;
   background: black;
 }
-.popular .cards h2::before {
-  position: absolute;
-  content: "";
-  bottom: -20px;
-  left: 40%;
-  height: 1px;
-  width: 60px;
-  background: black;
-}
+
 .popular .cards h3 {
   color: #000000;
   font-weight: 500;

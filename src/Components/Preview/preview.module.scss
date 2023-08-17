@@ -1,5 +1,7 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,700;1,600&family=Roboto:ital,wght@0,100;0,300;0,400;0,900;1,100;1,500;1,900&display=swap");
 .wrapper {
   width: 100%;
+  font-family: "Montserrat", sans-serif;
 }
 
 .room {
@@ -38,6 +40,9 @@
   display: flex;
 }
 .room-price p {
+  color: red;
+}
+.room-price p {
   padding: 0 30px 0 0;
 }
 // customer
@@ -47,4 +52,43 @@
 .number-customer input {
   border: 1px solid #ccc;
   height: 20px;
+}
+.filter {
+  display: flex;
+}
+.input-search {
+  border: 1px solid #ccc;
+  height: 20px;
+  border-radius: 20px;
+}
+.input-search-number {
+  border: 1px solid #ccc;
+  height: 20px;
+  border-radius: 20px;
+  width: 50%;
+  margin-left: 10px;
+}
+.input-search-type {
+  border: 1px solid #ccc;
+  height: 40px;
+  border-radius: 10px;
+  margin-left: 10px;
+  width: 150px;
+}
+.price-range {
+  width: 200px;
+  margin-left: 50px;
+}
+.search-date {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.search-btn {
+  background-color: #198754;
+  width: 100px;
+  height: 40px;
+  border-radius: 10px;
+  color: aliceblue;
+  margin-top: 20px;
 }
