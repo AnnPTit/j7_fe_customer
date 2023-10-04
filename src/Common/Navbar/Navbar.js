@@ -19,11 +19,6 @@ const Navbar = () => {
             <li>
               <img
                 className="logo"
-                // style={{
-                //   width: 50,
-                //   height: 50,
-                //   borderRadius: 1000,
-                // }}
                 src="https://j7v1.s3.amazonaws.com/logo.png"
               />
             </li>

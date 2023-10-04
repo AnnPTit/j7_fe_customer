@@ -12,8 +12,8 @@ const Home = () => {
   return (
     <>
       <Hero />
-      <HomeAbout />
       <MostPopular />
+      <HomeAbout />
       <DestinationHome />
       <Download />
       <Works />

@@ -104,7 +104,14 @@ function Detail() {
               color: "red",
             }}
           >
-            {room.typeRoom && room.typeRoom.pricePerDay} đ
+            {room.typeRoom && room.typeRoom.pricePerDay && (
+              <span>
+                {room.typeRoom.pricePerDay.toLocaleString("vi-VN", {
+                  style: "currency",
+                  currency: "VND",
+                })}{" "}
+              </span>
+            )}
           </span>
         </div>
         <br />
@@ -116,27 +123,37 @@ function Detail() {
               color: "red",
             }}
           >
-            {room.typeRoom && room.typeRoom.pricePerHours} đ
+            {room.typeRoom && room.typeRoom.pricePerHours && (
+              <span>
+                {room.typeRoom.pricePerHours.toLocaleString("vi-VN", {
+                  style: "currency",
+                  currency: "VND",
+                })}{" "}
+              </span>
+            )}
           </span>
         </div>
         <br />
+        <hr />
         <div className="item-text-item">
           <span>
             Mô tả : <br />
           </span>{" "}
-          <span className={cx("item-text")}>
-            {room.typeRoom && room.typeRoom.note}
-          </span>
+          <span className={cx("")}>{room.typeRoom && room.typeRoom.note}</span>
         </div>
-        <Link
-          to={url}
-          className="btn btn-primary"
-          style={{
-            marginTop: 50,
-          }}
-        >
-          Đặt Ngay
-        </Link>
+        {room.status === 1 ? (
+          <Link
+            to={url}
+            className="btn btn-primary"
+            style={{
+              marginTop: 50,
+            }}
+          >
+            Đặt Ngay
+          </Link>
+        ) : (
+          <div></div>
+        )}
       </div>
     </div>
   );

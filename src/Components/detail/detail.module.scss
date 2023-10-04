@@ -1,6 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,700;1,600&family=Roboto:ital,wght@0,100;0,300;0,400;0,900;1,100;1,500;1,900&display=swap");
+
 .wrapper {
   display: flex;
   margin-top: 100px;
+  font-family: "Montserrat", sans-serif;
 }
 .preview-img {
   width: 100%;
@@ -23,5 +26,9 @@
 }
 .item-text {
   font-weight: 500;
-  font-size: 20px;
+  font-size: 25px;
+}
+.item-name {
+  border-bottom: 2px solid #000;
+  padding-right: 200px;
 }
