@@ -141,15 +141,19 @@ function Detail() {
           </span>{" "}
           <span className={cx("")}>{room.typeRoom && room.typeRoom.note}</span>
         </div>
-        <Link
-          to={url}
-          className="btn btn-primary"
-          style={{
-            marginTop: 50,
-          }}
-        >
-          Đặt Ngay
-        </Link>
+        {room.status === 1 ? (
+          <Link
+            to={url}
+            className="btn btn-primary"
+            style={{
+              marginTop: 50,
+            }}
+          >
+            Đặt Ngay
+          </Link>
+        ) : (
+          <div></div>
+        )}
       </div>
     </div>
   );

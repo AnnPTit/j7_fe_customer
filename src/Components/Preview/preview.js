@@ -6,15 +6,12 @@ import { Link } from "react-router-dom";
 import classNames from "classnames/bind";
 import Style from "./preview.module.scss";
 import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Slider, Typography } from "@mui/material";
+import { Alert, Slider, Typography } from "@mui/material";
 import DateFnsUtils from "@date-io/date-fns";
-import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-import dayjs from "dayjs";
-import { type } from "@testing-library/user-event/dist/type";
+import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { ToastContainer, toast } from "react-toastify";
 
 const cx = classNames.bind(Style);
 
@@ -23,16 +20,25 @@ function Preview() {
   const [room, setRoom] = useState([{}]);
   const [open, setOpen] = useState(false);
   const [typeRoomChose, setTypeRoomChose] = useState("");
-  const [dataChange, setDataChange] = useState(false);
   const [data, setData] = useState([]);
   const [selectedDateStart, setSelectedDateStart] = useState(new Date());
   const [selectedDateEnd, setselectedDateEnd] = useState(new Date());
   const [typeRoom, setTypeRoom] = useState([]);
-
+  const [click, setClick] = useState(false);
   const [roomName, setRoomName] = useState("");
-  const [numberCustom, setNumberCustom] = useState(1);
-  // const [typeRoomName, setTypeRoomName] = useState("");
+  const [numberCustom, setNumberCustom] = useState("");
   const [priceRange, setPriceRange] = useState([0, 5000000]);
+  const price1 = priceRange[0];
+  const price2 = priceRange[1];
+
+  const formatDate = (date) => {
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const year = date.getFullYear();
+    return `${year}-${month}-${day}`;
+  };
+  const formattedStartDate = formatDate(selectedDateStart);
+  const formattedEndDate = formatDate(selectedDateEnd);
 
   const handleOpenDialog = () => {
     setOpen(true);
@@ -42,45 +48,22 @@ function Preview() {
     setOpen(false);
   };
 
-  const formatDate = (date) => {
-    const day = date.getDate().toString().padStart(2, "0");
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
+  const payload = {
+    typeRoom: typeRoomChose,
+    numberCustom: numberCustom,
+    pricePerDays: [price1, price2],
+    checkIn: formattedStartDate,
+    checkOut: formattedEndDate,
   };
-  const handleSearch = () => {
-    const price1 = priceRange[0];
-    const price2 = priceRange[1];
-    const formattedStartDate = formatDate(selectedDateStart);
-    const formattedEndDate = formatDate(selectedDateEnd);
 
-    // Hàm tìm kiếm
+  useEffect(() => {
     const fetchData = async () => {
       try {
-        let Api = `http://localhost:2003/api/home/get-room-filter?capacity=${numberCustom}`;
-
-        if (roomName !== "") {
-          Api = Api + `&roomName=${roomName}`;
-        }
-        if (typeRoomChose !== "") {
-          Api = Api + `&typeRoomCode=${typeRoomChose}`;
-        }
-        if (price1 !== "") {
-          Api = Api + `&startPrice=${price1}`;
-        }
-        if (price2 !== "") {
-          Api = Api + `&endPrice=${price2}`;
-        }
-        if (formattedStartDate !== "") {
-          Api = Api + `&dayStart=${formattedStartDate}`;
-        }
-        if (formattedEndDate !== "") {
-          Api = Api + `&dayEnd=${formattedEndDate}`;
-        }
-        console.warn(Api);
-        const response = await axios.get(Api); // Thay đổi URL API của bạn tại đây
-        console.log(response.data);
-        setData(response.data);
+        let Api = `http://localhost:2003/api/home/room/search?current_page=${0}`;
+        // console.warn(Api);
+        const response = await axios.post(Api, payload); // Thay đổi URL API của bạn tại đây
+        console.log(response.data.content);
+        setData(response.data.content);
       } catch (error) {
         if (error.response) {
           // Xử lý response lỗi
@@ -95,7 +78,12 @@ function Preview() {
         }
       }
     };
+
     fetchData();
+  }, [click]);
+
+  const handleSearch = () => {
+    setClick(!click);
   };
 
   //Hàm detail
@@ -106,14 +94,27 @@ function Preview() {
           `http://localhost:2003/api/home/room/detail/${id}`
         );
         if (response.data) {
-          setRoom([response.data]);
+          // setRoom([response.data]);
+          const room = {
+            capacity: response.data.typeRoom.capacity,
+            id: response.data.id,
+            note: response.data.note,
+            pricePerDay: response.data.typeRoom.pricePerDay,
+            pricePerHours: response.data.typeRoom.pricePerHours,
+            roomCode: response.data.roomCode,
+            roomName: response.data.roomName,
+            typeRoom: response.data.typeRoom.typeRoomName,
+            urls: [response.data.photoList[0].url],
+          };
+          console.log(room);
+          setRoom([room]);
         }
       } catch (error) {
         console.log(error);
       }
     }
     fetchData();
-  }, []);
+  }, [id]);
 
   // Hàm get loại phòng
   useEffect(() => {
@@ -143,24 +144,131 @@ function Preview() {
     }).format(value);
   };
 
+  const handleRemoveRoom = (id) => {
+    if (room.length === 1) {
+      toast.error("Không thể xóa !");
+    } else {
+      const updatedRoom = room.filter((item) => item.id !== id);
+      setRoom(updatedRoom);
+    }
+  };
+  const handleAddRoom = (room1) => {
+    const isRoomExist = room.some(
+      (existingRoom) => existingRoom.id === room1.id
+    );
+    if (isRoomExist) {
+      toast.error("Phòng đã tồn tại");
+    } else {
+      setRoom((prev) => [...prev, room1]);
+    }
+  };
+
+  console.log(room);
   const idArray = room.map((roomObj) => roomObj.id);
   const idString = idArray.join("&");
   const url = `/booking/${idString}`;
 
+
   return (
     <div className={cx("wrapper")}>
-      <button
-        className={cx("btn btn-outline-primary")}
-        onClick={handleOpenDialog}
-        style={{
-          float: "right",
-          marginLeft: 40,
-          marginTop: 40,
-          marginRight: 40,
-        }}
-      >
-        Thêm Phòng
-      </button>
+      <ToastContainer />
+      <div>
+        <button
+          className={cx("btn btn-outline-primary")}
+          onClick={handleOpenDialog}
+          style={{
+            float: "right",
+            marginRight: 100,
+            marginTop: 20,
+            width: 150,
+          }}
+        >
+          Thêm Phòng
+        </button>
+        <br />
+        <div
+          style={{
+            marginTop: 100,
+          }}
+        >
+          {room.map((roomItem) => (
+            <div className={cx("room")} key={roomItem.id}>
+              <div className={cx("img")}>
+                {roomItem && roomItem.urls && roomItem.urls[0] && (
+                  <img
+                    className={cx("img-item")}
+                    src={roomItem.urls[0]}
+                    alt="Room"
+                  />
+                )}
+              </div>
+              <div className={cx("room-body")}>
+                <div className={cx("room-heading")}>
+                  <h2 className={cx("room-title")}>{roomItem.roomName}</h2>
+                  <p>-</p>
+                  {roomItem.typeRoom && (
+                    <p> {roomItem.typeRoom.typeRoomName}</p>
+                  )}
+                </div>
+                {roomItem.typeRoom && <p> Số Khách : {roomItem.capacity}</p>}
+
+                <div className={cx("room-price")}>
+                  Đơn giá theo giờ :
+                  {roomItem.typeRoom && (
+                    <p>
+                      {roomItem.pricePerHours.toLocaleString("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
+                      })}
+                    </p>
+                  )}
+                  Đơn giá theo ngày :
+                  {roomItem.typeRoom && (
+                    <p>
+                      {roomItem.pricePerDay.toLocaleString("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
+                      })}
+                    </p>
+                  )}
+                </div>
+                <br />
+                <p>{roomItem.note}</p>
+              </div>
+              <button
+                onClick={() => {
+                  handleRemoveRoom(roomItem.id);
+                }}
+              >
+                <i
+                  className={cx("fa fa-trash")}
+                  style={{
+                    color: "red",
+                    fontSize: 30,
+                    marginRight: 20,
+                    padding: 20,
+                    cursor: "pointer",
+                  }}
+                ></i>
+              </button>
+            </div>
+          ))}
+        </div>
+        <Link to={url}>
+          <button
+            type="button"
+            className={cx("btn btn-success")}
+            style={{
+              float: "right",
+              marginRight: 100,
+              marginTop: 20,
+              width: 150,
+            }}
+          >
+            Đặt phòng
+          </button>
+        </Link>
+      </div>
       <br />
       <br />
       <Dialog
@@ -206,6 +314,7 @@ function Preview() {
                     setTypeRoomChose(e.target.value);
                   }}
                 >
+                  <option value={""}>Loại phòng</option>
                   {typeRoom.map((type) => (
                     <option key={type.id} value={type.typeRoomCode}>
                       {type.typeRoomName}
@@ -233,7 +342,7 @@ function Preview() {
             <div className={cx("search-date")}>
               <div>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <DateTimePicker
+                  <DatePicker
                     style={{
                       marginRight: 40,
                       marginLeft: 10,
@@ -245,7 +354,7 @@ function Preview() {
                     showTodayButton
                   />
 
-                  <DateTimePicker
+                  <DatePicker
                     value={selectedDateEnd}
                     disablePast
                     onChange={setselectedDateEnd}
@@ -263,56 +372,46 @@ function Preview() {
                 Tìm
               </button>
             </div>
-            {data.map((room) => (
-              <div key={room.id} className={cx("room")}>
+            {data.map((room1) => (
+              <div key={room1.id} className={cx("room")}>
                 <div className={cx("img")}>
-                  {room.photoList && (
-                    <img
-                      className={cx("img-item")}
-                      src={room.photoList[0].url}
-                    />
-                  )}
+                  <img className={cx("img-item")} src={room1.urls[0]} />
                 </div>
                 <div className={cx("room-body")}>
                   <div className={cx("room-heading")}>
-                    <h2 className={cx("room-title")}>{room.roomName}</h2>
+                    <h2 className={cx("room-title")}>{room1.roomName}</h2>
                     <p>-</p>
-                    {room.typeRoom && <p> {room.typeRoom.typeRoomName}</p>}
+                    {room1.typeRoom && <p> {room1.typeRoom}</p>}
                   </div>
-                  {room.typeRoom && <p> Số Khách : {room.typeRoom.capacity}</p>}
+                  {room1.typeRoom && <p> Số Khách : {room1.capacity}</p>}
 
                   <div className={cx("room-price")}>
-                    {room.typeRoom && (
-                      <p>
-                        {" "}
-                        Đơn giá theo giờ :{" "}
-                        {room.typeRoom.pricePerHours.toLocaleString("vi-VN", {
-                          style: "currency",
-                          currency: "VND",
-                        })}
-                      </p>
-                    )}
-                    {room.typeRoom && (
-                      <p>
-                        {" "}
-                        Đơn giá theo ngày :{" "}
-                        {room.typeRoom.pricePerDay.toLocaleString("vi-VN", {
-                          style: "currency",
-                          currency: "VND",
-                        })}
-                      </p>
-                    )}
+                    Đơn giá theo giờ :
+                    <p>
+                      {" "}
+                      {room1.pricePerHours.toLocaleString("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
+                      })}
+                    </p>
+                    Đơn giá theo ngày :
+                    <p>
+                      {room1.pricePerDay.toLocaleString("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
+                      })}
+                    </p>
                   </div>
 
                   <br />
-                  <p>{room.note}</p>
+                  <p>{room1.note}</p>
                 </div>
 
                 <button
                   type="button"
                   className={cx("btn btn-success ")}
                   onClick={() => {
-                    setRoom((pre) => [...pre, room]);
+                    handleAddRoom(room1);
                   }}
                   style={{
                     marginRight: 30,
@@ -327,67 +426,6 @@ function Preview() {
           </div>
         </DialogContent>
       </Dialog>
-      <div>
-        {room.map((roomItem) => (
-          <div className={cx("room")} key={roomItem.id}>
-            <div className={cx("img")}>
-              {roomItem.photoList && (
-                <img
-                  className={cx("img-item")}
-                  src={roomItem.photoList[0].url}
-                  alt="Room"
-                />
-              )}
-            </div>
-            <div className={cx("room-body")}>
-              <div className={cx("room-heading")}>
-                <h2 className={cx("room-title")}>{roomItem.roomName}</h2>
-                <p>-</p>
-                {roomItem.typeRoom && <p> {roomItem.typeRoom.typeRoomName}</p>}
-              </div>
-              {roomItem.typeRoom && (
-                <p> Số Khách : {roomItem.typeRoom.capacity}</p>
-              )}
-
-              <div className={cx("room-price")}>
-                Đơn giá theo giờ :
-                {roomItem.typeRoom && (
-                  <p>
-                    {roomItem.typeRoom.pricePerHours.toLocaleString("vi-VN", {
-                      style: "currency",
-                      currency: "VND",
-                    })}
-                  </p>
-                )}
-                Đơn giá theo ngày :
-                {roomItem.typeRoom && (
-                  <p>
-                    {roomItem.typeRoom.pricePerDay.toLocaleString("vi-VN", {
-                      style: "currency",
-                      currency: "VND",
-                    })}
-                  </p>
-                )}
-              </div>
-
-              <br />
-              <p>{roomItem.note}</p>
-            </div>
-          </div>
-        ))}
-        <Link to={url}>
-          <button
-            type="button"
-            className="btn btn-success"
-            style={{
-              position: "relative",
-              left: 1750,
-            }}
-          >
-            Đặt phòng
-          </button>
-        </Link>
-      </div>
     </div>
   );
 }

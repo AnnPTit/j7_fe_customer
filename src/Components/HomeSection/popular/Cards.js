@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
+import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import axios from "axios";
 import style from "./Cards.module.scss";
@@ -6,19 +7,46 @@ import classNames from "classnames/bind";
 import { Link } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import MyPagination from "../MyPagination/MyPagination";
 const cx = classNames.bind(style);
 const Cards = () => {
   const [pageNumber, setPageNumber] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
-  const [dataChange, setDataChange] = useState(false);
   const [data, setData] = useState([]);
+
+  const currentURL = window.location.href;
+  // Tạo một đối tượng URLSearchParams từ URL
+  const urlSearchParams = new URLSearchParams(currentURL);
+  // Lấy giá trị của các tham số từ đối tượng URLSearchParams
+  const typeRoom = urlSearchParams.get("typeRoom");
+  const checkIn = urlSearchParams.get("checkIn");
+  const checkOut = urlSearchParams.get("checkOut");
+  const priceTo = urlSearchParams.get("priceTo");
+  const priceFrom = urlSearchParams.get("priceFrom");
+  const numberCustom = urlSearchParams.get("numberCustom");
+  const click = urlSearchParams.get("click");
+  console.log("typeRoom:", typeRoom);
+  console.log("checkIn:", checkIn);
+  console.log("checkOut:", checkOut);
+  console.log("priceTo:", priceTo);
+  console.log("priceFrom:", priceFrom);
+  console.log("numberCustom:", numberCustom);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const payload = {
+    typeRoom: typeRoom,
+    numberCustom: numberCustom,
+    pricePerDays: [priceFrom, priceTo],
+    checkIn: checkIn,
+    checkOut: checkOut,
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let Api = `http://localhost:2003/api/home/room/loadByBook?current_page=${pageNumber}`;
+        let Api = `http://localhost:2003/api/home/room/search?current_page=${pageNumber}&total_page=5`;
         // console.warn(Api);
-        const response = await axios.get(Api); // Thay đổi URL API của bạn tại đây
+        const response = await axios.post(Api, payload); // Thay đổi URL API của bạn tại đây
         console.log(response.data);
         setTotalPages(response.data.totalPages);
         setTotalElements(response.data.totalElements);
@@ -39,7 +67,7 @@ const Cards = () => {
     };
 
     fetchData();
-  }, [pageNumber, dataChange]);
+  }, [pageNumber, click]);
 
   return (
     <>
@@ -53,7 +81,7 @@ const Cards = () => {
                   <Link to={detailUrl}>
                     <img
                       className={cx("image-item")}
-                      src={value.photoList?.[0]?.url ?? ""}
+                      src={value.urls?.[0] ?? ""}
                       alt=""
                     />
                   </Link>
@@ -73,7 +101,17 @@ const Cards = () => {
                       color: "red",
                     }}
                   ></i>
-                  <label>{value.typeRoom?.typeRoomName}</label>
+                  <label>{value.typeRoom}</label>
+                  <br />
+                  <span
+                    style={{
+                      marginRight: 5,
+                    }}
+                  >
+                    {value.capacity}
+                  </span>
+                  <i className="fa fa-user"></i>
+                  <span> /Phòng</span>
                   <h3>
                     {value && (
                       <span
@@ -82,11 +120,11 @@ const Cards = () => {
                           fontWeight: 700,
                         }}
                       >
-                        {value.typeRoom?.pricePerDay?.toLocaleString("vi-VN", {
+                        {value.pricePerDay?.toLocaleString("vi-VN", {
                           style: "currency",
                           currency: "VND",
-                        })}{" "}
-                        / <span>Per Day</span>
+                        })}
+                        / <span>Một ngày</span>
                       </span>
                     )}
                   </h3>
@@ -95,6 +133,13 @@ const Cards = () => {
             </div>
           );
         })}
+      </div>
+      <div className={cx("pagination")}>
+        <MyPagination
+          pageNumber={pageNumber}
+          totalPages={totalPages}
+          setPageNumber={setPageNumber}
+        />
       </div>
     </>
   );

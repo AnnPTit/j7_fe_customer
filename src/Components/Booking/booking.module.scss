@@ -1,5 +1,8 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;1,100&display=swap");
+
 .wrapper {
   width: 100%;
+  font-family: "Roboto", sans-serif;
 }
 
 .room {
@@ -7,6 +10,7 @@
   justify-content: space-evenly;
   margin: 50px;
   border: 1px solid #000;
+  margin-bottom: 100px;
 }
 .img {
   width: 100px;
@@ -50,4 +54,19 @@
 //  Order
 .info-order {
   min-width: 500px;
+}
+.capacity {
+  background-color: rgb(238, 151, 151);
+  margin: 10px;
+  padding: 5px 20px;
+  border-radius: 20px;
+}
+.type-room {
+}
+.numberCustom {
+  border: 1px solid #fffcfc;
+  margin-top: 50px;
+  height: 20px;
+  margin-right: 50;
+  border-bottom: 1px solid #0a0a0a;
 }

@@ -5,7 +5,11 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import classNames from "classnames/bind";
 import style from "./booking.module.scss";
-import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { colors } from "@mui/material";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Swal from "sweetalert2";
 
 var stompClient = null;
 const disconnect = () => {
@@ -26,14 +30,20 @@ function Booking() {
   const [dayEnd, setDayEnd] = useState();
   const [roomPrice, setRoomPrice] = useState(0);
   const [deposit, setDeposit] = useState();
+  const [vat, setVat] = useState();
   const [totalPriceRoom, setTotalPriceRoom] = useState();
   const [dataService, setDataService] = useState([]);
   const [checkedItems, setCheckedItems] = useState({});
   const [selectedServiceCodes, setSelectedServiceCodes] = useState([]);
   const today = new Date().toISOString().split("T")[0];
   const [guestCounts, setGuestCounts] = useState({}); // Một đối tượng để lưu số lượng khách cho từng phòng
-  const [isBook, setIsBook] = useState(0);
-
+  const [isBook, setIsBook] = useState({
+    message: null,
+    status: null,
+    ids: [],
+  });
+  let ids;
+  let url = id;
   const handleSubmit = () => {
     const hoVaTenValue = document.getElementById("hoVaTenInput").value;
     const emailValue = document.getElementById("emailInput").value;
@@ -61,6 +71,27 @@ function Booking() {
     sendMessage(JSON.stringify(payload));
   };
 
+  console.log(isBook.ids);
+  const roomIds = room.map((room) => [room.id]);
+  console.log(roomIds);
+  let isMatched = false;
+
+  isBook.ids.forEach((isBookId) => {
+    roomIds.forEach((roomIdArray) => {
+      if (roomIdArray.includes(isBookId)) {
+        isMatched = true;
+      }
+    });
+  });
+
+  useEffect(() => {
+    if (isMatched) {
+      toast.error(isBook.message);
+    } else {
+      console.log("Không có phần tử trùng nhau giữa hai danh sách.");
+    }
+  });
+
   const handleGuestCountChange = (roomId, count) => {
     setGuestCounts((prevCounts) => ({
       ...prevCounts,
@@ -85,7 +116,8 @@ function Booking() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const ids = id.split("&");
+        console.log(url);
+        ids = url.split("&");
 
         for (const id1 of ids) {
           const response = await axios.get(
@@ -101,8 +133,11 @@ function Booking() {
       }
     }
     fetchData();
-  }, []);
+  }, [id]);
 
+  useEffect(() => {
+    setTotalPriceRoom(roomPrice);
+  });
   // Hàm Lấy Tiền cọc
   useEffect(() => {
     async function fetchData() {
@@ -170,14 +205,42 @@ function Booking() {
     }).format(price);
   }
 
+  const handleRemoveRoom = (id) => {
+    if (room.length === 1) {
+      toast.error("Không thể xóa !");
+    } else {
+      Swal.fire({
+        title: "Bạn có chắc chắn muốn xóa ? ",
+        text: "",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Đúng, Xóa nó!",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          const updatedRoom = room.filter((item) => item.id !== id);
+          setRoom(updatedRoom);
+          
+          if (updatedRoom) {
+            Swal.fire("Xóa thành công !", "success");
+            toast.success("Xóa Thành Công !");
+          }
+        }
+      });
+    }
+  };
+
   const connect = () => {
     const ws = new SockJS(`http://localhost:2003/ws`);
     stompClient = Stomp.over(ws);
     stompClient.connect({}, () => {
       stompClient.subscribe("/topic/product", (data) => {
-        const status = data;
-        console.log(status.body);
-        setIsBook(status.body);
+        const status = data.body; // Lấy nội dung từ tin nhắn
+        console.log(status);
+        const message = JSON.parse(status);
+        // Sử dụng biến containsElements để kiểm tra và alert status.body
+        setIsBook(message);
       });
     });
   };
@@ -193,6 +256,11 @@ function Booking() {
       return;
     }
     setDayStart(selectedDay);
+    const startDate = new Date(selectedDay);
+    const endDate = new Date(dayEnd);
+    const timeDiff = endDate.getTime() - startDate.getTime();
+    const numberOfDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    subPriceRoom(numberOfDays + 1, roomPrice);
   };
   const handleSubPrice = (e) => {
     const startDate = new Date(dayStart);
@@ -211,31 +279,19 @@ function Booking() {
     let price = day * roomPrice;
     setTotalPriceRoom(price);
     setDeposit((price * tc) / 100);
+    setVat((price * tc) / 100);
   };
 
   return (
     <div>
-      <h1>Hoàn Tất Đặt Phòng </h1>
-      <FormGroup>
-        {dataService.map((service) => (
-          <FormControlLabel
-            key={service.id}
-            control={
-              <Checkbox
-                checked={checkedItems[service.id] || false}
-                onChange={handleChange}
-                name={service.id}
-              />
-            }
-            label={
-              service.serviceName +
-              " - " +
-              formatCurrency(service.price) +
-              " VND"
-            }
-          />
-        ))}
-      </FormGroup>
+      <ToastContainer />
+      <h1
+        style={{
+          margin: 80,
+        }}
+      >
+        Hoàn Tất Đặt Phòng
+      </h1>
       <div className={cx("wrapper")}>
         {room.map((room1) => (
           <div key={room1.id} className={cx("room")}>
@@ -252,16 +308,50 @@ function Booking() {
               <div className={cx("room-heading")}>
                 <h2 className={cx("room-title")}>{room1.roomName}</h2>
                 <p>-</p>
-                {room1.typeRoom && <p> {room1.typeRoom.typeRoomName}</p>}
+                <span className={cx("type-room")}>
+                  {room1.typeRoom && <p> {room1.typeRoom.typeRoomName}</p>}
+                </span>
               </div>
-              {room1.typeRoom && <p> Số Khách : {room1.typeRoom.capacity}</p>}
+              {room1.typeRoom && (
+                <p>
+                  Sức chứa :
+                  <span className={cx("capacity")}>
+                    {room1.typeRoom.capacity}{" "}
+                    <FontAwesomeIcon icon="fa-solid fa-user" />
+                  </span>
+                </p>
+              )}
 
               <div className={cx("room-price")}>
                 {room1.typeRoom && (
-                  <p> Đơn giá theo giờ : {room1.typeRoom.pricePerHours}</p>
+                  <p>
+                    Đơn giá theo giờ :
+                    <span
+                      style={{
+                        color: "red",
+                      }}
+                    >
+                      {room1.typeRoom.pricePerHours.toLocaleString("vi-VN", {
+                        style: "currency",
+                        currency: "VND", // Loại tiền tệ Việt Nam (VND)
+                      })}
+                    </span>
+                  </p>
                 )}
                 {room1.typeRoom && (
-                  <p> Đơn giá theo ngày : {room1.typeRoom.pricePerDay}</p>
+                  <p>
+                    Đơn giá theo ngày :
+                    <span
+                      style={{
+                        color: "red",
+                      }}
+                    >
+                      {room1.typeRoom.pricePerDay.toLocaleString("vi-VN", {
+                        style: "currency",
+                        currency: "VND", // Loại tiền tệ Việt Nam (VND)
+                      })}
+                    </span>
+                  </p>
                 )}
               </div>
               <br />
@@ -274,11 +364,31 @@ function Booking() {
                 onChange={(e) =>
                   handleGuestCountChange(room1.id, e.target.value)
                 }
-                style={{
-                  background: "red",
-                }}
+                placeholder="Số khách"
+                className={cx("numberCustom")}
               />
+              <button
+                onClick={() => {
+                  handleRemoveRoom(room1.id);
+                }}
+              >
+                <i
+                  className={cx("fa fa-trash")}
+                  style={{
+                    color: "red",
+                    fontSize: 30,
+                    marginRight: 20,
+                    padding: 20,
+                    cursor: "pointer",
+                  }}
+                ></i>
+              </button>
             </div>
+            <div
+              style={{
+                width: 50,
+              }}
+            ></div>
           </div>
         ))}
 
@@ -344,8 +454,8 @@ function Booking() {
                 onChange={(e) => handleSubPrice(e)}
               />
             </div>
-            <p>Nhận phòng từ : 2:00 CH</p>
-            <p>Trả phòng trước : 12:00 CH</p>
+            <p>Nhận phòng từ : 12:00 CH</p>
+            <p>Trả phòng trước : 2:00 CH</p>
             <p>Tiền Phòng </p>
             <input
               type="text"
@@ -361,15 +471,28 @@ function Booking() {
               defaultValue={deposit}
             />
             <br />
+            <p>VAT </p>
+            <input
+              type="text"
+              className="form-control"
+              disabled
+              defaultValue={vat}
+            />
+            <br />
             <p>Ghi chú </p>
             <input
               type="text"
               className="form-control"
               id="note"
-              defaultValue={deposit}
+              defaultValue={""}
             />
             <br />
-            {isBook == 0 ? (
+
+            {isMatched && isBook.status === 1 ? (
+              <button type="button" className="btn btn-success">
+                Phòng đã được đặt
+              </button>
+            ) : (
               <button
                 type="button"
                 className="btn btn-info"
@@ -379,12 +502,6 @@ function Booking() {
               >
                 Đặt phòng
               </button>
-            ) : (
-              <div>
-                <button type="button" className="btn btn-success">
-                  Phòng Đã được đặt thành công
-                </button>
-              </div>
             )}
           </div>
         </div>
