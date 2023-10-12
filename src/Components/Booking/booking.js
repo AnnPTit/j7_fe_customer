@@ -7,9 +7,12 @@ import classNames from "classnames/bind";
 import style from "./booking.module.scss";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { colors } from "@mui/material";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Swal from "sweetalert2";
+import Tippy from "@tippyjs/react";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import BasicTabs from "../Tab/CustomTabPanel";
 
 var stompClient = null;
 const disconnect = () => {
@@ -18,12 +21,15 @@ const disconnect = () => {
     console.log("Stomp disconnected");
   }
 };
+
 const sendMessage = (message) => {
   stompClient.send("/app/products", {}, message);
 };
+
 const cx = classNames.bind(style);
 function Booking() {
   const { id } = useParams();
+  const [open, setOpen] = useState(false);
   const [room, setRoom] = useState([]);
   const [tc, setTc] = useState(0);
   const [dayStart, setDayStart] = useState();
@@ -32,9 +38,6 @@ function Booking() {
   const [deposit, setDeposit] = useState();
   const [vat, setVat] = useState();
   const [totalPriceRoom, setTotalPriceRoom] = useState();
-  const [dataService, setDataService] = useState([]);
-  const [checkedItems, setCheckedItems] = useState({});
-  const [selectedServiceCodes, setSelectedServiceCodes] = useState([]);
   const today = new Date().toISOString().split("T")[0];
   const [guestCounts, setGuestCounts] = useState({}); // Một đối tượng để lưu số lượng khách cho từng phòng
   const [isBook, setIsBook] = useState({
@@ -44,11 +47,36 @@ function Booking() {
   });
   let ids;
   let url = id;
+  function isValidEmail(email) {
+    var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  }
+
+  const handleOpenDialog = () => {
+    setOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpen(false);
+  };
   const handleSubmit = () => {
     const hoVaTenValue = document.getElementById("hoVaTenInput").value;
     const emailValue = document.getElementById("emailInput").value;
     const soDienThoaiValue = document.getElementById("soDienThoaiInput").value;
     const note = document.getElementById("note").value;
+    if (hoVaTenValue === "") {
+      toast.error("Họ và tên không được để trống");
+      return;
+    } else if (emailValue === "") {
+      toast.error("Email không được để trống");
+      return;
+    } else if (!isValidEmail(emailValue)) {
+      toast.error("Email không đúng định dạng ");
+      return;
+    } else if (soDienThoaiValue === "") {
+      toast.error("Số điện thoại không được để trống");
+      return;
+    }
     // Tạo payload
     const roomData = room.map((room) => ({
       id: room.id,
@@ -93,6 +121,10 @@ function Booking() {
   });
 
   const handleGuestCountChange = (roomId, count) => {
+    if (count < 0) {
+      toast.error("Số khách lớn hơn 0");
+      return;
+    }
     setGuestCounts((prevCounts) => ({
       ...prevCounts,
       [roomId]: count,
@@ -159,45 +191,7 @@ function Booking() {
     }
     fetchData();
   }, []);
-  // Hàm get Service
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:2003/api/home/service/getAll`
-        ); // Thay đổi URL API của bạn tại đây
-        console.log(response.data);
-        setDataService(response.data);
-      } catch (error) {
-        if (error.response) {
-          // Xử lý response lỗi
-          if (error.response.status === 403) {
-            alert("Bạn không có quyền truy cập vào trang này");
-            window.location.href = "/auth/login"; // Thay đổi "/dang-nhap" bằng đường dẫn đến trang đăng nhập của bạn
-          } else {
-            alert("Có lỗi xảy ra trong quá trình gọi API");
-          }
-        } else {
-          console.log("Không thể kết nối đến API");
-        }
-      }
-    };
-    fetchData();
-  }, []);
-  const handleChange = (event) => {
-    const { name, checked } = event.target;
-    setCheckedItems((prevState) => ({ ...prevState, [name]: checked }));
-    if (checked) {
-      setSelectedServiceCodes((prevSelectedCodes) => [
-        ...prevSelectedCodes,
-        name,
-      ]);
-    } else {
-      setSelectedServiceCodes((prevSelectedCodes) =>
-        prevSelectedCodes.filter((code) => code !== name)
-      );
-    }
-  };
+
   function formatCurrency(price) {
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",
@@ -221,7 +215,7 @@ function Booking() {
         if (result.isConfirmed) {
           const updatedRoom = room.filter((item) => item.id !== id);
           setRoom(updatedRoom);
-          
+
           if (updatedRoom) {
             Swal.fire("Xóa thành công !", "success");
             toast.success("Xóa Thành Công !");
@@ -316,8 +310,7 @@ function Booking() {
                 <p>
                   Sức chứa :
                   <span className={cx("capacity")}>
-                    {room1.typeRoom.capacity}{" "}
-                    <FontAwesomeIcon icon="fa-solid fa-user" />
+                    <i class="fa fa-user"></i> {room1.typeRoom.capacity}
                   </span>
                 </p>
               )}
@@ -357,7 +350,7 @@ function Booking() {
               <br />
               <p>{room1.note}</p>
             </div>
-            <div>
+            <div className={cx("service-item")}>
               <input
                 type="number"
                 value={guestCounts[room1.id] || ""}
@@ -367,6 +360,24 @@ function Booking() {
                 placeholder="Số khách"
                 className={cx("numberCustom")}
               />
+              <Tippy
+                content="Thêm dịch vụ"
+                interactive={true}
+                interactiveBorder={20}
+                delay={100}
+              >
+                <i
+                  class="fa fa-bars"
+                  style={{
+                    color: "black",
+                    fontSize: 30,
+                    marginRight: 20,
+                    padding: 20,
+                    cursor: "pointer",
+                  }}
+                  onClick={handleOpenDialog}
+                ></i>
+              </Tippy>
               <button
                 onClick={() => {
                   handleRemoveRoom(room1.id);
@@ -463,7 +474,13 @@ function Booking() {
               disabled
               defaultValue={totalPriceRoom}
             />
-            <p>Tiền Cọc </p>
+            <p
+              style={{
+                marginTop: 20,
+              }}
+            >
+              Tiền Cọc{" "}
+            </p>
             <input
               type="text"
               className="form-control"
@@ -506,6 +523,24 @@ function Booking() {
           </div>
         </div>
       </div>
+      <Dialog
+        open={open}
+        onClose={handleCloseDialog}
+        fullWidth
+        PaperProps={{
+          style: {
+            maxWidth: "60%",
+            maxHeight: "90%",
+          },
+        }}
+      >
+        <DialogTitle>Chọn dịch vụ </DialogTitle>
+        <DialogContent>
+          <BasicTabs>
+            <p>ok</p>
+          </BasicTabs>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
