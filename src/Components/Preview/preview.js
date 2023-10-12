@@ -8,7 +8,7 @@ import Style from "./preview.module.scss";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Alert, Slider, Typography } from "@mui/material";
+import {  Slider, Typography } from "@mui/material";
 import DateFnsUtils from "@date-io/date-fns";
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { ToastContainer, toast } from "react-toastify";
@@ -168,7 +168,6 @@ function Preview() {
   const idString = idArray.join("&");
   const url = `/booking/${idString}`;
 
-
   return (
     <div className={cx("wrapper")}>
       <ToastContainer />
@@ -206,9 +205,7 @@ function Preview() {
                 <div className={cx("room-heading")}>
                   <h2 className={cx("room-title")}>{roomItem.roomName}</h2>
                   <p>-</p>
-                  {roomItem.typeRoom && (
-                    <p> {roomItem.typeRoom.typeRoomName}</p>
-                  )}
+                  {roomItem.typeRoom && <p> {roomItem.typeRoom}</p>}
                 </div>
                 {roomItem.typeRoom && <p> Số Khách : {roomItem.capacity}</p>}
 

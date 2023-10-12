@@ -65,8 +65,12 @@
 }
 .numberCustom {
   border: 1px solid #fffcfc;
-  margin-top: 50px;
   height: 20px;
   margin-right: 50;
   border-bottom: 1px solid #0a0a0a;
+}
+.service-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
