@@ -1,0 +1,79 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;1,100&display=swap");
+
+.wrapper {
+  width: 100%;
+  font-family: "Roboto", sans-serif;
+}
+
+.room {
+  display: flex;
+  justify-content: space-evenly;
+  margin: 50px;
+  border: 1px solid #000;
+  margin-bottom: 100px;
+}
+.img {
+  width: 100px;
+  height: 200px;
+  flex: 1;
+}
+.img-item {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.room-heading {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.room-heading p {
+  margin: 0;
+  padding-left: 100px;
+}
+// .room-title h2 {
+// }
+.room-body {
+  flex: 3;
+  margin-left: 100px;
+}
+.room-price {
+  display: flex;
+}
+.room-price p {
+  padding: 0 30px 0 0;
+}
+// Customer
+.info-body {
+  display: flex;
+  justify-content: space-around;
+}
+.info-customer {
+  margin: 0 50px;
+}
+//  Order
+.info-order {
+  min-width: 500px;
+}
+.capacity {
+  background-color: rgb(238, 151, 151);
+  margin: 10px;
+  padding: 5px 20px;
+  border-radius: 20px;
+}
+.type-room {
+}
+.numberCustom {
+  border: 1px solid #fffcfc;
+  height: 20px;
+  margin-right: 50;
+  border-bottom: 1px solid #0a0a0a;
+}
+.service-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.nav-link {
+  padding: 20px;
+}

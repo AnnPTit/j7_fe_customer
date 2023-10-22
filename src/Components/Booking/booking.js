@@ -36,6 +36,10 @@ function Booking() {
   const [dayEnd, setDayEnd] = useState();
   const [roomPrice, setRoomPrice] = useState(0);
   const [deposit, setDeposit] = useState();
+  const [customer, setCustomer] = useState({});
+  const [fullname, setFullname] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [vat, setVat] = useState();
   const [totalPriceRoom, setTotalPriceRoom] = useState();
   const today = new Date().toISOString().split("T")[0];
@@ -52,7 +56,8 @@ function Booking() {
     return emailRegex.test(email);
   }
 
-  const handleOpenDialog = () => {
+  const handleOpenDialog = (id) => {
+    console.log(id);
     setOpen(true);
   };
 
@@ -60,9 +65,9 @@ function Booking() {
     setOpen(false);
   };
   const handleSubmit = () => {
-    const hoVaTenValue = document.getElementById("hoVaTenInput").value;
-    const emailValue = document.getElementById("emailInput").value;
-    const soDienThoaiValue = document.getElementById("soDienThoaiInput").value;
+    const hoVaTenValue = fullname;
+    const emailValue = email;
+    const soDienThoaiValue = phone;
     const note = document.getElementById("note").value;
     if (hoVaTenValue === "") {
       toast.error("Họ và tên không được để trống");
@@ -169,7 +174,9 @@ function Booking() {
 
   useEffect(() => {
     setTotalPriceRoom(roomPrice);
-  });
+    setDeposit(roomPrice / 10);
+    setVat(roomPrice / 10);
+  }, [roomPrice]);
   // Hàm Lấy Tiền cọc
   useEffect(() => {
     async function fetchData() {
@@ -276,6 +283,23 @@ function Booking() {
     setVat((price * tc) / 100);
   };
 
+  useEffect(() => {
+    const storedData = localStorage.getItem("idCustom");
+
+    if (storedData) {
+      // Nếu dữ liệu tồn tại trong localStorage
+      const customer = JSON.parse(storedData);
+      setCustomer(customer);
+    }
+  }, []);
+  useEffect(() => {
+    if (customer) {
+      setFullname(customer.fullname);
+      setEmail(customer.email);
+      setPhone(customer.phoneNumber);
+    }
+  }, [customer]);
+
   return (
     <div>
       <ToastContainer />
@@ -375,7 +399,7 @@ function Booking() {
                     padding: 20,
                     cursor: "pointer",
                   }}
-                  onClick={handleOpenDialog}
+                  onClick={() => handleOpenDialog(room1.id)}
                 ></i>
               </Tippy>
               <button
@@ -414,7 +438,10 @@ function Booking() {
               <input
                 type="text"
                 className="form-control"
-                id="hoVaTenInput"
+                onChange={(e) => {
+                  setFullname(e.target.value);
+                }}
+                value={fullname}
                 placeholder="Nguyen Van A"
               />
             </div>
@@ -430,7 +457,10 @@ function Booking() {
                 <input
                   type="email"
                   className="form-control"
-                  id="emailInput"
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                  }}
+                  value={email}
                   aria-describedby="basic-addon3 basic-addon4"
                 />
               </div>
@@ -439,8 +469,11 @@ function Booking() {
             <div className="input-group mb-3">
               <span className="input-group-text">+84</span>
               <input
-                id="soDienThoaiInput"
                 type="text"
+                onChange={(e) => {
+                  setPhone(e.target.value);
+                }}
+                value={phone}
                 className="form-control"
                 aria-label="Amount (to the nearest dollar)"
               />
@@ -534,11 +567,9 @@ function Booking() {
           },
         }}
       >
-        <DialogTitle>Chọn dịch vụ </DialogTitle>
+        <DialogTitle>Chọn dịch vụ</DialogTitle>
         <DialogContent>
-          <BasicTabs>
-            <p>ok</p>
-          </BasicTabs>
+          <BasicTabs></BasicTabs>
         </DialogContent>
       </Dialog>
     </div>

@@ -22,6 +22,7 @@ import Register from "./Components/login/Register";
 import Detail from "./Components/detail/detail";
 import Booking from "./Components/Booking/booking";
 import Preview from "./Components/Preview/preview";
+import Cart from "./Components/login/Cart";
 /*-------------blog------------ */
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
           <Route path="/contact" component={Contact} />
           <Route path="/sign-in" component={Login} />
           <Route path="/Register" component={Register} />
+          <Route path="/cart" component={Cart} />
           <Route path="/detail/:id" component={Detail} />
           <Route path="/booking/:id" component={Booking} />
           <Route path="/preview/:id" component={Preview} />

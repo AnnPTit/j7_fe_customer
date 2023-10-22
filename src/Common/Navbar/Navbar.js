@@ -1,12 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Navbar.css";
 import { Link } from "react-router-dom";
+import Tippy from "@tippyjs/react";
 
 const Navbar = () => {
   const [click, setClick] = useState(false);
+  const [customer, setCustomer] = useState({});
 
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
+  useEffect(() => {
+    const storedData = localStorage.getItem("idCustom");
+
+    if (storedData) {
+      // Nếu dữ liệu tồn tại trong localStorage
+      const customer = JSON.parse(storedData);
+      setCustomer(customer);
+    }
+  }, []);
+  const handleSignOut = () => {
+    localStorage.removeItem("idCustom"); // Xóa dữ liệu từ Local Storage
+    setCustomer({}); // Cập nhật customer thành một object rỗng
+  };
+
+  console.log("1111111", customer);
   return (
     <>
       <nav className="navbar">
@@ -60,15 +77,45 @@ const Navbar = () => {
           </ul>
 
           <div className="login-area flex">
-            <li>
-              <Link to="/sign-in">
-                <i className="far fa-chevron-right"></i>Sign in
-              </Link>
-            </li>
+            {Object.keys(customer).length > 0 ? (
+              <li>
+                <Link
+                  to="/sign-in"
+                  onClick={() => {
+                    handleSignOut();
+                  }}
+                >
+                  <i className="far fa-chevron-right"></i>Sign out
+                </Link>
+              </li>
+            ) : (
+              <li>
+                <Link to="/sign-in">
+                  <i className="far fa-chevron-right"></i>Sign in
+                </Link>
+              </li>
+            )}
             <li>
               <Link to="/register">
                 <i className="far fa-chevron-right"></i>Register
               </Link>
+            </li>
+            <li>
+              <Tippy
+                content="Thêm dịch vụ"
+                interactive={true}
+                interactiveBorder={20}
+                delay={100}
+              >
+                <Link to="/cart">
+                  <i
+                    class="fa fa-cart-plus"
+                    style={{
+                      fontSize: 20,
+                    }}
+                  ></i>
+                </Link>
+              </Tippy>
             </li>
 
             {/* <li>
