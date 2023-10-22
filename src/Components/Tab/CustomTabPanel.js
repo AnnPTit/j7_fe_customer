@@ -6,11 +6,17 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import axios from "axios";
 import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
+  TextField,
+  TextareaAutosize,
 } from "@mui/material";
 import { Scrollbar } from "../scrollbar";
 
@@ -56,6 +62,9 @@ export default function BasicTabs() {
   const [selectedServiceId, setSelectedServiceId] = useState(null);
   const [selectedComboId, setSelectedComboId] = useState(null);
   const [openQuantityNote, setOpenQuantityNote] = React.useState(false);
+  const [openQuantityNoteService, setOpenQuantityNoteService] =
+    React.useState(false);
+  const [itemSelected, setItemSelected] = useState("");
 
   // Hàm get Service
   useEffect(() => {
@@ -131,8 +140,17 @@ export default function BasicTabs() {
     return price.toLocaleString("vi-VN") + " VND";
   };
   const handleOpenQuantityNote = (serviceId) => {
+    setItemSelected(serviceId);
     setSelectedServiceId(serviceId);
     setOpenQuantityNote(true);
+  };
+  const handleOpenQuantityNoteCombo = (comboId) => {
+    setSelectedComboId(comboId);
+    setOpenQuantityNote(true);
+  };
+  const handleSubmitQuantity = (item) => {
+    setOpenQuantityNote(false);
+    console.log(item);
   };
   return (
     <Box sx={{ width: "100%" }}>
@@ -146,6 +164,107 @@ export default function BasicTabs() {
           <Tab label="Combo Dịch vụ" {...a11yProps(1)} />
         </Tabs>
       </Box>
+      <Dialog
+        open={openQuantityNote}
+        onClose={() => {}}
+        fullWidth
+        PaperProps={{
+          style: {
+            maxWidth: "30%",
+            maxHeight: "90%",
+          },
+        }}
+      >
+        <DialogTitle>
+          {selectedComboId !== null &&
+            combo.find((combo) => combo.id === selectedComboId)?.comboName}
+        </DialogTitle>
+        <DialogContent>
+          <TextField
+            style={{ marginTop: 10 }}
+            label="Số lượng"
+            fullWidth
+            variant="outlined"
+          />
+          <br />
+          <br />
+          <TextareaAutosize
+            className="form-control"
+            placeholder="Ghi chú"
+            name="note"
+            cols={100}
+            style={{ height: 150 }}
+            variant="outlined"
+          />
+        </DialogContent>
+        <DialogActions>
+          <button
+            className="btn btn-outline-warning"
+            onClick={() => {
+              setOpenQuantityNote(false);
+            }}
+          >
+            HỦY
+          </button>
+          <button
+            className="btn btn-outline-primary"
+            onClick={() => handleSubmitQuantity(itemSelected)}
+          >
+            XÁC NHẬN
+          </button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={openQuantityNoteService}
+        onClose={() => {}}
+        fullWidth
+        PaperProps={{
+          style: {
+            maxWidth: "30%",
+            maxHeight: "90%",
+          },
+        }}
+      >
+        <DialogTitle>
+          {selectedServiceId !== null &&
+            dataService.find((service) => service.id === selectedServiceId)
+              ?.serviceName}
+        </DialogTitle>
+        <DialogContent>
+          <TextField
+            style={{ marginTop: 10 }}
+            label="Số lượng"
+            fullWidth
+            variant="outlined"
+          />
+          <br />
+          <br />
+          <TextareaAutosize
+            className="form-control"
+            placeholder="Ghi chú"
+            name="note"
+            cols={100}
+            style={{ height: 150 }}
+            variant="outlined"
+          />
+        </DialogContent>
+        <DialogActions>
+          <button
+            className="btn btn-outline-warning"
+            onClick={() => {
+              setOpenQuantityNote(false);
+            }}
+          >
+            HỦY
+          </button>
+          <button
+            className="btn btn-outline-primary"
+            onClick={() => handleSubmitQuantity(dataService.id)}
+          >
+            XÁC NHẬN
+          </button>
+        </DialogActions>
+      </Dialog>
       <CustomTabPanel value={value} index={0}>
         <div>
           <Scrollbar>
@@ -205,14 +324,16 @@ export default function BasicTabs() {
                       <TableCell>{combo.comboName}</TableCell>
                       <TableCell>
                         {combo.comboServiceList.map((service) => (
-                          <p>{service.service.serviceName}</p>
+                          <p key={service.service.id}>
+                            {service.service.serviceName}
+                          </p>
                         ))}
                       </TableCell>
                       <TableCell>{formatPrice(combo.price)}</TableCell>
                       <TableCell>{combo.note}</TableCell>
                       <TableCell>
                         <button
-                          onClick={() => handleOpenQuantityNote(combo.id)}
+                          onClick={() => handleOpenQuantityNoteCombo(combo.id)}
                           className="btn btn-outline-primary"
                         >
                           Chọn

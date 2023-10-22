@@ -1,0 +1,291 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
+import Tippy from "@tippyjs/react";
+import classNames from "classnames/bind";
+import style from "./Cart.module.scss";
+import { ToastContainer, toast } from "react-toastify";
+
+function Cart() {
+  //lấy id custom đăng nhập từ local
+  let idCustom;
+  useEffect(() => {
+    const storedData = localStorage.getItem("idCustom");
+    if (storedData === null) {
+      toast.error("Vui lòng đăng nhập");
+      setTimeout(function () {
+        window.location.href = "/sign-in";
+      }, 2000);
+    } else {
+      const customer = JSON.parse(storedData);
+      idCustom = customer.id;
+    }
+  }, []);
+
+  // Nếu dữ liệu tồn tại trong localStorage
+
+  const [data, setData] = useState([]);
+  const [odStt, setOdStt] = useState(1);
+  const cx = classNames.bind(style);
+  // call API để lấy dữ liệu
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        let Api = `http://localhost:2003/api/home/cart/${idCustom}/${odStt}`;
+        // console.warn(Api);
+        const response = await axios.get(Api); // Thay đổi URL API của bạn tại đây
+        console.log(response.data);
+        setData(response.data);
+      } catch (error) {
+        if (error.response) {
+          // Xử lý response lỗi
+          if (error.response.status === 403) {
+            alert("Bạn không có quyền truy cập vào trang này");
+            window.location.href = "/auth/login"; // Thay đổi "/dang-nhap" bằng đường dẫn đến trang đăng nhập của bạn
+          } else {
+            alert("Có lỗi xảy ra trong quá trình gọi API");
+          }
+        } else {
+          console.log("Không thể kết nối đến API");
+        }
+      }
+    };
+
+    fetchData();
+  }, [idCustom, odStt]);
+
+  function formatDate(dateString) {
+    const date = new Date(dateString); // Chuyển đổi chuỗi ngày thành đối tượng Date
+    if (!isNaN(date.getTime())) {
+      // Kiểm tra xem chuyển đổi thành công hay không
+      const day = date.getDate();
+      const month = date.getMonth() + 1; // Lưu ý: Tháng bắt đầu từ 0
+      const year = date.getFullYear();
+
+      // Định dạng ngày, tháng và năm thành "dd/mm/yyyy"
+      return `${padZero(day)}/${padZero(month)}/${year}`;
+    } else {
+      return dateString; // Trả lại nguyên gốc nếu không thể định dạng
+    }
+  }
+
+  function padZero(number) {
+    return number.toString().padStart(2, "0"); // Thêm số 0 phía trước nếu cần
+  }
+
+  return (
+    <>
+      <ToastContainer></ToastContainer>
+      <ul className={cx("nav")}>
+        <li className={cx("nav-item")}>
+          <button
+            className={cx("nav-link")}
+            onClick={() => {
+              setOdStt(1);
+            }}
+          >
+            Chờ xác nhận
+          </button>
+        </li>
+        <li className={cx("nav-item")}>
+          <button
+            className={cx("nav-link")}
+            onClick={() => {
+              setOdStt(4);
+            }}
+          >
+            Đã xác nhận
+          </button>
+        </li>
+        <li className={cx("nav-item")}>
+          <button
+            className={cx("nav-link")}
+            onClick={() => {
+              setOdStt(5);
+            }}
+          >
+            Chờ check In
+          </button>
+        </li>
+        <li className={cx("nav-item")}>
+          <button
+            className={cx("nav-link")}
+            onClick={() => {
+              setOdStt(2);
+            }}
+          >
+            Đã nhận phòng
+          </button>
+        </li>
+        <li className={cx("nav-item")}>
+          <button
+            className={cx("nav-link")}
+            onClick={() => {
+              setOdStt(3);
+            }}
+          >
+            Đã trả phòng
+          </button>
+        </li>
+        <li className={cx("nav-item")}>
+          <button
+            className={cx("nav-link")}
+            onClick={() => {
+              setOdStt(0);
+            }}
+          >
+            Đã hủy
+          </button>
+        </li>
+        <li className={cx("nav-item")}>
+          <button
+            className={cx("nav-link")}
+            onClick={() => {
+              setOdStt(7);
+            }}
+          >
+            Hết hạn
+          </button>
+        </li>
+      </ul>
+      <div className={cx("wrapper")}>
+        {data.length === 0 ? (
+          <h2>Không có dữ liệu</h2>
+        ) : (
+          data.map((room1) => (
+            <div key={room1.id} className={cx("room")}>
+              <div className={cx("img")}>
+                {room1.url && (
+                  <img className={cx("img-item")} src={room1.url} alt="Room" />
+                )}
+              </div>
+              <div className={cx("room-body")}>
+                <div className={cx("room-heading")}>
+                  <h2 className={cx("room-title")}>{room1.roomName}</h2>
+                  <p>-</p>
+                  <span className={cx("type-room")}>
+                    {room1.typeRoom && <p> {room1.typeRoom}</p>}
+                  </span>
+                </div>
+                {room1.typeRoom && (
+                  <p>
+                    Sức chứa :
+                    <span className={cx("capacity")}>
+                      <i class="fa fa-user"></i> {room1.numberCustom}
+                    </span>
+                  </p>
+                )}
+
+                <div className={cx("room-price")}>
+                  {room1.typeRoom && (
+                    <p>
+                      Đơn giá :
+                      <span
+                        style={{
+                          color: "red",
+                        }}
+                      >
+                        {room1.price.toLocaleString("vi-VN", {
+                          style: "currency",
+                          currency: "VND", // Loại tiền tệ Việt Nam (VND)
+                        })}
+                      </span>
+                    </p>
+                  )}
+                  {room1.typeRoom && (
+                    <p>
+                      CheckIn :
+                      <span
+                        style={{
+                          color: "red",
+                        }}
+                      >
+                        {formatDate(room1.bookingStart)}
+                      </span>
+                    </p>
+                  )}
+                  {room1.typeRoom && (
+                    <p>
+                      CheckOut :
+                      <span
+                        style={{
+                          color: "red",
+                        }}
+                      >
+                        {formatDate(room1.bookingEnd)}
+                      </span>
+                    </p>
+                  )}
+                  {room1.typeRoom && (
+                    <p>
+                      Ngày đặt :
+                      <span
+                        style={{
+                          color: "red",
+                        }}
+                      >
+                        {formatDate(room1.bookingDay)}
+                      </span>
+                    </p>
+                  )}
+                </div>
+                <br />
+                <p>{room1.note}</p>
+              </div>
+
+              <div className={cx("service-item")}>
+                <input
+                  style={{
+                    backgroundColor: "#95c4e0",
+                    borderRadius: 50,
+                    textAlign: "center",
+                    lineHeight: 0.2,
+                    color: "white",
+                  }}
+                  placeholder="Chờ xác nhận"
+                  disabled="true"
+                />
+                <Tippy
+                  content="Thêm dịch vụ"
+                  interactive={true}
+                  interactiveBorder={20}
+                  delay={100}
+                >
+                  <i
+                    class="fa fa-bars"
+                    style={{
+                      color: "black",
+                      fontSize: 30,
+                      marginRight: 20,
+                      padding: 20,
+                      cursor: "pointer",
+                    }}
+                    onClick={() => {}}
+                  ></i>
+                </Tippy>
+                <button onClick={() => {}}>
+                  <i
+                    className={cx("fa fa-trash")}
+                    style={{
+                      color: "red",
+                      fontSize: 30,
+                      marginRight: 20,
+                      padding: 20,
+                      cursor: "pointer",
+                    }}
+                  ></i>
+                </button>
+              </div>
+              <div
+                style={{
+                  width: 50,
+                }}
+              ></div>
+            </div>
+          ))
+        )}
+      </div>
+    </>
+  );
+}
+
+export default Cart;
