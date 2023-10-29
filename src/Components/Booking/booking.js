@@ -55,7 +55,10 @@ function Booking() {
     var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
   }
-
+  function isPhoneNumberValid(phoneNumber) {
+    const regex = /^(\+84|0)[35789][0-9]{8}$/;
+    return regex.test(phoneNumber);
+  }
   const handleOpenDialog = (id) => {
     console.log(id);
     setOpen(true);
@@ -81,7 +84,11 @@ function Booking() {
     } else if (soDienThoaiValue === "") {
       toast.error("Số điện thoại không được để trống");
       return;
+    } else if (!isPhoneNumberValid(soDienThoaiValue)) {
+      toast.error("Số điện thoại không đúng định dạng !");
+      return;
     }
+
     // Tạo payload
     const roomData = room.map((room) => ({
       id: room.id,
@@ -119,7 +126,7 @@ function Booking() {
 
   useEffect(() => {
     if (isMatched) {
-      toast.error(isBook.message);
+      toast.info(isBook.message);
     } else {
       console.log("Không có phần tử trùng nhau giữa hai danh sách.");
     }
