@@ -4,10 +4,11 @@ import Tippy from "@tippyjs/react";
 import classNames from "classnames/bind";
 import style from "./Cart.module.scss";
 import { ToastContainer, toast } from "react-toastify";
+import { Button } from "bootstrap";
 
 function Cart() {
   //lấy id custom đăng nhập từ local
-  let idCustom;
+  const [idCustom, setIdCustom] = useState("");
   useEffect(() => {
     const storedData = localStorage.getItem("idCustom");
     if (storedData === null) {
@@ -15,9 +16,10 @@ function Cart() {
       setTimeout(function () {
         window.location.href = "/sign-in";
       }, 2000);
-    } else {
+    } else if (storedData) {
       const customer = JSON.parse(storedData);
-      idCustom = customer.id;
+      console.log("22222", customer);
+      setIdCustom(customer.id);
     }
   }, []);
 
@@ -71,6 +73,34 @@ function Cart() {
   function padZero(number) {
     return number.toString().padStart(2, "0"); // Thêm số 0 phía trước nếu cần
   }
+
+  const groupedData = data.reduce((result, room1) => {
+    const orderCode = room1.orderCode;
+
+    if (!result[orderCode]) {
+      result[orderCode] = { data: [], totalPrice: 0 };
+    }
+
+    result[orderCode].data.push(room1);
+    result[orderCode].totalPrice += room1.deposit;
+    return result;
+  }, {});
+
+  const groupedArray = Object.values(groupedData);
+
+  console.log(groupedArray);
+
+  const createPaymentMomo = async (code) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:2003/api/payment-method/payment-momo/online/${code}`
+      );
+      window.location.href = response.data.payUrl;
+    } catch (error) {
+      console.error("Error creating payment:", error);
+    }
+    console.log(code);
+  };
 
   return (
     <>
@@ -151,100 +181,209 @@ function Cart() {
         {data.length === 0 ? (
           <h2>Không có dữ liệu</h2>
         ) : (
-          data.map((room1) => (
-            <div key={room1.id} className={cx("room")}>
-              <div className={cx("img")}>
-                {room1.url && (
-                  <img className={cx("img-item")} src={room1.url} alt="Room" />
+          groupedArray.map((arr) => (
+            <div>
+              <div>
+                <h2>
+                  {arr.data[0].orderCode} -{" "}
+                  {arr.totalPrice.toLocaleString("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                  })}
+                </h2>
+
+                {arr.data[0].orderStatus === 4 ? (
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => createPaymentMomo(arr.data[0].orderCode)}
+                  >
+                    Thanh toán MOMO
+                  </button>
+                ) : (
+                  <div></div>
                 )}
               </div>
-              <div className={cx("room-body")}>
-                <div className={cx("room-heading")}>
-                  <h2 className={cx("room-title")}>{room1.roomName}</h2>
-                  <p>-</p>
-                  <span className={cx("type-room")}>
-                    {room1.typeRoom && <p> {room1.typeRoom}</p>}
-                  </span>
-                </div>
-                {room1.typeRoom && (
-                  <p>
-                    Sức chứa :
-                    <span className={cx("capacity")}>
-                      <i class="fa fa-user"></i> {room1.numberCustom}
-                    </span>
-                  </p>
-                )}
+              {arr.data.map((room1) => (
+                <div key={room1.id} className={cx("room")}>
+                  <div className={cx("img")}>
+                    {room1.url && (
+                      <img
+                        className={cx("img-item")}
+                        src={room1.url}
+                        alt="Room"
+                      />
+                    )}
+                  </div>
+                  <div className={cx("room-body")}>
+                    <div className={cx("room-heading")}>
+                      <h2 className={cx("room-title")}>{room1.roomName}</h2>
+                      <p>-</p>
+                      <span className={cx("type-room")}>
+                        {room1.typeRoom && <p> {room1.typeRoom}</p>}
+                      </span>
+                    </div>
+                    {room1.typeRoom && (
+                      <p>
+                        Sức chứa :
+                        <span className={cx("capacity")}>
+                          <i class="fa fa-user"></i> {room1.numberCustom}
+                        </span>
+                      </p>
+                    )}
 
-                <div className={cx("room-price")}>
-                  {room1.typeRoom && (
-                    <p>
-                      Đơn giá :
-                      <span
-                        style={{
-                          color: "red",
-                        }}
-                      >
-                        {room1.price.toLocaleString("vi-VN", {
-                          style: "currency",
-                          currency: "VND", // Loại tiền tệ Việt Nam (VND)
-                        })}
-                      </span>
-                    </p>
-                  )}
-                  {room1.typeRoom && (
-                    <p>
-                      CheckIn :
-                      <span
-                        style={{
-                          color: "red",
-                        }}
-                      >
-                        {formatDate(room1.bookingStart)}
-                      </span>
-                    </p>
-                  )}
-                  {room1.typeRoom && (
-                    <p>
-                      CheckOut :
-                      <span
-                        style={{
-                          color: "red",
-                        }}
-                      >
-                        {formatDate(room1.bookingEnd)}
-                      </span>
-                    </p>
-                  )}
-                  {room1.typeRoom && (
-                    <p>
-                      Ngày đặt :
-                      <span
-                        style={{
-                          color: "red",
-                        }}
-                      >
-                        {formatDate(room1.bookingDay)}
-                      </span>
-                    </p>
-                  )}
-                </div>
-                <br />
-                <p>{room1.note}</p>
-              </div>
+                    <div className={cx("room-price")}>
+                      {room1.typeRoom && (
+                        <p>
+                          Đơn giá :
+                          <span
+                            style={{
+                              color: "red",
+                            }}
+                          >
+                            {room1.price.toLocaleString("vi-VN", {
+                              style: "currency",
+                              currency: "VND", // Loại tiền tệ Việt Nam (VND)
+                            })}
+                          </span>
+                        </p>
+                      )}
+                      {room1.typeRoom && (
+                        <p>
+                          CheckIn :
+                          <span
+                            style={{
+                              color: "red",
+                            }}
+                          >
+                            {formatDate(room1.bookingStart)}
+                          </span>
+                        </p>
+                      )}
+                      {room1.typeRoom && (
+                        <p>
+                          CheckOut :
+                          <span
+                            style={{
+                              color: "red",
+                            }}
+                          >
+                            {formatDate(room1.bookingEnd)}
+                          </span>
+                        </p>
+                      )}
+                      {room1.typeRoom && (
+                        <p>
+                          Ngày đặt :
+                          <span
+                            style={{
+                              color: "red",
+                            }}
+                          >
+                            {formatDate(room1.bookingDay)}
+                          </span>
+                        </p>
+                      )}
+                    </div>
+                    <br />
+                    <p>{room1.note}</p>
+                  </div>
 
-              <div className={cx("service-item")}>
-                <input
-                  style={{
-                    backgroundColor: "#95c4e0",
-                    borderRadius: 50,
-                    textAlign: "center",
-                    lineHeight: 0.2,
-                    color: "white",
-                  }}
-                  placeholder="Chờ xác nhận"
-                  disabled="true"
-                />
-                <Tippy
+                  <div className={cx("service-item")}>
+                    {room1.orderStatus === 1 &&
+                    new Date(room1.bookingStart) > new Date() ? (
+                      <input
+                        style={{
+                          backgroundColor: "#95c4e0",
+                          borderRadius: 50,
+                          textAlign: "center",
+                          lineHeight: 0.2,
+                          color: "white",
+                        }}
+                        value={"Chờ xác nhận"}
+                        disabled={true}
+                      />
+                    ) : room1.orderStatus === 4 ? (
+                      <div
+                        style={{
+                          display: "flex",
+                        }}
+                      >
+                        <input
+                          style={{
+                            backgroundColor: "green",
+                            borderRadius: 50,
+                            textAlign: "center",
+                            lineHeight: 0.2,
+                            color: "white",
+                          }}
+                          value={"Đã xác nhận"}
+                          disabled={true}
+                        />
+                      </div>
+                    ) : room1.orderStatus === 5 ? (
+                      <input
+                        style={{
+                          backgroundColor: "#95c4e0",
+                          borderRadius: 50,
+                          textAlign: "center",
+                          lineHeight: 0.2,
+                          color: "white",
+                        }}
+                        value={"Chờ check in"}
+                        disabled={true}
+                      />
+                    ) : room1.orderStatus === 2 ? (
+                      <input
+                        style={{
+                          backgroundColor: "green",
+                          borderRadius: 50,
+                          textAlign: "center",
+                          lineHeight: 0.2,
+                          color: "white",
+                        }}
+                        value={"Đã nhận phòng"}
+                        disabled={true}
+                      />
+                    ) : room1.orderStatus === 3 ? (
+                      <input
+                        style={{
+                          backgroundColor: "#95c4e0",
+                          borderRadius: 50,
+                          textAlign: "center",
+                          lineHeight: 0.2,
+                          color: "white",
+                        }}
+                        value={"Đã trả phòng"}
+                        disabled={true}
+                      />
+                    ) : room1.orderStatus === 0 ? (
+                      <input
+                        style={{
+                          backgroundColor: "#95c4e0",
+                          borderRadius: 50,
+                          textAlign: "center",
+                          lineHeight: 0.2,
+                          color: "white",
+                        }}
+                        value={"Đã hủy"}
+                        disabled={true}
+                      />
+                    ) : (
+                      <input
+                        style={{
+                          backgroundColor: "red",
+                          borderRadius: 50,
+                          textAlign: "center",
+                          lineHeight: 0.2,
+                          color: "white",
+                        }}
+                        // placeholder="Hết hạn"
+                        value={"Hết hạn"}
+                        disabled={true}
+                      />
+                    )}
+
+                    {/* <Tippy
                   content="Thêm dịch vụ"
                   interactive={true}
                   interactiveBorder={20}
@@ -261,25 +400,33 @@ function Cart() {
                     }}
                     onClick={() => {}}
                   ></i>
-                </Tippy>
-                <button onClick={() => {}}>
-                  <i
-                    className={cx("fa fa-trash")}
+                </Tippy> */}
+                    {room1.orderStatus === 1 &&
+                    new Date(room1.bookingStart) > new Date() ? (
+                      <button onClick={() => {}}>
+                        <i
+                          // <i class="fa-solid fa-xmark"></i>
+                          className={cx("fa fa-trash")}
+                          style={{
+                            color: "red",
+                            fontSize: 30,
+                            marginRight: 20,
+                            padding: 20,
+                            cursor: "pointer",
+                          }}
+                        ></i>
+                      </button>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
+                  <div
                     style={{
-                      color: "red",
-                      fontSize: 30,
-                      marginRight: 20,
-                      padding: 20,
-                      cursor: "pointer",
+                      width: 50,
                     }}
-                  ></i>
-                </button>
-              </div>
-              <div
-                style={{
-                  width: 50,
-                }}
-              ></div>
+                  ></div>
+                </div>
+              ))}
             </div>
           ))
         )}
