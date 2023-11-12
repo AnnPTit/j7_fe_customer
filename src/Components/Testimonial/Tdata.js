@@ -2,8 +2,8 @@ const Tdata = [
   {
     id: 1,
     desc: "Lorem ipsum dolor sit amet consectetur ipiscing elit amet consectetur piscing elit consectetur adipiscing elit sed et eletum. orem ipsum dolor sit amet consectetur adipiscing elit amet consectetur piscing elit amet consectetur adipiscing elit sed et eletum nulla eu placerat felis etiam tincidunt orci lacus id varius dolor fermum sit amet.",
-    name: "KEVIN MARTHIN",
-    profile: "/images/profile/profile1.jpg",
+    name: "PHAM AN ",
+    profile: "/images/profile/EIVEE0940.JPG",
     post: "Developer",
   },
   {

@@ -13,6 +13,8 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import BasicTabs from "../Tab/CustomTabPanel";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 var stompClient = null;
 const disconnect = () => {
@@ -32,8 +34,8 @@ function Booking() {
   const [open, setOpen] = useState(false);
   const [room, setRoom] = useState([]);
   const [tc, setTc] = useState(0);
-  const [dayStart, setDayStart] = useState();
-  const [dayEnd, setDayEnd] = useState();
+  const [dayStart, setDayStart] = useState(new Date());
+  const [dayEnd, setDayEnd] = useState(new Date());
   const [roomPrice, setRoomPrice] = useState(0);
   const [deposit, setDeposit] = useState();
   const [customer, setCustomer] = useState({});
@@ -42,7 +44,7 @@ function Booking() {
   const [phone, setPhone] = useState("");
   const [vat, setVat] = useState();
   const [totalPriceRoom, setTotalPriceRoom] = useState();
-  const today = new Date().toISOString().split("T")[0];
+  const today = new Date();
   const [guestCounts, setGuestCounts] = useState({}); // Một đối tượng để lưu số lượng khách cho từng phòng
   const [isBook, setIsBook] = useState({
     message: null,
@@ -67,6 +69,11 @@ function Booking() {
   const handleCloseDialog = () => {
     setOpen(false);
   };
+  // Tạo payload
+  const roomData = room.map((room) => ({
+    id: room.id,
+    guestCount: guestCounts[room.id] || 0, // Lấy số lượng khách từ guestCounts, mặc định là 0 nếu không có
+  }));
   const handleSubmit = () => {
     const hoVaTenValue = fullname;
     const emailValue = email;
@@ -89,11 +96,6 @@ function Booking() {
       return;
     }
 
-    // Tạo payload
-    const roomData = room.map((room) => ({
-      id: room.id,
-      guestCount: guestCounts[room.id] || 0, // Lấy số lượng khách từ guestCounts, mặc định là 0 nếu không có
-    }));
     const payload = {
       rooms: roomData,
       user: {
@@ -108,21 +110,28 @@ function Booking() {
       note,
     };
     console.log(payload);
+    for (let index = 0; index < payload.rooms.length; index++) {
+      if (payload.rooms[index].guestCount === 0) {
+        toast.error("Số khách không được để trống!");
+        return;
+      }
+    }
     sendMessage(JSON.stringify(payload));
   };
 
-  console.log(isBook.ids);
   const roomIds = room.map((room) => [room.id]);
   console.log(roomIds);
   let isMatched = false;
 
-  isBook.ids.forEach((isBookId) => {
-    roomIds.forEach((roomIdArray) => {
-      if (roomIdArray.includes(isBookId)) {
-        isMatched = true;
-      }
+  if (isBook.ids && isBook.ids.length > 0) {
+    isBook.ids.forEach((isBookId) => {
+      roomIds.forEach((roomIdArray) => {
+        if (roomIdArray.includes(isBookId)) {
+          isMatched = true;
+        }
+      });
     });
-  });
+  }
 
   useEffect(() => {
     if (isMatched) {
@@ -132,9 +141,13 @@ function Booking() {
     }
   });
 
-  const handleGuestCountChange = (roomId, count) => {
+  const handleGuestCountChange = (roomId, count, capacity) => {
     if (count < 0) {
-      toast.error("Số khách lớn hơn 0");
+      toast.error("Số khách lớn hơn 0 !");
+      return;
+    }
+    if (count > capacity) {
+      toast.error("Số khách vượt quá sức chứa !");
       return;
     }
     setGuestCounts((prevCounts) => ({
@@ -147,15 +160,15 @@ function Booking() {
     connect();
   }, []);
 
-  useEffect(() => {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
-    const day = currentDate.getDate().toString().padStart(2, "0");
-    const initialDate = `${year}-${month}-${day}`;
-    setDayStart(initialDate);
-    setDayEnd(initialDate);
-  }, []);
+  // useEffect(() => {
+  //   const initialDate = new Date();
+  //   // const year = currentDate.getFullYear();
+  //   // const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+  //   // const day = currentDate.getDate().toString().padStart(2, "0");
+  //   // const initialDate = `${day}-${month}-${year}`;
+  //   setDayStart(initialDate);
+  //   setDayEnd(initialDate);
+  // }, []);
   //Hàm detail
   useEffect(() => {
     async function fetchData() {
@@ -206,12 +219,9 @@ function Booking() {
     fetchData();
   }, []);
 
-  function formatCurrency(price) {
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    }).format(price);
-  }
+  const formatPrice = (price) => {
+    return price.toLocaleString("vi-VN") + " VND";
+  };
 
   const handleRemoveRoom = (id) => {
     if (room.length === 1) {
@@ -246,48 +256,34 @@ function Booking() {
       stompClient.subscribe("/topic/product", (data) => {
         const status = data.body; // Lấy nội dung từ tin nhắn
         console.log(status);
+        console.log(status.message);
         const message = JSON.parse(status);
         // Sử dụng biến containsElements để kiểm tra và alert status.body
         setIsBook(message);
+        toast.error(message.message);
       });
     });
   };
 
-  const handleChoseDay = (e) => {
-    const selectedDay = e.target.value;
-    if (selectedDay < today) {
-      alert("Ngày đặt không thể nhỏ hơn ngày hôm nay.");
-      return;
-    }
-    if (selectedDay > dayEnd) {
-      alert("Ngày đặt không thể lớn hơn ngày trả.");
-      return;
-    }
-    setDayStart(selectedDay);
-    const startDate = new Date(selectedDay);
-    const endDate = new Date(dayEnd);
-    const timeDiff = endDate.getTime() - startDate.getTime();
-    const numberOfDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-    subPriceRoom(numberOfDays + 1, roomPrice);
-  };
-  const handleSubPrice = (e) => {
-    const startDate = new Date(dayStart);
-    const endDate = new Date(e.target.value);
-    const timeDiff = endDate.getTime() - startDate.getTime();
-    const numberOfDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-    if (numberOfDays < 0) {
-      alert("Vui lòng chọn lại ngày ");
-      return;
-    }
-    setDayEnd(e.target.value);
-    subPriceRoom(numberOfDays + 1, roomPrice);
-  };
   const subPriceRoom = (day, roomPrice) => {
     console.log(roomPrice);
     let price = day * roomPrice;
     setTotalPriceRoom(price);
     setDeposit((price * tc) / 100);
     setVat((price * tc) / 100);
+  };
+
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr); // Chuyển đổi chuỗi ngày thành đối tượng Date
+
+    if (isNaN(date.getTime())) {
+      return ""; // Trả về giá trị mặc định hoặc thông báo lỗi nếu chuỗi không hợp lệ
+    }
+
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
   };
 
   useEffect(() => {
@@ -306,6 +302,37 @@ function Booking() {
       setPhone(customer.phoneNumber);
     }
   }, [customer]);
+
+  const handleDateChange = (date) => {
+    console.log("today", today);
+    console.log("today2", date);
+    if (date < today) {
+      alert("Ngày đặt không thể nhỏ hơn ngày hôm nay.");
+      return;
+    }
+    if (date > dayEnd) {
+      alert("Ngày đặt không thể lớn hơn ngày trả.");
+      return;
+    }
+    setDayStart(date);
+    const startDate = new Date(date);
+    const endDate = new Date(dayEnd);
+    const timeDiff = endDate.getTime() - startDate.getTime();
+    const numberOfDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    subPriceRoom(numberOfDays + 1, roomPrice);
+  };
+  const handleDateChange2 = (date) => {
+    const startDate = new Date(dayStart);
+    const endDate = date;
+    const timeDiff = endDate.getTime() - startDate.getTime();
+    const numberOfDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    if (numberOfDays < 0) {
+      alert("Vui lòng chọn lại ngày ");
+      return;
+    }
+    setDayEnd(date);
+    subPriceRoom(numberOfDays + 1, roomPrice);
+  };
 
   return (
     <div>
@@ -386,7 +413,11 @@ function Booking() {
                 type="number"
                 value={guestCounts[room1.id] || ""}
                 onChange={(e) =>
-                  handleGuestCountChange(room1.id, e.target.value)
+                  handleGuestCountChange(
+                    room1.id,
+                    e.target.value,
+                    room1.typeRoom.capacity
+                  )
                 }
                 placeholder="Số khách"
                 className={cx("numberCustom")}
@@ -489,20 +520,40 @@ function Booking() {
           <div className={cx("info-order")}>
             <h2>Thông tin đơn hàng </h2>
             <p>Ngày Đặt</p>
-            <div className="input-group mb-3">
-              <input
+            <div
+              className="input-group mb-3"
+              style={{
+                border: "1px solid #ccc",
+              }}
+            >
+              {/* <input
                 type="date"
                 className="form-control"
-                value={dayStart}
+                value={formatDate(dayStart)}
                 onChange={(e) => handleChoseDay(e)}
+              /> */}
+              <DatePicker
+                selected={dayStart}
+                onChange={handleDateChange}
+                dateFormat="dd/MM/yyyy"
               />
             </div>
-            <div className="input-group mb-3">
-              <input
+            <div
+              className="input-group mb-3"
+              style={{
+                border: "1px solid #ccc",
+              }}
+            >
+              {/* <input
                 type="date"
                 value={dayEnd}
                 className="form-control"
                 onChange={(e) => handleSubPrice(e)}
+              /> */}
+              <DatePicker
+                selected={dayEnd}
+                onChange={handleDateChange2}
+                dateFormat="dd/MM/yyyy"
               />
             </div>
             <p>Nhận phòng từ : 12:00 CH</p>
@@ -512,7 +563,7 @@ function Booking() {
               type="text"
               className="form-control"
               disabled
-              defaultValue={totalPriceRoom}
+              defaultValue={totalPriceRoom ? formatPrice(totalPriceRoom) : null}
             />
             <p
               style={{
@@ -525,7 +576,7 @@ function Booking() {
               type="text"
               className="form-control"
               disabled
-              defaultValue={deposit}
+              defaultValue={deposit ? formatPrice(deposit) : null}
             />
             <br />
             <p>VAT </p>
@@ -533,7 +584,7 @@ function Booking() {
               type="text"
               className="form-control"
               disabled
-              defaultValue={vat}
+              defaultValue={vat ? formatPrice(vat) : null}
             />
             <br />
             <p>Ghi chú </p>

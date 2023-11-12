@@ -8,7 +8,7 @@
 .room {
   display: flex;
   justify-content: space-evenly;
-  margin: 50px;
+  margin: 20px;
   border: 1px solid #000;
   margin-bottom: 100px;
 }
@@ -74,6 +74,42 @@
   align-items: center;
   justify-content: center;
 }
+.header {
+  background-color: #ccc;
+  margin-top: 2px;
+}
 .nav-link {
-  padding: 20px;
+  margin: 10px 20px;
+  padding: 10px 20px;
+  // background-color: #ccc;
+}
+
+.active {
+  color: red;
+  background-color: red;
+}
+
+.no-data {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  margin: 70px 0;
+}
+.group-order {
+  margin-top: 5px;
+  border: 1px solid #111010;
+}
+.order-title {
+  margin: 20px;
+}
+.order-name {
+  background-color: #ccc;
+  border-radius: 20px;
+  padding: 30px 0;
+  width: 20%;
+  padding-left: 30px;
+}
+.btn-pay {
+  border-radius: 20px;
 }

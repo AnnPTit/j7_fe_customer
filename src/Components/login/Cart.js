@@ -105,86 +105,129 @@ function Cart() {
   return (
     <>
       <ToastContainer></ToastContainer>
-      <ul className={cx("nav")}>
-        <li className={cx("nav-item")}>
-          <button
-            className={cx("nav-link")}
-            onClick={() => {
-              setOdStt(1);
-            }}
-          >
-            Chờ xác nhận
-          </button>
-        </li>
-        <li className={cx("nav-item")}>
-          <button
-            className={cx("nav-link")}
-            onClick={() => {
-              setOdStt(4);
-            }}
-          >
-            Đã xác nhận
-          </button>
-        </li>
-        <li className={cx("nav-item")}>
-          <button
-            className={cx("nav-link")}
-            onClick={() => {
-              setOdStt(5);
-            }}
-          >
-            Chờ check In
-          </button>
-        </li>
-        <li className={cx("nav-item")}>
-          <button
-            className={cx("nav-link")}
-            onClick={() => {
-              setOdStt(2);
-            }}
-          >
-            Đã nhận phòng
-          </button>
-        </li>
-        <li className={cx("nav-item")}>
-          <button
-            className={cx("nav-link")}
-            onClick={() => {
-              setOdStt(3);
-            }}
-          >
-            Đã trả phòng
-          </button>
-        </li>
-        <li className={cx("nav-item")}>
-          <button
-            className={cx("nav-link")}
-            onClick={() => {
-              setOdStt(0);
-            }}
-          >
-            Đã hủy
-          </button>
-        </li>
-        <li className={cx("nav-item")}>
-          <button
-            className={cx("nav-link")}
-            onClick={() => {
-              setOdStt(7);
-            }}
-          >
-            Hết hạn
-          </button>
-        </li>
-      </ul>
+      <div className={cx("header")}>
+        <ul className={cx("nav")}>
+          <li className={cx("nav-item")}>
+            <button
+              style={
+                odStt === 1
+                  ? { color: "white", background: "black", borderRadius: 20 }
+                  : null
+              }
+              className={cx("nav-link")}
+              onClick={() => {
+                setOdStt(1);
+              }}
+            >
+              Chờ xác nhận
+            </button>
+          </li>
+          <li className={cx("nav-item")}>
+            <button
+              style={
+                odStt === 4
+                  ? { color: "white", background: "black", borderRadius: 20 }
+                  : null
+              }
+              className={cx("nav-link")}
+              onClick={() => {
+                setOdStt(4);
+              }}
+            >
+              Đã xác nhận
+            </button>
+          </li>
+          <li className={cx("nav-item")}>
+            <button
+              style={
+                odStt === 5
+                  ? { color: "white", background: "black", borderRadius: 20 }
+                  : null
+              }
+              className={cx("nav-link")}
+              onClick={() => {
+                setOdStt(5);
+              }}
+            >
+              Chờ check In
+            </button>
+          </li>
+          <li className={cx("nav-item")}>
+            <button
+              style={
+                odStt === 2
+                  ? { color: "white", background: "black", borderRadius: 20 }
+                  : null
+              }
+              className={cx("nav-link")}
+              onClick={() => {
+                setOdStt(2);
+              }}
+            >
+              Đã nhận phòng
+            </button>
+          </li>
+          <li className={cx("nav-item")}>
+            <button
+              style={
+                odStt === 3
+                  ? { color: "white", background: "black", borderRadius: 20 }
+                  : null
+              }
+              className={cx("nav-link")}
+              onClick={() => {
+                setOdStt(3);
+              }}
+            >
+              Đã trả phòng
+            </button>
+          </li>
+          <li className={cx("nav-item")}>
+            <button
+              style={
+                odStt === 0
+                  ? { color: "white", background: "black", borderRadius: 20 }
+                  : null
+              }
+              className={cx("nav-link")}
+              onClick={() => {
+                setOdStt(0);
+              }}
+            >
+              Đã hủy
+            </button>
+          </li>
+          <li className={cx("nav-item")}>
+            <button
+              style={
+                odStt === 7
+                  ? { color: "white", background: "black", borderRadius: 20 }
+                  : null
+              }
+              className={cx("nav-link")}
+              onClick={() => {
+                setOdStt(7);
+              }}
+            >
+              Hết hạn
+            </button>
+          </li>
+        </ul>
+      </div>
       <div className={cx("wrapper")}>
         {data.length === 0 ? (
-          <h2>Không có dữ liệu</h2>
+          <div className={cx("no-data")}>
+            <img
+              src="https://cdn4.iconfinder.com/data/icons/music-ui-solid-24px/24/cross_delete_remove_close-2-256.png"
+              alt="no data"
+            />
+            <h2 className={cx("no-data-tile")}> Không có dữ liệu </h2>
+          </div>
         ) : (
           groupedArray.map((arr) => (
-            <div>
-              <div>
-                <h2>
+            <div className={cx("group-order")}>
+              <div className={cx("order-title")}>
+                <h2 className={cx("order-name")}>
                   {arr.data[0].orderCode} -{" "}
                   {arr.totalPrice.toLocaleString("vi-VN", {
                     style: "currency",
@@ -194,6 +237,9 @@ function Cart() {
 
                 {arr.data[0].orderStatus === 4 ? (
                   <button
+                    style={{
+                      borderRadius: 10,
+                    }}
                     className="btn btn-primary"
                     onClick={() => createPaymentMomo(arr.data[0].orderCode)}
                   >
@@ -382,25 +428,6 @@ function Cart() {
                         disabled={true}
                       />
                     )}
-
-                    {/* <Tippy
-                  content="Thêm dịch vụ"
-                  interactive={true}
-                  interactiveBorder={20}
-                  delay={100}
-                >
-                  <i
-                    class="fa fa-bars"
-                    style={{
-                      color: "black",
-                      fontSize: 30,
-                      marginRight: 20,
-                      padding: 20,
-                      cursor: "pointer",
-                    }}
-                    onClick={() => {}}
-                  ></i>
-                </Tippy> */}
                     {room1.orderStatus === 1 &&
                     new Date(room1.bookingStart) > new Date() ? (
                       <button onClick={() => {}}>
