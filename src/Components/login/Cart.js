@@ -102,6 +102,24 @@ function Cart() {
     console.log(code);
   };
 
+  const cancelOrder = async (code) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:2003/api/home/order/cancel/${code}/0`
+      );
+      if (response.data.status === 1) {
+        toast.success(response.data.message);
+      }
+      if (response.data.status === 0) {
+        toast.error(response.data.message);
+      }
+      window.location.href = `/cart`;
+    } catch (error) {
+      console.error("Error creating payment:", error);
+    }
+    console.log(code);
+  };
+
   return (
     <>
       <ToastContainer></ToastContainer>
@@ -212,6 +230,21 @@ function Cart() {
               Hết hạn
             </button>
           </li>
+          <li className={cx("nav-item")}>
+            <button
+              style={
+                odStt === 6
+                  ? { color: "white", background: "black", borderRadius: 20 }
+                  : null
+              }
+              className={cx("nav-link")}
+              onClick={() => {
+                setOdStt(6);
+              }}
+            >
+              Bị từ chối
+            </button>
+          </li>
         </ul>
       </div>
       <div className={cx("wrapper")}>
@@ -239,11 +272,22 @@ function Cart() {
                   <button
                     style={{
                       borderRadius: 10,
+                      backgroundColor: "#b84d84",
                     }}
                     className="btn btn-primary"
                     onClick={() => createPaymentMomo(arr.data[0].orderCode)}
                   >
-                    Thanh toán MOMO
+                    Thanh Toán MOMO
+                  </button>
+                ) : arr.data[0].orderStatus === 1 ? (
+                  <button
+                    style={{
+                      borderRadius: 10,
+                    }}
+                    className="btn btn-primary"
+                    onClick={() => cancelOrder(arr.data[0].orderCode)}
+                  >
+                    Hủy Đặt Phòng
                   </button>
                 ) : (
                   <div></div>
@@ -430,19 +474,7 @@ function Cart() {
                     )}
                     {room1.orderStatus === 1 &&
                     new Date(room1.bookingStart) > new Date() ? (
-                      <button onClick={() => {}}>
-                        <i
-                          // <i class="fa-solid fa-xmark"></i>
-                          className={cx("fa fa-trash")}
-                          style={{
-                            color: "red",
-                            fontSize: 30,
-                            marginRight: 20,
-                            padding: 20,
-                            cursor: "pointer",
-                          }}
-                        ></i>
-                      </button>
+                      <button onClick={() => {}}></button>
                     ) : (
                       <></>
                     )}
