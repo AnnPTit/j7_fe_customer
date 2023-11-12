@@ -96,9 +96,17 @@ const Home = ({ slides }) => {
                   setTypeRoomChose(e.target.value);
                 }}
               >
-                <option value={""}>Loại phòng</option>
+                <option className={cx("option")} value={""}>
+                  Loại phòng
+                </option>
                 {typeRoom.map((type) => (
-                  <option key={type.id} value={type.typeRoomCode}>
+                  <option
+                    key={type.id}
+                    value={type.typeRoomCode}
+                    style={{
+                      lineHeight: 100,
+                    }}
+                  >
                     {type.typeRoomName}
                   </option>
                 ))}

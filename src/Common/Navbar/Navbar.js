@@ -23,7 +23,6 @@ const Navbar = () => {
     setCustomer({}); // Cập nhật customer thành một object rỗng
   };
 
-  console.log("1111111", customer);
   return (
     <>
       <nav className="navbar">
@@ -101,12 +100,7 @@ const Navbar = () => {
               </Link>
             </li>
             <li>
-              <Tippy
-                content="Thêm dịch vụ"
-                interactive={true}
-                interactiveBorder={20}
-                delay={100}
-              >
+              <Tippy interactive={true} interactiveBorder={20} delay={100}>
                 <Link to="/cart">
                   <i
                     class="fa fa-cart-plus"
