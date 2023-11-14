@@ -76,33 +76,28 @@ function Detail() {
           </span>
         </div>
         <p>{room.note}</p>
-
         <div className="item-text-item">
-          <span className={cx("item-text")}>
-            {room.typeRoom && room.typeRoom.typeRoomName}
-          </span>
-        </div>
-        <br />
-        <div className="item-text-item">
-          <span className={cx("item-text")}>
+          <span className={cx("item-type-room")}>
+            {room.typeRoom && room.typeRoom.typeRoomName} - 
             {room.floor && room.floor.floorName}
           </span>
         </div>
+       
         <br />
         <div className="item-text-item">
           <span>Sức chứa : </span>
-          <span className={cx("item-text")}>
-            {room.typeRoom && room.typeRoom.capacity} N
+          <span className={cx("item-capacity-wrapper")}>
+          <span className={cx("item-capacity")}>
+            {room.typeRoom && room.typeRoom.capacity} 
+          </span>
+          <i class="fa fa-user"></i>
           </span>
         </div>
         <br />
         <div className="item-text-item">
-          <span>Đơn giá theo ngày : </span>{" "}
+          <span>Đơn giá  : </span>{" "}
           <span
-            className={cx("item-text")}
-            style={{
-              color: "red",
-            }}
+            className={cx("item-capacity-wrapper")}
           >
             {room.typeRoom && room.typeRoom.pricePerDay && (
               <span>
@@ -115,7 +110,7 @@ function Detail() {
           </span>
         </div>
         <br />
-        <div className="item-text-item">
+        {/* <div className="item-text-item">
           <span>Đơn giá theo giờ : </span>{" "}
           <span
             className={cx("item-text")}
@@ -133,7 +128,7 @@ function Detail() {
             )}
           </span>
         </div>
-        <br />
+        <br /> */}
         <hr />
         <div className="item-text-item">
           <span>

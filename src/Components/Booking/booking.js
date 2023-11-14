@@ -374,7 +374,7 @@ function Booking() {
               )}
 
               <div className={cx("room-price")}>
-                {room1.typeRoom && (
+                {/* {room1.typeRoom && (
                   <p>
                     Đơn giá theo giờ :
                     <span
@@ -388,10 +388,10 @@ function Booking() {
                       })}
                     </span>
                   </p>
-                )}
+                )} */}
                 {room1.typeRoom && (
                   <p>
-                    Đơn giá theo ngày :
+                    Đơn giá  :
                     <span
                       style={{
                         color: "red",
