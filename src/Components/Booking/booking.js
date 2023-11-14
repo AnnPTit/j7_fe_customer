@@ -45,6 +45,7 @@ function Booking() {
   const [vat, setVat] = useState();
   const [totalPriceRoom, setTotalPriceRoom] = useState();
   const today = new Date();
+  const [loading, setLoading] = useState(false);
   const [guestCounts, setGuestCounts] = useState({}); // Một đối tượng để lưu số lượng khách cho từng phòng
   const [isBook, setIsBook] = useState({
     message: null,
@@ -116,6 +117,7 @@ function Booking() {
         return;
       }
     }
+    setLoading(true);
     sendMessage(JSON.stringify(payload));
   };
 
@@ -261,6 +263,7 @@ function Booking() {
         // Sử dụng biến containsElements để kiểm tra và alert status.body
         setIsBook(message);
         toast.error(message.message);
+        setLoading(false);
       });
     });
   };
@@ -601,15 +604,24 @@ function Booking() {
                 Phòng đã được đặt
               </button>
             ) : (
-              <button
-                type="button"
-                className="btn btn-info"
-                onClick={() => {
-                  handleSubmit();
-                }}
-              >
-                Đặt phòng
-              </button>
+              <div>
+                {loading && (
+                  <div class="d-flex justify-content-center">
+                    <div class="spinner-border" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </div>
+                )}
+                <button
+                  type="button"
+                  className="btn btn-info"
+                  onClick={() => {
+                    handleSubmit();
+                  }}
+                >
+                  Đặt phòng
+                </button>
+              </div>
             )}
           </div>
         </div>
