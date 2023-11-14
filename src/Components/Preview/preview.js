@@ -205,12 +205,11 @@ function Preview() {
                 <div className={cx("room-heading")}>
                   <h2 className={cx("room-title")}>{roomItem.roomName}</h2>
                   <p>-</p>
-                  {roomItem.typeRoom && <p> {roomItem.typeRoom}</p>}
+                  {roomItem.typeRoom && <p className={cx("room-sub-title")}>{roomItem.typeRoom}</p>}
                 </div>
-                {roomItem.typeRoom && <p> Số Khách : {roomItem.capacity}</p>}
-
+              {roomItem.typeRoom && <p className={cx("item-capacity")}> Số Khách : <span>{roomItem.capacity} <i class="fa fa-user"></i></span></p> }
                 <div className={cx("room-price")}>
-                  Đơn giá theo giờ :
+                  {/* Đơn giá theo giờ :
                   {roomItem.typeRoom && (
                     <p>
                       {roomItem.pricePerHours.toLocaleString("vi-VN", {
@@ -218,8 +217,8 @@ function Preview() {
                         currency: "VND",
                       })}
                     </p>
-                  )}
-                  Đơn giá theo ngày :
+                  )} */}
+                  Đơn giá  :
                   {roomItem.typeRoom && (
                     <p>
                       {roomItem.pricePerDay.toLocaleString("vi-VN", {
@@ -232,7 +231,7 @@ function Preview() {
                 <br />
                 <p>{roomItem.note}</p>
               </div>
-              <button
+              <button className={cx("btn-delete")}
                 onClick={() => {
                   handleRemoveRoom(roomItem.id);
                 }}
@@ -240,7 +239,6 @@ function Preview() {
                 <i
                   className={cx("fa fa-trash")}
                   style={{
-                    color: "red",
                     fontSize: 30,
                     marginRight: 20,
                     padding: 20,
@@ -358,7 +356,7 @@ function Preview() {
                     label="Checkout"
                     showTodayButton
                   />
-                </MuiPickersUtilsProvider>
+               </MuiPickersUtilsProvider>
               </div>
               <button
                 className={cx("search-btn")}
@@ -376,22 +374,21 @@ function Preview() {
                 </div>
                 <div className={cx("room-body")}>
                   <div className={cx("room-heading")}>
-                    <h2 className={cx("room-title")}>{room1.roomName}</h2>
+                    <h2 className={cx("room-title-2")}>{room1.roomName}</h2>
                     <p>-</p>
                     {room1.typeRoom && <p> {room1.typeRoom}</p>}
                   </div>
                   {room1.typeRoom && <p> Số Khách : {room1.capacity}</p>}
-
                   <div className={cx("room-price")}>
-                    Đơn giá theo giờ :
+                    {/* Đơn giá theo giờ :
                     <p>
                       {" "}
                       {room1.pricePerHours.toLocaleString("vi-VN", {
                         style: "currency",
                         currency: "VND",
                       })}
-                    </p>
-                    Đơn giá theo ngày :
+                    </p> */}
+                    Đơn giá  :
                     <p>
                       {room1.pricePerDay.toLocaleString("vi-VN", {
                         style: "currency",

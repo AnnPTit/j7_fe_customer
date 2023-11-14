@@ -15,6 +15,8 @@
 //item
 .item-infor {
   margin: 0 30px;
+  padding: 0 50px 0 0;
+  font-weight: 500;
 }
 .img-item {
   width: 1000px;
@@ -31,4 +33,20 @@
 .item-name {
   border-bottom: 2px solid #000;
   padding-right: 200px;
+}
+.item-capacity{
+font-size: 20px;
+margin: 0 10px 0 10px;
+}
+.item-type-room{
+  font-weight: 500;
+  font-size: 25px;
+  background-color: rgb(140, 195, 216);
+  padding: 10px 20px;
+  border-radius: 20px;
+}
+.item-capacity-wrapper{
+ background-color: rgb(236, 136, 43);
+ padding: 5px 10px;
+ border-radius:  20px;
 }
