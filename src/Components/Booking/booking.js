@@ -276,18 +276,6 @@ function Booking() {
     setVat((price * tc) / 100);
   };
 
-  const formatDate = (dateStr) => {
-    const date = new Date(dateStr); // Chuyển đổi chuỗi ngày thành đối tượng Date
-
-    if (isNaN(date.getTime())) {
-      return ""; // Trả về giá trị mặc định hoặc thông báo lỗi nếu chuỗi không hợp lệ
-    }
-
-    const day = date.getDate().toString().padStart(2, "0");
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-  };
 
   useEffect(() => {
     const storedData = localStorage.getItem("idCustom");
@@ -377,21 +365,6 @@ function Booking() {
               )}
 
               <div className={cx("room-price")}>
-                {/* {room1.typeRoom && (
-                  <p>
-                    Đơn giá theo giờ :
-                    <span
-                      style={{
-                        color: "red",
-                      }}
-                    >
-                      {room1.typeRoom.pricePerHours.toLocaleString("vi-VN", {
-                        style: "currency",
-                        currency: "VND", // Loại tiền tệ Việt Nam (VND)
-                      })}
-                    </span>
-                  </p>
-                )} */}
                 {room1.typeRoom && (
                   <p>
                     Đơn giá  :
@@ -425,7 +398,7 @@ function Booking() {
                 placeholder="Số khách"
                 className={cx("numberCustom")}
               />
-              <Tippy
+              {/* <Tippy
                 content="Thêm dịch vụ"
                 interactive={true}
                 interactiveBorder={20}
@@ -442,7 +415,7 @@ function Booking() {
                   }}
                   onClick={() => handleOpenDialog(room1.id)}
                 ></i>
-              </Tippy>
+              </Tippy> */}
               <button
                 onClick={() => {
                   handleRemoveRoom(room1.id);

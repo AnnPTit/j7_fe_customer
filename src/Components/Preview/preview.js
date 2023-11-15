@@ -8,9 +8,8 @@ import Style from "./preview.module.scss";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import {  Slider, Typography } from "@mui/material";
-import DateFnsUtils from "@date-io/date-fns";
-import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { Slider, Typography } from "@mui/material";
+import DatePicker from "react-datepicker";
 import { ToastContainer, toast } from "react-toastify";
 
 const cx = classNames.bind(Style);
@@ -22,7 +21,7 @@ function Preview() {
   const [typeRoomChose, setTypeRoomChose] = useState("");
   const [data, setData] = useState([]);
   const [selectedDateStart, setSelectedDateStart] = useState(new Date());
-  const [selectedDateEnd, setselectedDateEnd] = useState(new Date());
+  const [selectedDateEnd, setSelectedDateEnd] = useState(new Date());
   const [typeRoom, setTypeRoom] = useState([]);
   const [click, setClick] = useState(false);
   const [roomName, setRoomName] = useState("");
@@ -60,7 +59,7 @@ function Preview() {
     const fetchData = async () => {
       try {
         let Api = `http://localhost:2003/api/home/room/search?current_page=${0}`;
-        // console.warn(Api);
+        console.warn(payload);
         const response = await axios.post(Api, payload); // Thay đổi URL API của bạn tại đây
         console.log(response.data.content);
         setData(response.data.content);
@@ -205,9 +204,19 @@ function Preview() {
                 <div className={cx("room-heading")}>
                   <h2 className={cx("room-title")}>{roomItem.roomName}</h2>
                   <p>-</p>
-                  {roomItem.typeRoom && <p className={cx("room-sub-title")}>{roomItem.typeRoom}</p>}
+                  {roomItem.typeRoom && (
+                    <p className={cx("room-sub-title")}>{roomItem.typeRoom}</p>
+                  )}
                 </div>
-              {roomItem.typeRoom && <p className={cx("item-capacity")}> Số Khách : <span>{roomItem.capacity} <i class="fa fa-user"></i></span></p> }
+                {roomItem.typeRoom && (
+                  <p className={cx("item-capacity")}>
+                    {" "}
+                    Số Khách :{" "}
+                    <span>
+                      {roomItem.capacity} <i class="fa fa-user"></i>
+                    </span>
+                  </p>
+                )}
                 <div className={cx("room-price")}>
                   {/* Đơn giá theo giờ :
                   {roomItem.typeRoom && (
@@ -218,7 +227,7 @@ function Preview() {
                       })}
                     </p>
                   )} */}
-                  Đơn giá  :
+                  Đơn giá :
                   {roomItem.typeRoom && (
                     <p>
                       {roomItem.pricePerDay.toLocaleString("vi-VN", {
@@ -231,7 +240,8 @@ function Preview() {
                 <br />
                 <p>{roomItem.note}</p>
               </div>
-              <button className={cx("btn-delete")}
+              <button
+                className={cx("btn-delete")}
                 onClick={() => {
                   handleRemoveRoom(roomItem.id);
                 }}
@@ -329,14 +339,16 @@ function Preview() {
                   min={0}
                   max={5000000}
                 />
-                <Typography>{`${formatCurrency(
-                  priceRange[0]
-                )} - ${formatCurrency(priceRange[1])}`}</Typography>
+                <Typography>
+                  {`${formatCurrency(priceRange[0])} - ${formatCurrency(
+                    priceRange[1]
+                  )}`}
+                </Typography>
               </div>
             </div>
             <div className={cx("search-date")}>
-              <div>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <div className={cx("date-picker")}>
+                {/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <DatePicker
                     style={{
                       marginRight: 40,
@@ -352,11 +364,35 @@ function Preview() {
                   <DatePicker
                     value={selectedDateEnd}
                     disablePast
-                    onChange={setselectedDateEnd}
+                    onChange={setSelectedDateEnd}
                     label="Checkout"
                     showTodayButton
                   />
-               </MuiPickersUtilsProvider>
+               </MuiPickersUtilsProvider> */}
+                <div
+                  className={cx("input-group-date")}
+                  style={{
+                    border: "1px solid #ccc",
+                  }}
+                >
+                  <DatePicker
+                    selected={selectedDateStart}
+                    onChange={setSelectedDateStart}
+                    dateFormat="dd/MM/yyyy"
+                  />
+                </div>
+                <div
+                 className={cx("input-group-date")}
+                  style={{
+                    border: "1px solid #ccc",
+                  }}
+                >
+                  <DatePicker
+                    selected={selectedDateEnd}
+                    onChange={setSelectedDateEnd}
+                    dateFormat="dd/MM/yyyy"
+                  />
+                </div>
               </div>
               <button
                 className={cx("search-btn")}
@@ -388,7 +424,7 @@ function Preview() {
                         currency: "VND",
                       })}
                     </p> */}
-                    Đơn giá  :
+                    Đơn giá :
                     <p>
                       {room1.pricePerDay.toLocaleString("vi-VN", {
                         style: "currency",

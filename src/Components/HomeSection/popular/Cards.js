@@ -86,16 +86,18 @@ const Cards = () => {
                     />
                   </Link>
                 </div>
-                <div className="rate">
+                {/* <div className="rate">
                   <i className="fa fa-star"></i>
                   <i className="fa fa-star"></i>
                   <i className="fa fa-star"></i>
                   <i className="far fa-star"></i>
                   <i className="far fa-star"></i>
-                </div>
+                </div> */}
+                <br></br>
                 <div className="details">
                   <h2>{value.roomName}</h2>
                   <i
+                  // <i class="fa-solid fa-people-roof"></i>
                     className="fas fa-map-marker-alt"
                     style={{
                       color: "red",
@@ -111,7 +113,6 @@ const Cards = () => {
                     {value.capacity}
                   </span>
                   <i className="fa fa-user"></i>
-                  <span> /Phòng</span>
                   <h3>
                     {value && (
                       <span
@@ -124,7 +125,6 @@ const Cards = () => {
                           style: "currency",
                           currency: "VND",
                         })}
-                        / <span>Một ngày</span>
                       </span>
                     )}
                   </h3>
