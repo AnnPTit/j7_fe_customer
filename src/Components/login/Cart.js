@@ -457,7 +457,21 @@ function Cart() {
                         }}
                         value={"Đã hủy"}
                         disabled={true}
-                      />
+                      /> ? (
+                        odStt === 6
+                      ) : (
+                        <input
+                          style={{
+                            backgroundColor: "red",
+                            borderRadius: 50,
+                            textAlign: "center",
+                            lineHeight: 0.2,
+                            color: "white",
+                          }}
+                          value={"Bị từ chối"}
+                          disabled={true}
+                        />
+                      )
                     ) : (
                       <input
                         style={{
@@ -467,8 +481,7 @@ function Cart() {
                           lineHeight: 0.2,
                           color: "white",
                         }}
-                        // placeholder="Hết hạn"
-                        value={"Hết hạn"}
+                        value={"Bị từ chối"}
                         disabled={true}
                       />
                     )}

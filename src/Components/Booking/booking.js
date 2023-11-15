@@ -43,9 +43,11 @@ function Booking() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [vat, setVat] = useState();
+  const [vatValue, setVatValue] = useState();
   const [totalPriceRoom, setTotalPriceRoom] = useState();
   const today = new Date();
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [guestCounts, setGuestCounts] = useState({}); // Một đối tượng để lưu số lượng khách cho từng phòng
   const [isBook, setIsBook] = useState({
     message: null,
@@ -121,28 +123,6 @@ function Booking() {
     sendMessage(JSON.stringify(payload));
   };
 
-  const roomIds = room.map((room) => [room.id]);
-  console.log(roomIds);
-  let isMatched = false;
-
-  if (isBook.ids && isBook.ids.length > 0) {
-    isBook.ids.forEach((isBookId) => {
-      roomIds.forEach((roomIdArray) => {
-        if (roomIdArray.includes(isBookId)) {
-          isMatched = true;
-        }
-      });
-    });
-  }
-
-  useEffect(() => {
-    if (isMatched) {
-      toast.info(isBook.message);
-    } else {
-      console.log("Không có phần tử trùng nhau giữa hai danh sách.");
-    }
-  });
-
   const handleGuestCountChange = (roomId, count, capacity) => {
     if (count < 0) {
       toast.error("Số khách lớn hơn 0 !");
@@ -162,16 +142,6 @@ function Booking() {
     connect();
   }, []);
 
-  // useEffect(() => {
-  //   const initialDate = new Date();
-  //   // const year = currentDate.getFullYear();
-  //   // const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
-  //   // const day = currentDate.getDate().toString().padStart(2, "0");
-  //   // const initialDate = `${day}-${month}-${year}`;
-  //   setDayStart(initialDate);
-  //   setDayEnd(initialDate);
-  // }, []);
-  //Hàm detail
   useEffect(() => {
     async function fetchData() {
       try {
@@ -196,9 +166,9 @@ function Booking() {
 
   useEffect(() => {
     setTotalPriceRoom(roomPrice);
-    setDeposit(roomPrice / 10);
-    setVat(roomPrice / 10);
-  }, [roomPrice]);
+    setDeposit(roomPrice / tc);
+    setVatValue(roomPrice / vat);
+  }, [roomPrice, tc, vat]);
   // Hàm Lấy Tiền cọc
   useEffect(() => {
     async function fetchData() {
@@ -206,13 +176,12 @@ function Booking() {
         const response = await axios.get(
           `http://localhost:2003/api/home/deposit/getByCode?code=TC`
         );
-        // const vat = await axios.get(
-        //   "http://localhost:2003/api/home/deposit/getByCode?code=VAT"
-        // );
-        // console.log("Room", response.data);
+        const vat = await axios.get(
+          "http://localhost:2003/api/home/deposit/getByCode?code=VAT"
+        );
+        console.log("Room", response.data);
         setTc(response.data.pileValue);
-        // setVat(vat.data.pileValue);
-
+        setVat(vat.data.pileValue);
         console.log("Tiền cọc", response.data);
       } catch (error) {
         console.log(error);
@@ -262,20 +231,46 @@ function Booking() {
         const message = JSON.parse(status);
         // Sử dụng biến containsElements để kiểm tra và alert status.body
         setIsBook(message);
-        toast.error(message.message);
+        if (message.message.includes("Đặt phòng thành công")) {
+          setSuccess(true);
+        }
+        // if (checkMatchingIds()) {
+        //   toast.error(message.message);
+        // }
         setLoading(false);
       });
     });
   };
+  function checkMatchingIds() {
+    let isMatched = false;
+    const roomIds = room.map((room) => room.id);
+    if (isBook.ids && isBook.ids.length > 0) {
+      isBook.ids.forEach((isBookId) => {
+        if (roomIds.includes(isBookId)) {
+          isMatched = true;
+        }
+      });
+    }
+    console.log("11111111111", room);
+    console.log(isBook);
+    return isMatched;
+  }
+
+  useEffect(() => {
+    if (checkMatchingIds()) {
+      toast.info(isBook.message);
+    } else {
+      console.log("Không có phần tử trùng nhau giữa hai danh sách.");
+    }
+  }, [isBook.message]);
 
   const subPriceRoom = (day, roomPrice) => {
     console.log(roomPrice);
     let price = day * roomPrice;
     setTotalPriceRoom(price);
     setDeposit((price * tc) / 100);
-    setVat((price * tc) / 100);
+    setVatValue((price * tc) / 100);
   };
-
 
   useEffect(() => {
     const storedData = localStorage.getItem("idCustom");
@@ -367,7 +362,7 @@ function Booking() {
               <div className={cx("room-price")}>
                 {room1.typeRoom && (
                   <p>
-                    Đơn giá  :
+                    Đơn giá :
                     <span
                       style={{
                         color: "red",
@@ -560,7 +555,7 @@ function Booking() {
               type="text"
               className="form-control"
               disabled
-              defaultValue={vat ? formatPrice(vat) : null}
+              defaultValue={vatValue ? formatPrice(vatValue) : null}
             />
             <br />
             <p>Ghi chú </p>
@@ -572,7 +567,7 @@ function Booking() {
             />
             <br />
 
-            {isMatched && isBook.status === 1 ? (
+            {checkMatchingIds() && isBook.status === 1 && success ? (
               <button type="button" className="btn btn-success">
                 Phòng đã được đặt
               </button>
