@@ -144,6 +144,12 @@ function Booking() {
   });
 
   const handleGuestCountChange = (roomId, count, capacity) => {
+    console.log(capacity);
+    console.log(count)
+    setGuestCounts((prevCounts) => ({
+      ...prevCounts,
+      [roomId]: count,
+    }));
     if (count < 0) {
       toast.error("Số khách lớn hơn 0 !");
       return;
@@ -152,10 +158,7 @@ function Booking() {
       toast.error("Số khách vượt quá sức chứa !");
       return;
     }
-    setGuestCounts((prevCounts) => ({
-      ...prevCounts,
-      [roomId]: count,
-    }));
+
   };
 
   useEffect(() => {
