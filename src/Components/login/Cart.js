@@ -4,7 +4,7 @@ import Tippy from "@tippyjs/react";
 import classNames from "classnames/bind";
 import style from "./Cart.module.scss";
 import { ToastContainer, toast } from "react-toastify";
-import { Button } from "bootstrap";
+import Swal from "sweetalert2";
 
 function Cart() {
   //lấy id custom đăng nhập từ local
@@ -285,7 +285,26 @@ function Cart() {
                       borderRadius: 10,
                     }}
                     className="btn btn-primary"
-                    onClick={() => cancelOrder(arr.data[0].orderCode)}
+                    // onClick={() => cancelOrder(arr.data[0].orderCode)}
+                    onClick={() => {
+                      Swal.fire({
+                        title: "Bạn có chắc chắn muốn hủy ? ",
+                        text: "",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Yes, Add it!",
+                      }).then(async (result) => {
+                        if (result.isConfirmed) {
+                          const isSubmitSuccess = await cancelOrder(arr.data[0].orderCode);
+                          if (isSubmitSuccess) {
+                            Swal.fire("Thêm thành công !", "success");
+                            toast.success("Thêm Thành Công !");
+                          }
+                        }
+                      });
+                    }}
                   >
                     Hủy Đặt Phòng
                   </button>
