@@ -5,6 +5,7 @@ import GalleryData from "./GalleryData";
 import HeadTitle from "../../Common/HeadTitle/HeadTitle";
 
 const Gallery = () => {
+  
   return (
     <>
       <HeadTitle />
