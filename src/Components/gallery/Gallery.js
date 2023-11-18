@@ -7,6 +7,7 @@ import "./Gallery.css";
 import Cards from "./Cards";
 import MyPagination from "./index"; // Import component MyPagination
 
+
 const cx = classNames.bind(styled);
 
 function Gallery() {
