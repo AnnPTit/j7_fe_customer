@@ -85,7 +85,7 @@ const Home = ({ slides }) => {
 
       <section className="slide-form">
         <div className="container">
-          <h2>ARMANI Hotel - Nơi an nghỉ lí tưởng của bạn</h2>
+          <h2>ARMANI Hotel - Thanh lịch Hoàn Hảo, Khám Phá Phong Cách Armani.</h2>
           <span> Tìm kiếm phòng </span>
 
           <form>

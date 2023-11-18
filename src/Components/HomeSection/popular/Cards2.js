@@ -8,7 +8,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import MyPagination from "../MyPagination/MyPagination";
 const cx = classNames.bind(style);
-const Cards = () => {
+const Cards2 = () => {
   const [pageNumber, setPageNumber] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [data, setData] = useState([]);
@@ -42,10 +42,11 @@ const Cards = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let Api = `http://localhost:2003/api/home/room/search?current_page=${pageNumber}&total_page=5`;
+        let Api = `http://localhost:2003/api/home/room/top?total_page=5&current_page=${pageNumber}`;
         // console.warn(Api);
-        const response = await axios.post(Api, payload); // Thay đổi URL API của bạn tại đây
-        console.log(response.data);
+        const response = await axios.get(Api); // Thay đổi URL API của bạn tại đây
+    
+        console.log("Toprooom",response.data)
         setTotalPages(response.data.totalPages);
         setData(response.data.content);
       } catch (error) {
@@ -64,7 +65,7 @@ const Cards = () => {
     };
 
     fetchData();
-  }, [pageNumber, click]);
+  }, [pageNumber]);
 
   return (
     <>
@@ -125,6 +126,18 @@ const Cards = () => {
                       </span>
                     )}
                   </h3>
+                  Số lượt đặt:  <t/>
+                  {value && (
+                      <span
+                        style={{
+                          color: "red",
+                          fontWeight: 700,
+                        }}
+                      >
+                        {value.countBook}
+                      </span>
+                    )}
+                  
                 </div>
               </div>
             </div>
@@ -142,4 +155,4 @@ const Cards = () => {
   );
 };
 
-export default Cards;
+export default Cards2;

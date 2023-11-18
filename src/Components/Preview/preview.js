@@ -48,6 +48,7 @@ function Preview() {
   };
 
   const payload = {
+    roomName: roomName,
     typeRoom: typeRoomChose,
     numberCustom: numberCustom,
     pricePerDays: [price1, price2],
@@ -382,7 +383,7 @@ function Preview() {
                   />
                 </div>
                 <div
-                 className={cx("input-group-date")}
+                  className={cx("input-group-date")}
                   style={{
                     border: "1px solid #ccc",
                   }}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Tippy from "@tippyjs/react";
+// import Tippy from "@tippyjs/react";
 import classNames from "classnames/bind";
 import style from "./Cart.module.scss";
 import { ToastContainer, toast } from "react-toastify";
@@ -339,7 +339,7 @@ function Cart() {
                         </span>
                       </p>
                     )}
-
+<br/>
                     <div className={cx("room-price")}>
                       {room1.typeRoom && (
                         <p>
@@ -394,7 +394,10 @@ function Cart() {
                       )}
                     </div>
                     <br />
-                    <p>{room1.note}</p>
+                    {room1.refuseReason &&(
+                      <p>Lí do từ chối : {room1.refuseReason}</p>
+                    )
+                    }
                   </div>
 
                   <div className={cx("service-item")}>
@@ -500,7 +503,7 @@ function Cart() {
                           lineHeight: 0.2,
                           color: "white",
                         }}
-                        value={"Bị từ chối"}
+                        value={"Hết hạn"}
                         disabled={true}
                       />
                     )}

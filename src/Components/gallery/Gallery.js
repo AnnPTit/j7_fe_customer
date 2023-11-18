@@ -37,6 +37,11 @@ function Gallery() {
     setPageNumber(newPageNumber);
   };
 
+<<<<<<< HEAD
+=======
+const Gallery = () => {
+  
+>>>>>>> 95f59d63bc527bf810688ba24c2597e9e49644e4
   return (
     <section className="gallery top">
       <div className="container grid">
