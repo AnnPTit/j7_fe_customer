@@ -37,30 +37,26 @@ function Gallery() {
     setPageNumber(newPageNumber);
   };
 
-<<<<<<< HEAD
-=======
-const Gallery = () => {
-  
->>>>>>> 95f59d63bc527bf810688ba24c2597e9e49644e4
-  return (
-    <section className="gallery top">
-      <div className="container grid">
-        {rooms.map((value) => (
-          <Cards
-            key={value.index}
-            imgaes={value.photoList[0].url}
-            title={value.roomName}
-            price={value.typeRoom.pricePerDay}
-          />
-        ))}
-      </div>
-      <MyPagination
-        pageNumber={pageNumber}
-        totalPages={totalPages}
-        setPageNumber={handlePageChange}
-      />
-    </section>
-  );
+  const Gallery = () => {
+    return (
+      <section className="gallery top">
+        <div className="container grid">
+          {rooms.map((value) => (
+            <Cards
+              key={value.index}
+              imgaes={value.photoList[0].url}
+              title={value.roomName}
+              price={value.typeRoom.pricePerDay}
+            />
+          ))}
+        </div>
+        <MyPagination
+          pageNumber={pageNumber}
+          totalPages={totalPages}
+          setPageNumber={handlePageChange}
+        />
+      </section>
+    );
+  };
 }
-
 export default Gallery;
