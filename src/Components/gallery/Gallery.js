@@ -1,4 +1,3 @@
-// Gallery.js
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import classNames from "classnames/bind";
