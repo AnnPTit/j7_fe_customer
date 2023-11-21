@@ -1,10 +1,24 @@
+// Cards.js
 import React, { useState } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-const Cards = (props) => {
+const Cards = ({ room }) => {
   const [popup, setPopup] = useState(false);
 
   const toggleModal = () => {
     setPopup(!popup);
+  };
+
+  const closeModal = () => {
+    setPopup(false);
+  };
+
+  const formatCurrency = (amount) => {
+    const formatter = new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
+    return formatter.format(amount);
   };
 
   return (
@@ -12,7 +26,7 @@ const Cards = (props) => {
       <div className="items">
         <div className="img">
           <img
-            src={props.imgaes}
+            src={room.photoList[0].url}
             alt="Gallery Image"
             onClick={toggleModal}
             style={{ cursor: "pointer" }}
@@ -20,21 +34,49 @@ const Cards = (props) => {
           <i className="fas fa-image" onClick={toggleModal}></i>
         </div>
         <div className="title">
-          <h3>{props.title}</h3>
-          <p>Price: ${props.price}</p>
+          <h3>{room.roomName}</h3>
+          <p>Giá thành: {formatCurrency(room.typeRoom.pricePerDay)}</p>
         </div>
       </div>
 
       {popup && (
         <div className="popup">
-          <div className="hide" onClick={toggleModal}></div>
+          <div className="hide" onClick={closeModal}></div>
           <div className="popup-content">
-            <button onClick={toggleModal}>Close</button>
             <img
-              src={props.imgaes}
+              src={room.photoList[0].url}
               alt="Gallery Image"
-              style={{ maxWidth: "100%", maxHeight: "80vh", margin: "auto", display: "block" }}
+              style={{ width: "500px", height: "300px" }}
             />
+            <div className="detail">
+              <div className="item-text-item">
+                <h1>{room.roomName}</h1>
+              </div>
+              <hr />
+              <div className="item-text-item">
+                <span>{room.note}</span>
+              </div>
+              <div className="item-text-item">
+                <span>
+                  {room.typeRoom.typeRoomName}-{room.floor.floorName}{" "}
+                </span>
+              </div>
+              <div className="item-text-item">
+                <span>Sức chứa: {room.typeRoom.capacity} Người</span>
+              </div>
+              <div className="item-text-item">
+                <span>
+                  Giá thành: {formatCurrency(room.typeRoom.pricePerDay)}
+                </span>
+              </div>
+              <hr />
+              <div className="item-text-item">
+                <span>
+                  Mô tả : <br />
+                </span>{" "}
+                <span>{room.typeRoom.note}</span>
+              </div>
+            </div>
           </div>
         </div>
       )}
