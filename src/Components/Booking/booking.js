@@ -112,20 +112,22 @@ function Booking() {
       totalPriceRoom,
       note,
     };
+    setLoading(true);
     console.log(payload);
     for (let index = 0; index < payload.rooms.length; index++) {
       if (payload.rooms[index].guestCount === 0) {
         toast.error("Số khách không được để trống!");
+        setLoading(false);
         return;
       }
     }
-    setLoading(true);
+
     sendMessage(JSON.stringify(payload));
   };
 
   const handleGuestCountChange = (roomId, count, capacity) => {
     console.log(capacity);
-    console.log(count)
+    console.log(count);
     setGuestCounts((prevCounts) => ({
       ...prevCounts,
       [roomId]: count,
@@ -138,7 +140,6 @@ function Booking() {
       toast.error("Số khách vượt quá sức chứa !");
       return;
     }
-
   };
 
   useEffect(() => {

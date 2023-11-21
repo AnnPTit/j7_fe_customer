@@ -104,6 +104,7 @@ function Cart() {
 
   const cancelOrder = async (code) => {
     try {
+      
       const response = await axios.post(
         `http://localhost:2003/api/home/order/cancel/${code}/0`
       );
