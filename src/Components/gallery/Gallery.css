@@ -102,6 +102,11 @@
   right: -34.5%;
   font-weight: bold;
 }
+.detail{
+  float: right;
+  padding-left: 10px;
+  color: white;
+}
 @media screen and (max-width: 768px) {
   .gallery .container {
     max-width: 100%;
@@ -130,4 +135,5 @@
     right: 6.5%;
     font-weight: bold;
   }
+  
 }

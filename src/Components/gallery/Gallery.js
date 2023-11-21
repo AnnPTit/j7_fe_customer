@@ -1,3 +1,4 @@
+// Gallery.js
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import classNames from "classnames/bind";
@@ -5,8 +6,7 @@ import styled from "@emotion/styled";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Gallery.css";
 import Cards from "./Cards";
-import MyPagination from "./index"; // Import component MyPagination
-
+import MyPagination from "./index";
 
 const cx = classNames.bind(styled);
 
@@ -19,7 +19,7 @@ function Gallery() {
     async function fetchData() {
       try {
         const response = await axios.get(
-          `http://localhost:2003/api/home/room/loadByBook?current_page=${pageNumber}`
+          `http://localhost:2003/api/home/room/load?current_page=${pageNumber}`
         );
         console.log(response.data);
         if (response.data) {
@@ -41,13 +41,8 @@ function Gallery() {
   return (
     <section className="gallery top">
       <div className="container grid">
-        {rooms.map((value) => (
-          <Cards
-            key={value.index}
-            imgaes={value.photoList[0].url}
-            title={value.roomName}
-            price={value.typeRoom.pricePerDay}
-          />
+        {rooms.map((room) => (
+          <Cards key={room.index} room={room} />
         ))}
       </div>
       <MyPagination
