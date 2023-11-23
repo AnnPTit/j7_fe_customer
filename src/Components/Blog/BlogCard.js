@@ -1,30 +1,45 @@
-import React from "react"
-import { Link } from "react-router-dom"
+import React from "react";
+import { Link } from "react-router-dom";
 
-const BlogCard = ({ item: { id, cover, title, desc, para, catgeory, date } }) => {
+const BlogCard = ({
+  item: {
+    id,
+    title,
+    photoDTOS,
+    content,
+    countLike,
+    countView,
+    createAt,
+    createBy,
+  },
+}) => {
   return (
     <>
-      <div className='items'>
-        <div className='img'>
-          <img src={cover} alt='Gallery Image' />
+      <div className="items">
+        <div className="img">
+          {photoDTOS.map((photo, index) => (
+            <img key={index} src={photo} alt={`Photo ${index + 1}`} />
+          ))}
+          {/* <img src={photoDTOS.[0]} alt='Gallery Image' /> */}
         </div>
 
-        <div className='category flex_space'>
-          <span>{date}</span>
-          <label>{catgeory}</label>
+        <div className="category flex_space">
+          <span>{createAt}</span>
+          <label>{createBy}</label>
         </div>
 
-        <div className='details'>
+        <div className="details">
           <h3>{title}</h3>
-          <p>{para}</p>
+          <p>{countLike}</p>
+          <p>{countView}</p>
         </div>
 
-        <Link to={`/blogsingle/${id}`} className='blogItem-link'>
-          READ MORE <i className='fa fa-long-arrow-right'></i>
+        <Link to={`/blogsingle/${id}`} className="blogItem-link">
+          READ MORE <i className="fa fa-long-arrow-right"></i>
         </Link>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default BlogCard
+export default BlogCard;
