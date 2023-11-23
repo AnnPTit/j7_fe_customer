@@ -136,10 +136,6 @@ function Booking() {
       toast.error("Số khách lớn hơn 0 !");
       return;
     }
-    if (count > capacity) {
-      toast.error("Số khách vượt quá sức chứa !");
-      return;
-    }
   };
 
   useEffect(() => {
@@ -168,11 +164,11 @@ function Booking() {
     fetchData();
   }, [id]);
 
-  useEffect(() => {
-    setTotalPriceRoom(roomPrice);
-    setDeposit(roomPrice / tc);
-    setVatValue(roomPrice / vat);
-  }, [roomPrice, tc, vat]);
+  // useEffect(() => {
+  //   setTotalPriceRoom(roomPrice);
+  //   setDeposit(roomPrice / tc);
+  //   setVatValue(roomPrice / vat);
+  // }, [roomPrice, tc, vat]);
   // Hàm Lấy Tiền cọc
   useEffect(() => {
     async function fetchData() {
@@ -217,6 +213,11 @@ function Booking() {
 
           if (updatedRoom) {
             Swal.fire("Xóa thành công !", "success");
+            const endDate = new Date(dayEnd);
+            const startDate = new Date(dayStart);
+            const timeDiff = endDate.getTime() - startDate.getTime();
+            const numberOfDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+            subPriceRoom(numberOfDays, roomPrice);
             toast.success("Xóa Thành Công !");
           }
         }
@@ -237,6 +238,7 @@ function Booking() {
         setIsBook(message);
         if (message.message.includes("Đặt phòng thành công")) {
           setSuccess(true);
+          toast.success("Phòng đã có lượt đặt vui lòng làm mới lại trang !");
         }
         // if (checkMatchingIds()) {
         //   toast.error(message.message);
@@ -255,8 +257,6 @@ function Booking() {
         }
       });
     }
-    console.log("11111111111", room);
-    console.log(isBook);
     return isMatched;
   }
 
@@ -309,7 +309,7 @@ function Booking() {
     const endDate = new Date(dayEnd);
     const timeDiff = endDate.getTime() - startDate.getTime();
     const numberOfDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-    subPriceRoom(numberOfDays + 1, roomPrice);
+    subPriceRoom(numberOfDays, roomPrice);
   };
   const handleDateChange2 = (date) => {
     const startDate = new Date(dayStart);
@@ -321,7 +321,7 @@ function Booking() {
       return;
     }
     setDayEnd(date);
-    subPriceRoom(numberOfDays + 1, roomPrice);
+    subPriceRoom(numberOfDays, roomPrice);
   };
 
   return (
@@ -415,7 +415,7 @@ function Booking() {
                   onClick={() => handleOpenDialog(room1.id)}
                 ></i>
               </Tippy> */}
-              <button
+              {/* <button
                 onClick={() => {
                   handleRemoveRoom(room1.id);
                 }}
@@ -430,7 +430,7 @@ function Booking() {
                     cursor: "pointer",
                   }}
                 ></i>
-              </button>
+              </button> */}
             </div>
             <div
               style={{
