@@ -12,7 +12,7 @@ footer h2 {
   letter-spacing: 2px;
 }
 footer p {
-  font-size: 13px;
+  font-size: 15px;
   opacity: 0.6;
   font-weight: 300;
   letter-spacing: 1px;
@@ -23,7 +23,8 @@ footer .icon i {
 footer ul li a {
   opacity: 0.7;
   color: white;
-  font-size: 13px;
+  font-size: 15px;
+  text-decoration: none;
 }
 footer ul li {
   margin-bottom: 10px;
@@ -39,7 +40,7 @@ footer .post label,
 footer .post span {
   opacity: 0.5;
   margin-right: 10px;
-  font-size: 13px;
+  font-size: 15px;
   margin-bottom: 20px;
 }
 footer input {
