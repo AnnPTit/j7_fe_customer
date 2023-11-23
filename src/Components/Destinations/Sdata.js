@@ -3,6 +3,7 @@ const Sdata = [
     id: 1,
     title: "HA NOI",
     image: "/images/dest-1.jpg",
+    des2: "Hà Nội l, như: Hoàng thành Thăng Long, Văn Miếu - Quốc Tử Giám, Chùa Một Cột,... Những di tích này là minh chứng cho bề dày lịch sử và văn hóa của dân tộc Việt Nam.",
     desc: "Hà Nội là thủ đô của Việt Nam, một thành phố cổ kính và hiện đại, mang đậm dấu ấn lịch sử và văn hóa của dân tộc. Nơi đây là điểm đến hấp dẫn đối với du khách trong và ngoài nước. Hà Nội có bề dày lịch sử lâu đời, với hơn 1000 năm tuổi. Thành phố có nhiều di tích lịch sử - văn hóa nổi tiếng, như: Hoàng thành Thăng Long, Văn Miếu - Quốc Tử Giám, Chùa Một Cột,... Những di tích này là minh chứng cho bề dày lịch sử và văn hóa của dân tộc Việt Nam.",
     sidepara:
       "Hà Nội là một thành phố xinh đẹp, với nhiều cảnh quan thiên nhiên tươi đẹp. Nơi đây có Hồ Hoàn Kiếm, hồ Tây,... những hồ nước thơ mộng, hữu tình. Thành phố cũng có nhiều công viên xanh mát, như: Công viên Thống Nhất, Công viên Thủ Lệ,...",
