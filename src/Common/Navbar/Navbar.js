@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Navbar.css";
 import { Link } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 import Tippy from "@tippyjs/react";
 
 const Navbar = () => {
@@ -97,6 +98,11 @@ const Navbar = () => {
             <li>
               <Link to="/register">
                 <i className="far fa-chevron-right"></i>Register
+              </Link>
+            </li>
+            <li>
+              <Link to="/change">
+                <i className="far fa-chevron-right"></i>Change your password
               </Link>
             </li>
             <li>

@@ -105,29 +105,11 @@ const Login = () => {
                 Sign In
               </button>
               <p>
-                Don't have account? <Link to="/register">Signup!</Link>
+                Don't have account? <Link to="/Register">Signup!</Link>
               </p>
             </form>
           </div>
         </div>
-      </section>
-
-      <section className="show-data">
-        {recValue.map((cureentValue) => {
-          return (
-            <>
-              <div className="sign-box">
-                <h1>Sign-In Successfully</h1>
-                <h3>
-                  Email : <p>{cureentValue.email}</p>
-                </h3>
-                <h3>
-                  Password : <p>{cureentValue.password}</p>
-                </h3>
-              </div>
-            </>
-          );
-        })}
       </section>
     </>
   );
