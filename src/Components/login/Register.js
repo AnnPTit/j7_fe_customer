@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import HeadTitle from "../../Common/HeadTitle/HeadTitle";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 import "./design.css";
 
 const Register = () => {
@@ -15,7 +16,11 @@ const Register = () => {
     e.preventDefault();
 
     // Kiểm tra mật khẩu và xác nhận mật khẩu
+
     if (cpassword !== password) {
+      toast.error("Mật khẩu không trùng khớp!", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
       console.error("Mật khẩu không trùng khớp!");
       // Xử lý khi mật khẩu và xác nhận mật khẩu không khớp, có thể hiển thị thông báo cho người dùng
       return;
@@ -29,6 +34,7 @@ const Register = () => {
         email: email,
         password: password,
       };
+      console.log("Payload: " + newValue);
 
       // Gọi API để lưu thông tin người dùng mới
       const response = await axios.post(
@@ -58,6 +64,7 @@ const Register = () => {
     <>
       <HeadTitle />
       <section className="forms top">
+        <ToastContainer />
         <div className="container">
           <div className="sign-box">
             <p>
@@ -104,26 +111,6 @@ const Register = () => {
             </form>
           </div>
         </div>
-      </section>
-
-      <section className="show-data">
-        {recValue.map((currentValue, index) => (
-          <div className="sign-box" key={index}>
-            <h1>Create an Account Successfully</h1>
-            <h3>
-              Name : <p>{currentValue.name}</p>
-            </h3>
-            <h3>
-              Email : <p>{currentValue.email}</p>
-            </h3>
-            <h3>
-              Password : <p>{currentValue.password}</p>
-            </h3>
-            <h3>
-              Confirm Password : <p>{currentValue.cpassword}</p>
-            </h3>
-          </div>
-        ))}
       </section>
     </>
   );
