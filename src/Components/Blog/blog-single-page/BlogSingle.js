@@ -4,17 +4,35 @@ import BlogData from "../BlogData";
 import EmptyFile from "../../../Common/Empty/EmptyFile";
 import HeadTitle from "../../../Common/HeadTitle/HeadTitle";
 import { useParams } from "react-router-dom";
+import axios from "axios";
 
 const BlogSingle = () => {
   const { id } = useParams();
   const [item, setItem] = useState(null);
 
+  const [items, setIems] = useState([]);
+  const fetchDataFromAPI = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:2003/api/home/load/blog"
+      );
+      const data = response.data.content;
+      console.log(response);
+      setIems(data);
+    } catch (error) {
+      console.error("Error fetching data from API:", error);
+    }
+  };
   useEffect(() => {
-    let item = BlogData.find((item) => item.id === parseInt(id));
+    fetchDataFromAPI(); // Gọi hàm để truy vấn dữ liệu từ API và cập nhật state
+  }, []);
+
+  useEffect(() => {
+    let item = items.find((item) => item.id === id);
     if (item) {
       setItem(item);
     }
-  }, [id]);
+  }, [id, items]);
   return (
     <>
       <HeadTitle />
@@ -30,22 +48,22 @@ const BlogSingle = () => {
 
             <article className="content flex_space">
               <div className="main-content">
-                <img src={item.cover} alt="" />
+                <img src={item.photoDTOS[0]} alt="" />
 
                 <div className="category flex_space">
-                  <span>{item.date}</span>
-                  <label>{item.catgeory}</label>
+                  <span>{item.createAt}</span>
+                  <label>{item.createBy}</label>
                 </div>
 
                 <h1> {item.title} </h1>
-                <p>{item.desc}</p>
-                <p>{item.desc}</p>
+                <p>{item.content}</p>
+                <p>{item.content}</p>
 
                 <h2>Two Column Text Sample</h2>
 
                 <div className="para flex_space">
-                  <p>{item.para}</p>
-                  <p>{item.para}</p>
+                  <p>{item.countLike}</p>
+                  <p>{item.countView}</p>
                 </div>
               </div>
               {/* --------- main-content--------- */}
