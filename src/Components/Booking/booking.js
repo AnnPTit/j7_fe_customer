@@ -8,13 +8,14 @@ import style from "./booking.module.scss";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
-import Tippy from "@tippyjs/react";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import BasicTabs from "../Tab/CustomTabPanel";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+// import DatePicker from "react-datepicker";
+// import "react-datepicker/dist/react-datepicker.css";
+import { DatePicker, Flex } from "antd";
+// import 'antd/lib/date-picker/style/css';  // Import DatePicker styles
 
 var stompClient = null;
 const disconnect = () => {
@@ -27,6 +28,8 @@ const disconnect = () => {
 const sendMessage = (message) => {
   stompClient.send("/app/products", {}, message);
 };
+
+const { RangePicker } = DatePicker;
 
 const cx = classNames.bind(style);
 function Booking() {
@@ -54,6 +57,7 @@ function Booking() {
     status: null,
     ids: [],
   });
+  const [disabledDates, setDisabledDates] = useState([]);
   let ids;
   let url = id;
   function isValidEmail(email) {
@@ -72,6 +76,37 @@ function Booking() {
   const handleCloseDialog = () => {
     setOpen(false);
   };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Split the id string into an array using '&'
+        const idArray = id.split("&");
+
+        // Create payload array
+        const payload = idArray.map((itemId) => ({
+          id: itemId,
+        }));
+
+        const response = await axios.post(
+          `http://localhost:2003/api/home/date-booked`,
+          payload
+        );
+
+        console.log(response.data);
+        setDisabledDates(response.data);
+        console.log(id);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [id]);
+
+  function disabledDate(current) {
+    const formattedDate = current.format("YYYY-MM-DD");
+    return disabledDates.includes(formattedDate);
+  }
   // Tạo payload
   const roomData = room.map((room) => ({
     id: room.id,
@@ -212,13 +247,13 @@ function Booking() {
           setRoom(updatedRoom);
 
           if (updatedRoom) {
-            Swal.fire("Xóa thành công !", "success");
-            const endDate = new Date(dayEnd);
-            const startDate = new Date(dayStart);
-            const timeDiff = endDate.getTime() - startDate.getTime();
-            const numberOfDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-            subPriceRoom(numberOfDays, roomPrice);
-            toast.success("Xóa Thành Công !");
+            // Swal.fire("Xóa thành công !", "success");
+            // const endDate = new Date(dayEnd);
+            // const startDate = new Date(dayStart);
+            // const timeDiff = endDate.getTime() - startDate.getTime();
+            // const numberOfDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+            // subPriceRoom(numberOfDays, roomPrice);
+            // toast.success("Xóa Thành Công !");
           }
         }
       });
@@ -298,10 +333,12 @@ function Booking() {
     console.log("today2", date);
     if (date < today) {
       alert("Ngày đặt không thể nhỏ hơn ngày hôm nay.");
+      setDayStart(null);
       return;
     }
     if (date > dayEnd) {
       alert("Ngày đặt không thể lớn hơn ngày trả.");
+      setDayStart(null);
       return;
     }
     setDayStart(date);
@@ -311,13 +348,15 @@ function Booking() {
     const numberOfDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
     subPriceRoom(numberOfDays, roomPrice);
   };
+
   const handleDateChange2 = (date) => {
     const startDate = new Date(dayStart);
-    const endDate = date;
+    const endDate = new Date(date); // Convert the date string to a Date object
     const timeDiff = endDate.getTime() - startDate.getTime();
     const numberOfDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
     if (numberOfDays < 0) {
       alert("Vui lòng chọn lại ngày ");
+      setDayEnd(null);
       return;
     }
     setDayEnd(date);
@@ -397,40 +436,6 @@ function Booking() {
                 placeholder="Số khách"
                 className={cx("numberCustom")}
               />
-              {/* <Tippy
-                content="Thêm dịch vụ"
-                interactive={true}
-                interactiveBorder={20}
-                delay={100}
-              >
-                <i
-                  class="fa fa-bars"
-                  style={{
-                    color: "black",
-                    fontSize: 30,
-                    marginRight: 20,
-                    padding: 20,
-                    cursor: "pointer",
-                  }}
-                  onClick={() => handleOpenDialog(room1.id)}
-                ></i>
-              </Tippy> */}
-              {/* <button
-                onClick={() => {
-                  handleRemoveRoom(room1.id);
-                }}
-              >
-                <i
-                  className={cx("fa fa-trash")}
-                  style={{
-                    color: "red",
-                    fontSize: 30,
-                    marginRight: 20,
-                    padding: 20,
-                    cursor: "pointer",
-                  }}
-                ></i>
-              </button> */}
             </div>
             <div
               style={{
@@ -496,40 +501,33 @@ function Booking() {
             <h2>Thông tin đơn hàng </h2>
             <p>Ngày Đặt</p>
             <div
-              className="input-group mb-3"
               style={{
-                border: "1px solid #ccc",
+                display: "flex",
+                marginBottom: 20,
               }}
             >
-              {/* <input
-                type="date"
-                className="form-control"
-                value={formatDate(dayStart)}
-                onChange={(e) => handleChoseDay(e)}
-              /> */}
-              <DatePicker
-                selected={dayStart}
-                onChange={handleDateChange}
-                dateFormat="dd/MM/yyyy"
-              />
-            </div>
-            <div
-              className="input-group mb-3"
-              style={{
-                border: "1px solid #ccc",
-              }}
-            >
-              {/* <input
-                type="date"
-                value={dayEnd}
-                className="form-control"
-                onChange={(e) => handleSubPrice(e)}
-              /> */}
-              <DatePicker
-                selected={dayEnd}
-                onChange={handleDateChange2}
-                dateFormat="dd/MM/yyyy"
-              />
+              <div
+                style={{
+                  marginRight: 40,
+                }}
+              >
+                <DatePicker
+                  selected={dayStart}
+                  onChange={handleDateChange}
+                  // dateFormat="dd/MM/yyyy"
+                  disabledDate={disabledDate}
+                  placeholder="Chọn ngày"
+                />
+              </div>
+              <div>
+                <DatePicker
+                  selected={dayEnd}
+                  onChange={handleDateChange2}
+                  // dateFormat="dd/MM/yyyy"
+                  disabledDate={disabledDate}
+                  placeholder="Chọn ngày"
+                />
+              </div>
             </div>
             <p>Nhận phòng từ : 12:00 CH</p>
             <p>Trả phòng trước : 2:00 CH</p>
