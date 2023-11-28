@@ -266,18 +266,23 @@ function Booking() {
     stompClient.connect({}, () => {
       stompClient.subscribe("/topic/product", (data) => {
         const status = data.body; // Lấy nội dung từ tin nhắn
-        console.log(status);
-        console.log(status.message);
+        console.log("11111111111111", status);
         const message = JSON.parse(status);
         // Sử dụng biến containsElements để kiểm tra và alert status.body
         setIsBook(message);
         if (message.message.includes("Đặt phòng thành công")) {
           setSuccess(true);
-          toast.success("Phòng đã có lượt đặt vui lòng làm mới lại trang !");
+          var dateMatches = message.message.match(/\[(.*?)\]/);
+          if (dateMatches) {
+            var date_string = dateMatches[1];
+            var date_array = date_string.split(", ");
+            console.log(date_array);
+            setDisabledDates(date_array);
+          } else {
+            console.log("Không tìm thấy ngày trong chuỗi.");
+          }
+          // toast.success("Phòng đã có lượt đặt vui lòng làm mới lại trang !");
         }
-        // if (checkMatchingIds()) {
-        //   toast.error(message.message);
-        // }
         setLoading(false);
       });
     });
@@ -297,7 +302,7 @@ function Booking() {
 
   useEffect(() => {
     if (checkMatchingIds()) {
-      toast.info(isBook.message);
+      console.info(isBook.message);
     } else {
       console.log("Không có phần tử trùng nhau giữa hai danh sách.");
     }
@@ -570,9 +575,14 @@ function Booking() {
             <br />
 
             {checkMatchingIds() && isBook.status === 1 && success ? (
-              <button type="button" className="btn btn-success">
-                Phòng đã được đặt
-              </button>
+              <div>
+                <button type="button" className="btn btn-success">
+                  Phòng đã được đặt
+                </button>
+                <br></br>
+                <br></br>
+                <label>Vui lòng tải lại trang</label>
+              </div>
             ) : (
               <div>
                 {loading && (
