@@ -13,6 +13,8 @@ function Gallery() {
   const [pageNumber, setPageNumber] = useState(0);
   const [rooms, setRooms] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
+  const [love, setLove] = useState(false);
+
 
   useEffect(() => {
     async function fetchData() {
@@ -41,7 +43,7 @@ function Gallery() {
     <section className="gallery top">
       <div className="container grid">
         {rooms.map((room) => (
-          <Cards key={room.index} room={room} />
+          <Cards key={room.index} room={room}  />
         ))}
       </div>
       <MyPagination

@@ -1,16 +1,45 @@
 // Cards.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import axios from "axios";
 
 const Cards = ({ room }) => {
   const [popup, setPopup] = useState(false);
+  const [love1, setLove1] = useState(false);
+  let love = false;
 
-  const toggleModal = () => {
+  const toggleModal = async () => {
     setPopup(!popup);
+
+    try {
+      const response = await axios.get(
+        "http://localhost:2003/api/home/check-love?idCustom=d911421b-350f-11ee-8f16-489ebddaf682&idRoom=43db6a16-e27a-49e0-9f7e-d8ccdf22affe"
+      );
+
+      console.log(response.data);
+
+      if (response.data) {
+        love = response.data;
+        setLove1(love)
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const closeModal = () => {
     setPopup(false);
+  };
+
+  const changeLove = (id) => {
+    console.log("ok");
+    console.log(id);
+    if (love) {
+      love = false;
+    } else {
+      love = true;
+    }
+    setLove1(!love1)
   };
 
   const formatCurrency = (amount) => {
@@ -20,6 +49,8 @@ const Cards = ({ room }) => {
     });
     return formatter.format(amount);
   };
+
+  console.log(love);
 
   return (
     <>
@@ -50,7 +81,34 @@ const Cards = ({ room }) => {
             />
             <div className="detail">
               <div className="item-text-item">
-                <h1>{room.roomName}</h1>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <h1>{room.roomName}</h1>
+                  {love || love1 ? (
+                    <img
+                      onClick={() => changeLove(room.id)}
+                      src="https://webstockreview.net/images/hearts-vector-png-7.png"
+                      style={{
+                        width: 30,
+                        height: 30,
+                      }}
+                    ></img>
+                  ) : (
+                    <img
+                      onClick={() => changeLove(room.id)}
+                      src="https://clipground.com/images/clipart-heart-icon-2.png"
+                      style={{
+                        width: 30,
+                        height: 30,
+                      }}
+                    ></img>
+                  )}
+                </div>
               </div>
               <hr />
               <div className="item-text-item">
