@@ -12,9 +12,8 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import BasicTabs from "../Tab/CustomTabPanel";
-// import DatePicker from "react-datepicker";
-// import "react-datepicker/dist/react-datepicker.css";
-import { DatePicker, Flex } from "antd";
+import dayjs from 'dayjs';
+import { DatePicker } from "antd";
 // import 'antd/lib/date-picker/style/css';  // Import DatePicker styles
 
 var stompClient = null;
@@ -31,7 +30,17 @@ const sendMessage = (message) => {
 
 const { RangePicker } = DatePicker;
 
+function generateRandomString(length) {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    result += characters.charAt(randomIndex);
+  }
+  return result;
+}
 const cx = classNames.bind(style);
+const keyToken = generateRandomString(5);
 function Booking() {
   const { id } = useParams();
   const [open, setOpen] = useState(false);
@@ -51,7 +60,9 @@ function Booking() {
   const today = new Date();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [guestCounts, setGuestCounts] = useState({}); // Một đối tượng để lưu số lượng khách cho từng phòng
+  const [guestCounts, setGuestCounts] = useState({}); 
+  const [keyCheck, setKeyCheck] = useState(""); 
+
   const [isBook, setIsBook] = useState({
     message: null,
     status: null,
@@ -105,7 +116,7 @@ function Booking() {
 
   function disabledDate(current) {
     const formattedDate = current.format("YYYY-MM-DD");
-    return disabledDates.includes(formattedDate);
+    return (current && current < dayjs().endOf('day') ) || (disabledDates.includes(formattedDate));
   }
   // Tạo payload
   const roomData = room.map((room) => ({
@@ -146,6 +157,7 @@ function Booking() {
       deposit,
       totalPriceRoom,
       note,
+      keyToken : keyToken
     };
     setLoading(true);
     console.log(payload);
@@ -302,7 +314,18 @@ function Booking() {
 
   useEffect(() => {
     if (checkMatchingIds()) {
-      console.info(isBook.message);
+      // toast.info(isBook.message);
+      const message = isBook.message;
+      const result = message.substring(0,  5);
+      console.log(result); // Kết quả: Ay5UL
+      console.log(keyToken)
+      if(result === keyToken){
+         const stringWithoutFirstFiveChars = message.substring(5);
+         const endIndex = stringWithoutFirstFiveChars.indexOf('[');
+         const result = stringWithoutFirstFiveChars.substring(0, endIndex);
+        toast.info(result );
+        setKeyCheck(keyToken);
+      }
     } else {
       console.log("Không có phần tử trùng nhau giữa hai danh sách.");
     }
@@ -574,7 +597,7 @@ function Booking() {
             />
             <br />
 
-            {checkMatchingIds() && isBook.status === 1 && success ? (
+            {checkMatchingIds() && isBook.status === 1 && success && keyToken === keyCheck ? (
               <div>
                 <button type="button" className="btn btn-success">
                   Phòng đã được đặt
