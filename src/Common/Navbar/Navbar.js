@@ -85,26 +85,31 @@ const Navbar = () => {
                     handleSignOut();
                   }}
                 >
-                  <i className="far fa-chevron-right"></i>Sign out
+                  <i className="far fa-chevron-right"></i>Đăng xuất
                 </Link>
               </li>
             ) : (
               <li>
                 <Link to="/sign-in">
-                  <i className="far fa-chevron-right"></i>Sign in
+                  <i className="far fa-chevron-right"></i>Đăng nhập
                 </Link>
               </li>
             )}
             <li>
               <Link to="/register">
-                <i className="far fa-chevron-right"></i>Register
+                <i className="far fa-chevron-right"></i>Đăng ký
               </Link>
             </li>
-            <li>
-              <Link to="/change">
-                <i className="far fa-chevron-right"></i>Change your password
-              </Link>
-            </li>
+            {Object.keys(customer).length > 0 ? (
+              <li>
+                <Link to="/change">
+                  <i className="far fa-chevron-right"></i>Đổi mật khẩu
+                </Link>
+              </li>
+            ) : (
+              <div></div>
+            )}
+
             <li>
               <Tippy interactive={true} interactiveBorder={20} delay={100}>
                 <Link to="/cart">
