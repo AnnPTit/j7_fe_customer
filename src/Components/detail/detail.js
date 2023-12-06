@@ -5,12 +5,14 @@ import classNames from "classnames/bind";
 import style from "./detail.module.scss";
 import Carousel from "react-material-ui-carousel";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Paper, Button } from "@mui/material";
+import { Paper } from "@mui/material";
 import { Link } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 const cx = classNames.bind(style);
 function Detail() {
   const { id } = useParams();
   const [room, setRoom] = useState({});
+  const [love, setLove] = useState(false);
   const url = `/preview/${id}`;
   //Hàm detail
   useEffect(() => {
@@ -32,6 +34,50 @@ function Detail() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    // Định nghĩa hàm fetchData bên trong useEffect
+    async function fetchData() {
+      try {
+        const storedData = localStorage.getItem("idCustom");
+        // Nếu dữ liệu tồn tại trong localStorage
+        const customer = JSON.parse(storedData);
+        const response = await axios.get(
+          `http://localhost:2003/api/home/check-love?idCustom=${customer.id}&idRoom=${id}`
+        );
+        console.log(response);
+        setLove(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchData();
+  }, []);
+
+  const changeLove = () => {
+    const storedData = localStorage.getItem("idCustom");
+    if (!storedData) {
+      toast.error("vui lòng đăng nhập !");
+      return;
+    }
+    // Định nghĩa hàm fetchData bên trong useEffect
+    async function fetchData() {
+      try {
+        const storedData = localStorage.getItem("idCustom");
+        // Nếu dữ liệu tồn tại trong localStorage
+        const customer = JSON.parse(storedData);
+        const response = await axios.get(
+          `http://localhost:2003/api/home/set-love?idCustom=${customer.id}&idRoom=${id}`
+        );
+        console.log(response);
+        setLove(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchData();
+    setLove(!love);
+  };
+
   var items = room.photoList;
 
   function Item(props) {
@@ -43,6 +89,7 @@ function Detail() {
   }
   return (
     <div className={cx("wrapper")}>
+      <ToastContainer></ToastContainer>
       <div className={cx("preview-img")}>
         {room.photoList && room.photoList.length > 0 && (
           <Carousel>
@@ -67,38 +114,51 @@ function Detail() {
           }}
         >
           <h1 className={cx("item-name")}>{room.roomName}</h1>
+
           <span className={cx("item-text")}>
-            {room.status === 1 ? (
-              <button className="btn btn-success">Còn trống</button>
+            {love === true ? (
+              <img
+                onClick={changeLove}
+                src="https://clipground.com/images/clipart-heart-icon-2.png"
+                style={{
+                  width: 30,
+                  height: 30,
+                }}
+              ></img>
             ) : (
-              "Đã đặt"
+              <img
+                onClick={changeLove}
+                src="https://webstockreview.net/images/hearts-vector-png-7.png"
+                style={{
+                  width: 30,
+                  height: 30,
+                }}
+              ></img>
             )}
           </span>
         </div>
         <p>{room.note}</p>
         <div className="item-text-item">
           <span className={cx("item-type-room")}>
-            {room.typeRoom && room.typeRoom.typeRoomName} - 
+            {room.typeRoom && room.typeRoom.typeRoomName} -
             {room.floor && room.floor.floorName}
           </span>
         </div>
-       
+
         <br />
         <div className="item-text-item">
           <span>Sức chứa : </span>
           <span className={cx("item-capacity-wrapper")}>
-          <span className={cx("item-capacity")}>
-            {room.typeRoom && room.typeRoom.capacity} 
-          </span>
-          <i class="fa fa-user"></i>
+            <span className={cx("item-capacity")}>
+              {room.typeRoom && room.typeRoom.capacity}
+            </span>
+            <i class="fa fa-user"></i>
           </span>
         </div>
         <br />
         <div className="item-text-item">
-          <span>Đơn giá  : </span>{" "}
-          <span
-            className={cx("item-capacity-wrapper")}
-          >
+          <span>Đơn giá : </span>{" "}
+          <span className={cx("item-capacity-wrapper")}>
             {room.typeRoom && room.typeRoom.pricePerDay && (
               <span>
                 {room.typeRoom.pricePerDay.toLocaleString("vi-VN", {
@@ -110,25 +170,6 @@ function Detail() {
           </span>
         </div>
         <br />
-        {/* <div className="item-text-item">
-          <span>Đơn giá theo giờ : </span>{" "}
-          <span
-            className={cx("item-text")}
-            style={{
-              color: "red",
-            }}
-          >
-            {room.typeRoom && room.typeRoom.pricePerHours && (
-              <span>
-                {room.typeRoom.pricePerHours.toLocaleString("vi-VN", {
-                  style: "currency",
-                  currency: "VND",
-                })}{" "}
-              </span>
-            )}
-          </span>
-        </div>
-        <br /> */}
         <hr />
         <div className="item-text-item">
           <span>

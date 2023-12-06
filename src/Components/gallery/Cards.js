@@ -89,7 +89,7 @@ const Cards = ({ room }) => {
                   }}
                 >
                   <h1>{room.roomName}</h1>
-                  {love || love1 ? (
+                  {/* {love || love1 ? (
                     <img
                       onClick={() => changeLove(room.id)}
                       src="https://webstockreview.net/images/hearts-vector-png-7.png"
@@ -107,7 +107,7 @@ const Cards = ({ room }) => {
                         height: 30,
                       }}
                     ></img>
-                  )}
+                  )} */}
                 </div>
               </div>
               <hr />
