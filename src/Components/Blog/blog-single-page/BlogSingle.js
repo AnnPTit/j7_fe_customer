@@ -193,10 +193,10 @@ const BlogSingle = () => {
                   <label>{item.createBy}</label>
                 </div>
                 <div className="para">
-                  <p>
+                  {/* <p>
                     <i class="fa fa-thumbs-up"></i>
                     <span> {like}</span>
-                  </p>
+                  </p> */}
                   <p>
                     <i class="fa fa-eye"></i>
                     <span> {item.countView}</span>
@@ -206,7 +206,7 @@ const BlogSingle = () => {
                 <p>{item.content}</p>
                 <p>{item.content}</p>
                 <div className="para flex_space">
-                  <button
+                  {/* <button
                     style={{
                       padding: 10,
                       paddingRight: 40,
@@ -217,7 +217,7 @@ const BlogSingle = () => {
                     onClick={handleLike}
                   >
                     <i class="fa fa-thumbs-up"></i>
-                  </button>
+                  </button> */}
                   <input
                     type="text"
                     placeholder="Bình luận"

@@ -71,10 +71,7 @@ const Login = () => {
       <section className="forms top">
         <div className="container">
           <div className="sign-box">
-            <p>
-              Enter your e-email and password below to log in to your account
-              and use the benefits of our website.
-            </p>
+            <p>Nhập Email và mật khẩu để đăng nhập</p>
             <form action="" onSubmit={submitForm}>
               <input
                 type="text"
@@ -92,20 +89,20 @@ const Login = () => {
               />
 
               <div className="flex_space">
-                <div className="flex">
+                {/* <div className="flex">
                   <input type="checkbox" />
                   <label>Remember Me</label>
-                </div>
+                </div> */}
                 <div className="flex">
-                  <span>I forgot my password</span>
+                  <span>Quên mật khẩu</span>
                 </div>
               </div>
 
               <button type="submit" className="primary-btn">
-                Sign In
+                Đăng nhập
               </button>
               <p>
-                Don't have account? <Link to="/Register">Signup!</Link>
+                Chưa có tài khoản ? <Link to="/Register">Tạo tài khoản!</Link>
               </p>
             </form>
           </div>

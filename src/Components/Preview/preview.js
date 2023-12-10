@@ -153,6 +153,10 @@ function Preview() {
     }
   };
   const handleAddRoom = (room1) => {
+    if (room.length === 3) {
+      toast.error("Bạn chỉ được đặt 3 phòng 1 lần !");
+      return;
+    }
     const isRoomExist = room.some(
       (existingRoom) => existingRoom.id === room1.id
     );

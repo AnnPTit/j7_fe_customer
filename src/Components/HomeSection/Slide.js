@@ -142,7 +142,7 @@ const Home = ({ slides }) => {
                   setPriceRange={setPriceRange}
                 />
               </div>
-              <input
+              {/* <input
                 className={cx("home-input")}
                 type="number"
                 placeholder="Số khách"
@@ -150,7 +150,7 @@ const Home = ({ slides }) => {
                 onChange={(e) => {
                   setNumberCustom(e.target.value);
                 }}
-              />
+              /> */}
             </div>
             <div className={cx("btn-search")}>
               <Link

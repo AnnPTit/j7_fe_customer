@@ -67,10 +67,7 @@ const Register = () => {
         <ToastContainer />
         <div className="container">
           <div className="sign-box">
-            <p>
-              Don't have an account? Create your account, it takes less than a
-              minute.
-            </p>
+            <p>Vui lòng điền đầy đủ thông tin để tạo tài khoản</p>
             <form action="" onSubmit={submitForm}>
               <input
                 type="text"
@@ -106,7 +103,7 @@ const Register = () => {
               />
 
               <button type="submit" className="primary-btn" disabled={loading}>
-                {loading ? "Creating Account..." : "Create an Account"}
+                {loading ? "Đang tạo ..." : "Tạo tài khoản"}
               </button>
             </form>
           </div>

@@ -3,6 +3,7 @@ import "./Navbar.css";
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Tippy from "@tippyjs/react";
+import { Logo } from "../../Components/logo";
 
 const Navbar = () => {
   const [click, setClick] = useState(false);
@@ -33,47 +34,48 @@ const Navbar = () => {
           </div>
 
           <ul className={click ? "nav-menu active" : "nav-menu"}>
-            <li>
-              <img
-                className="logo"
-                src="https://j7v1.s3.amazonaws.com/logo.png"
-              />
+            <li
+              style={{
+                width: 100,
+              }}
+            >
+              <Logo></Logo>
             </li>
             <li>
               <Link to="/" onClick={closeMobileMenu}>
-                Home
+                Trang chủ
               </Link>
             </li>
             <li>
               <Link to="/about" onClick={closeMobileMenu}>
-                About us
+                Về chúng tôi
               </Link>
             </li>
             <li>
               <Link to="/gallery" onClick={closeMobileMenu}>
-                Gallery
+                Phòng
               </Link>
             </li>
             <li>
               <Link to="/destinations" onClick={closeMobileMenu}>
-                Destinations
+                Điểm đến
               </Link>
             </li>
             <li>
               <Link to="/blog" onClick={closeMobileMenu}>
-                Blog
+                Bài viết
               </Link>
             </li>
             <li>
               <Link to="/testimonial" onClick={closeMobileMenu}>
-                Testimonial
+                Đội ngũ phát triển
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link to="/contact" onClick={closeMobileMenu}>
                 Contact Us
               </Link>
-            </li>
+            </li> */}
           </ul>
 
           <div className="login-area flex">
