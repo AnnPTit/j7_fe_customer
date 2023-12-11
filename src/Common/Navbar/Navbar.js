@@ -57,6 +57,11 @@ const Navbar = () => {
               </Link>
             </li>
             <li>
+              <Link to="/favourite" onClick={closeMobileMenu}>
+                Yêu thích
+              </Link>
+            </li>
+            <li>
               <Link to="/destinations" onClick={closeMobileMenu}>
                 Điểm đến
               </Link>
