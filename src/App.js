@@ -3,6 +3,7 @@ import Navbar from "./Common/Navbar/Navbar";
 import Home from "./Components/pages/Home";
 import About from "./Components/About/About";
 import Gallery from "./Components/gallery/Gallery";
+import Favourite from "./Components/favourite/Gallery";
 //import Destinations from "./Components/Destinations/Destinations"
 //import DHome from "./Components/Destinations/Home"
 import React, { Component } from "react";
@@ -35,6 +36,7 @@ function App() {
           <Route path="/" exact component={Home} />
           <Route path="/about" exact component={About} />
           <Route path="/gallery" exact component={Gallery} />
+          <Route path="/favourite" exact component={Favourite} />
           <Route path="/destinations" exact component={Destinations} />
           <Route path="/singlepage/:id" component={SinglePage} />
           <Route path="/blog" exact component={Blog} />
