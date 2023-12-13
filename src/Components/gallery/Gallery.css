@@ -137,3 +137,56 @@
   }
   
 }
+
+
+.search-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f8f9fa; /* Bootstrap background color */
+  border: 1px solid #dee2e6; /* Bootstrap border color */
+  border-radius: 5px;
+}
+
+.input-container {
+  margin-bottom: 15px;
+}
+
+form-control {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ced4da; /* Bootstrap border color */
+  border-radius: 4px;
+}
+
+.checkbox-container {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.form-check-input {
+  transform: scale(0.6);
+  margin-right: 8px; 
+}
+
+#selectedChildren,
+.form-control {
+  margin-top: 8px;
+}
+
+.btn-primary {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff; /* Bootstrap primary color */
+  color: #fff;
+  border: 1px solid #007bff; /* Bootstrap primary color */
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3; /* Bootstrap primary hover color */
+  border-color: #0056b3; /* Bootstrap primary hover color */
+}
