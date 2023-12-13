@@ -24,6 +24,7 @@ function Gallery() {
   const [selectedFacilities, setSelectedFacilities] = useState([]);
   const [selectedChildren, setSelectedChildren] = useState(0);
   const [isCrease, setIsCrease] = useState(false);
+  const [isCreaseBook, setIsCreaseBook] = useState(false);
 
   const handleCheckboxChange = (type) => {
     // Kiểm tra xem type có trong mảng selectedFacilities chưa
@@ -39,7 +40,7 @@ function Gallery() {
     }
   };
   useEffect(() => {
-   handleSubmit()
+    handleSubmit();
   }, [pageNumber]);
 
   useEffect(() => {
@@ -87,7 +88,8 @@ function Gallery() {
       priceRange,
       selectedChildren,
       currentPage: pageNumber,
-      isCrease: isCrease,
+      isCrease,
+      isCreaseBook,
     };
     console.log(payload);
     async function fetchData() {
@@ -188,7 +190,7 @@ function Gallery() {
           </div>
 
           <div>
-            Trẻ em:{" "}
+            Sắp xếp theo:{" "}
             <select
               value={isCrease}
               onChange={(e) => {
@@ -198,7 +200,18 @@ function Gallery() {
               <option value={false}>Đơn giá giảm dần</option>
               <option value={true}>Đơn giá tăng dần</option>
             </select>
-            <p>Đã chọn: {selectedChildren}</p>
+          </div>
+          <div>
+            Sắp xếp theo:{" "}
+            <select
+              value={isCreaseBook}
+              onChange={(e) => {
+                setIsCreaseBook(e.target.value);
+              }}
+            >
+              <option value={false}>Số lượng đặt giảm dần </option>
+              <option value={true}>Số lượng đặt tăng dần</option>
+            </select>
           </div>
           <button className="btn btn-primary" onClick={handleSubmit}>
             Tìm kiếm
