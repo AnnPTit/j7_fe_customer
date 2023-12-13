@@ -61,11 +61,11 @@ const Navbar = () => {
                 Yêu thích
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link to="/destinations" onClick={closeMobileMenu}>
                 Điểm đến
               </Link>
-            </li>
+            </li> */}
             <li>
               <Link to="/blog" onClick={closeMobileMenu}>
                 Bài viết

@@ -21,14 +21,14 @@ const AboutCard = () => {
           </p>
           <p>
             Khách sạn Armani Hotel là lựa chọn lý tưởng cho du khách khi đến
-            Việt Nam công tác, du lịch. Khách sạn hứa hẹn mang đến cho du
-            khách những trải nghiệm nghỉ dưỡng tuyệt vời
+            Việt Nam công tác, du lịch. Khách sạn hứa hẹn mang đến cho du khách
+            những trải nghiệm nghỉ dưỡng tuyệt vời
           </p>
-          <button className="secondary-btn">
-            Explore More <i className="fas fa-long-arrow-alt-right"></i>
-          </button>
+          {/* <button className="secondary-btn">
+            <i className="fas fa-long-arrow-alt-right"></i>
+          </button> */}
         </div>
-        <div className="row image">
+        <div className="row ">
           <img src="/images/about-img-1.jpg" alt="" />
           <div className="control-btn">
             <button className="prev">
