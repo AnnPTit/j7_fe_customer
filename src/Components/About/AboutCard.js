@@ -30,11 +30,11 @@ const AboutCard = () => {
         </div>
         <div className="row ">
           <img src="/images/about-img-1.jpg" alt="" />
-          <div className="control-btn">
+          {/* <div className="control-btn">
             <button className="prev">
               <i className="fas fa-play"></i>
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
     </>
