@@ -324,6 +324,9 @@ function Booking() {
          const endIndex = stringWithoutFirstFiveChars.indexOf('[');
          const result = stringWithoutFirstFiveChars.substring(0, endIndex);
         toast.info(result );
+        if(result.includes("Đặt phòng thành công")){
+          window.location.href="http://localhost:3001/cart"
+        }
         setKeyCheck(keyToken);
       }
     } else {

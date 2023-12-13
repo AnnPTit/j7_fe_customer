@@ -54,6 +54,7 @@ const Cards = ({ room }) => {
 
   return (
     <>
+  
       <div className="items">
         <div className="img">
           <img
@@ -134,6 +135,7 @@ const Cards = ({ room }) => {
                 </span>{" "}
                 <span>{room.typeRoom.note}</span>
               </div>
+              {/* <button onClick={()=>{window.location.href=`http://localhost:3001/detail/${id}`}}>Đăt ngay</button> */}
             </div>
           </div>
         </div>
