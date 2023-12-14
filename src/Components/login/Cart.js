@@ -104,7 +104,6 @@ function Cart() {
 
   const cancelOrder = async (code) => {
     try {
-      
       const response = await axios.post(
         `http://localhost:2003/api/home/order/cancel/${code}/0`
       );
@@ -219,6 +218,21 @@ function Cart() {
           <li className={cx("nav-item")}>
             <button
               style={
+                odStt === 8
+                  ? { color: "white", background: "black", borderRadius: 20 }
+                  : null
+              }
+              className={cx("nav-link")}
+              onClick={() => {
+                setOdStt(8);
+              }}
+            >
+              Hết hạn thanh toán
+            </button>
+          </li>
+          <li className={cx("nav-item")}>
+            <button
+              style={
                 odStt === 7
                   ? { color: "white", background: "black", borderRadius: 20 }
                   : null
@@ -298,7 +312,9 @@ function Cart() {
                         confirmButtonText: "Yes, Add it!",
                       }).then(async (result) => {
                         if (result.isConfirmed) {
-                          const isSubmitSuccess = await cancelOrder(arr.data[0].orderCode);
+                          const isSubmitSuccess = await cancelOrder(
+                            arr.data[0].orderCode
+                          );
                           if (isSubmitSuccess) {
                             Swal.fire("Thêm thành công !", "success");
                             toast.success("Thêm Thành Công !");
@@ -340,7 +356,7 @@ function Cart() {
                         </span>
                       </p>
                     )}
-<br/>
+                    <br />
                     <div className={cx("room-price")}>
                       {room1.typeRoom && (
                         <p>
@@ -395,10 +411,9 @@ function Cart() {
                       )}
                     </div>
                     <br />
-                    {room1.refuseReason &&(
+                    {room1.refuseReason && (
                       <p>Lí do từ chối : {room1.refuseReason}</p>
-                    )
-                    }
+                    )}
                   </div>
 
                   <div className={cx("service-item")}>

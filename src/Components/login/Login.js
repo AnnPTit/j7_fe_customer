@@ -74,6 +74,7 @@ const Login = () => {
             <p>
               Nhập E-mail và Mật khẩu để truy cập vào Website của chúng tôi!
             </p>
+            <p>Nhập Email và mật khẩu để đăng nhập</p>
             <form action="" onSubmit={submitForm}>
               <input
                 type="text"
@@ -90,14 +91,21 @@ const Login = () => {
                 placeholder="Mật khẩu"
               />
 
+              <div className="flex_space">
+                {/* <div className="flex">
+                  <input type="checkbox" />
+                  <label>Remember Me</label>
+                </div> */}
+                <div className="flex">
+                  <span>Quên mật khẩu</span>
+                </div>
+              </div>
+
               <button type="submit" className="primary-btn">
-                Đăng Nhập
+                Đăng nhập
               </button>
               <p>
-                Bạn chưa có tài khoản?{" "}
-                <Link to="/Register" style={{ color: "black" }}>
-                  Đăng ký!
-                </Link>
+                Chưa có tài khoản ? <Link to="/Register">Tạo tài khoản!</Link>
               </p>
             </form>
           </div>

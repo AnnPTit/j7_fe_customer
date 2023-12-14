@@ -121,7 +121,7 @@ function Booking() {
   // Tạo payload
   const roomData = room.map((room) => ({
     id: room.id,
-    guestCount: guestCounts[room.id] || 0, // Lấy số lượng khách từ guestCounts, mặc định là 0 nếu không có
+    guestCount: guestCounts[room.id] || 0, 
   }));
   const handleSubmit = () => {
     const hoVaTenValue = fullname;
@@ -324,6 +324,9 @@ function Booking() {
          const endIndex = stringWithoutFirstFiveChars.indexOf('[');
          const result = stringWithoutFirstFiveChars.substring(0, endIndex);
         toast.info(result );
+        if(result.includes("Đặt phòng thành công")){
+          window.location.href="http://localhost:3001/cart"
+        }
         setKeyCheck(keyToken);
       }
     } else {
@@ -557,8 +560,8 @@ function Booking() {
                 />
               </div>
             </div>
-            <p>Nhận phòng từ : 12:00 CH</p>
-            <p>Trả phòng trước : 2:00 CH</p>
+            <p>Nhận phòng từ : 2:00 PM</p>
+            <p>Trả phòng trước : 12:00 AM</p>
             <p>Tiền Phòng </p>
             <input
               type="text"

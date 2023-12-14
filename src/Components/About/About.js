@@ -33,17 +33,17 @@ const About = () => {
               sẽ đạt được những thành công trong tương lai, trở thành một trong
               những khách sạn hàng đầu Việt Nam.
             </p>
-            <button className="secondary-btn">
+            {/* <button className="secondary-btn">
               Explore More <i className="fas fa-long-arrow-alt-right"></i>
-            </button>
+            </button> */}
           </div>
           <div className="row image">
             <img src="/images/feature-img-1.jpg" alt="" />
-            <div className="control-btn">
+            {/* <div className="control-btn">
               <button className="prev">
                 <i className="fas fa-play"></i>
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>

@@ -171,25 +171,41 @@ function Detail() {
         </div>
         <br />
         <hr />
+        <div>
+          <div className="item-text-item">
+            <span>Tiện ích :</span>
+            <br />
+            <span className={cx("")}>
+              {room.roomFacilityList &&
+                room.roomFacilityList.map((facility) => (
+                  <div key={facility.id}>
+                    <ul>
+                      {facility.facility && (
+                        <li>- {facility.facility.facilityName}</li>
+                      )}
+                    </ul>
+                  </div>
+                ))}
+            </span>
+          </div>
+        </div>
+        <br></br>
         <div className="item-text-item">
           <span>
             Mô tả : <br />
           </span>{" "}
           <span className={cx("")}>{room.typeRoom && room.typeRoom.note}</span>
         </div>
-        {room.status === 1 ? (
-          <Link
-            to={url}
-            className="btn btn-primary"
-            style={{
-              marginTop: 50,
-            }}
-          >
-            Đặt Ngay
-          </Link>
-        ) : (
-          <div></div>
-        )}
+
+        <Link
+          to={url}
+          className="btn btn-primary"
+          style={{
+            marginTop: 50,
+          }}
+        >
+          Đặt Ngay
+        </Link>
       </div>
     </div>
   );

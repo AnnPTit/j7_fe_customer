@@ -1,26 +1,32 @@
 import React, { useEffect, useState } from "react";
 import "./BlogHome.css";
 import BlogCard from "./BlogCard";
-
+import MyPagination from "./index";
 import axios from "axios";
 
 const AllBlog = () => {
   const [items, setIems] = useState([]);
-  const fetchDataFromAPI = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:2003/api/home/load/blog"
-      );
-      const data = response.data.content;
-      console.log(response);
-      setIems(data);
-    } catch (error) {
-      console.error("Error fetching data from API:", error);
-    }
-  };
+  const [pageNumber, setPageNumber] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+
   useEffect(() => {
-    fetchDataFromAPI(); // Gọi hàm để truy vấn dữ liệu từ API và cập nhật state
-  }, []);
+    async function fetchData() {
+      try {
+        const response = await axios.get(
+          `http://localhost:2003/api/home/load/blog?current_page=${pageNumber}`
+        );
+        console.log(response.data);
+        if (response.data) {
+          setTotalPages(response.data.totalPages);
+          console.log(response.data);
+          setIems(response.data.content);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchData();
+  }, [pageNumber]);
 
   return (
     <>
@@ -32,6 +38,11 @@ const AllBlog = () => {
             })}
           </div>
         </div>
+        <MyPagination
+          pageNumber={pageNumber}
+          totalPages={totalPages}
+          setPageNumber={setPageNumber}
+        />
       </section>
     </>
   );

@@ -2,8 +2,10 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Cards = ({ room }) => {
+  const url = `/preview/${room.roomId}`;
   const [popup, setPopup] = useState(false);
   const [love1, setLove1] = useState(false);
   let love = false;
@@ -20,7 +22,7 @@ const Cards = ({ room }) => {
 
       if (response.data) {
         love = response.data;
-        setLove1(love)
+        setLove1(love);
       }
     } catch (error) {
       console.error(error);
@@ -39,7 +41,7 @@ const Cards = ({ room }) => {
     } else {
       love = true;
     }
-    setLove1(!love1)
+    setLove1(!love1);
   };
 
   const formatCurrency = (amount) => {
@@ -54,11 +56,10 @@ const Cards = ({ room }) => {
 
   return (
     <>
-  
       <div className="items">
         <div className="img">
           <img
-            src={room.photoList[0].url}
+            src={room.photoList[0]}
             alt="Gallery Image"
             onClick={toggleModal}
             style={{ cursor: "pointer" }}
@@ -67,7 +68,7 @@ const Cards = ({ room }) => {
         </div>
         <div className="title">
           <h3>{room.roomName}</h3>
-          <p>Giá thành: {formatCurrency(room.typeRoom.pricePerDay)}</p>
+          <p>Giá thành: {formatCurrency(room.pricePerDay)}</p>
         </div>
       </div>
 
@@ -76,7 +77,7 @@ const Cards = ({ room }) => {
           <div className="hide" onClick={closeModal}></div>
           <div className="popup-content">
             <img
-              src={room.photoList[0].url}
+              src={room.photoList[0]}
               alt="Gallery Image"
               style={{ width: "500px", height: "300px" }}
             />
@@ -113,29 +114,35 @@ const Cards = ({ room }) => {
               </div>
               <hr />
               <div className="item-text-item">
-                <span>{room.note}</span>
+                {/* <span>{room.not}</span> */}
               </div>
               <div className="item-text-item">
                 <span>
-                  {room.typeRoom.typeRoomName}-{room.floor.floorName}{" "}
+                  {room.typeRoom}-{room.floor}{" "}
                 </span>
               </div>
               <div className="item-text-item">
-                <span>Sức chứa: {room.typeRoom.capacity} Người</span>
+                <span>Sức chứa: {room.capacity} Người</span>
               </div>
               <div className="item-text-item">
-                <span>
-                  Giá thành: {formatCurrency(room.typeRoom.pricePerDay)}
-                </span>
+                <span>Giá thành: {formatCurrency(room.pricePerDay)}</span>
               </div>
               <hr />
               <div className="item-text-item">
                 <span>
                   Mô tả : <br />
                 </span>{" "}
-                <span>{room.typeRoom.note}</span>
+                <span>{room.typeRoomNote}</span>
               </div>
-              {/* <button onClick={()=>{window.location.href=`http://localhost:3001/detail/${id}`}}>Đăt ngay</button> */}
+              <Link
+                to={url}
+                className="btn btn-primary"
+                style={{
+                  marginTop: 50,
+                }}
+              >
+                Đặt Ngay
+              </Link>
             </div>
           </div>
         </div>

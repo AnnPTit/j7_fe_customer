@@ -70,6 +70,7 @@ const Register = () => {
         <div className="container">
           <div className="sign-box">
             <p>Bạn chưa có tài khoản? Hãy tạo cho mình một tài khoản mới!</p>
+            <p>Vui lòng điền đầy đủ thông tin để tạo tài khoản</p>
             <form action="" onSubmit={submitForm}>
               <input
                 type="text"
@@ -96,7 +97,7 @@ const Register = () => {
                 required
               />
               <input
-                type="password"
+                type="password" 
                 name="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -113,7 +114,7 @@ const Register = () => {
               />
 
               <button type="submit" className="primary-btn" disabled={loading}>
-                {loading ? "Creating Account..." : "Create an Account"}
+                {loading ? "Đang tạo ..." : "Tạo tài khoản"}
               </button>
             </form>
           </div>
