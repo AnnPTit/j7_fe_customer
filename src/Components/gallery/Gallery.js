@@ -23,8 +23,8 @@ function Gallery() {
   const [children, setChildren] = useState(0);
   const [selectedFacilities, setSelectedFacilities] = useState([]);
   const [selectedChildren, setSelectedChildren] = useState(0);
-  const [isCrease, setIsCrease] = useState(false);
-  const [isCreaseBook, setIsCreaseBook] = useState(false);
+  const [isCrease, setIsCrease] = useState(null);
+  const [isCreaseBook, setIsCreaseBook] = useState(null);
 
   const handleCheckboxChange = (type) => {
     // Kiểm tra xem type có trong mảng selectedFacilities chưa
@@ -195,10 +195,11 @@ function Gallery() {
               value={isCrease}
               onChange={(e) => {
                 setIsCrease(e.target.value);
+                setIsCreaseBook(null);
               }}
             >
-              <option value={false}>Đơn giá giảm dần</option>
-              <option value={true}>Đơn giá tăng dần</option>
+              <option value={false}>Đơn giá tăng dần</option>
+              <option value={true}>Đơn giá giảm dần</option>
             </select>
           </div>
           <div>
@@ -207,6 +208,7 @@ function Gallery() {
               value={isCreaseBook}
               onChange={(e) => {
                 setIsCreaseBook(e.target.value);
+                setIsCrease(null);
               }}
             >
               <option value={false}>Số lượng đặt giảm dần </option>
