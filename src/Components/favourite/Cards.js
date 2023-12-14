@@ -7,41 +7,59 @@ import { Link } from "react-router-dom";
 const Cards = ({ room }) => {
   const url = `/preview/${room.roomId}`;
   const [popup, setPopup] = useState(false);
-  const [love1, setLove1] = useState(false);
-  let love = false;
+  const [love, setLove] = useState(false);
+  const idCustom = localStorage.getItem("idCustom");
+  const idCustomObject = JSON.parse(idCustom);
+  const userId = idCustom ? idCustomObject.id : null;
 
   const toggleModal = async () => {
     setPopup(!popup);
 
-    try {
-      const response = await axios.get(
-        "http://localhost:2003/api/home/check-love?idCustom=d911421b-350f-11ee-8f16-489ebddaf682&idRoom=43db6a16-e27a-49e0-9f7e-d8ccdf22affe"
-      );
+  };
 
-      console.log(response.data);
 
-      if (response.data) {
-        love = response.data;
-        setLove1(love);
+  useEffect(() => {
+    // Định nghĩa hàm fetchData bên trong useEffect
+    async function fetchData() {
+      try {
+        const storedData = localStorage.getItem("idCustom");
+        // Nếu dữ liệu tồn tại trong localStorage
+        const customer = JSON.parse(storedData);
+        const response = await axios.get(
+          `http://localhost:2003/api/home/check-love?idCustom=${userId}&idRoom=${room.roomId}`
+        );
+        console.log(response);
+        setLove(response.data);
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.error(error);
     }
-  };
+    fetchData();
+  }, []);
 
-  const closeModal = () => {
-    setPopup(false);
-  };
-
-  const changeLove = (id) => {
-    console.log("ok");
-    console.log(id);
-    if (love) {
-      love = false;
-    } else {
-      love = true;
+  const changeLove = () => {
+    const storedData = localStorage.getItem("idCustom");
+    if (!storedData) {
+      // toast.error("vui lòng đăng nhập !");
+      return;
     }
-    setLove1(!love1);
+    // Định nghĩa hàm fetchData bên trong useEffect
+    async function fetchData() {
+      try {
+        const storedData = localStorage.getItem("idCustom");
+        // Nếu dữ liệu tồn tại trong localStorage
+        const customer = JSON.parse(storedData);
+        const response = await axios.get(
+          `http://localhost:2003/api/home/set-love?idCustom=${userId}&idRoom=${room.roomId}`
+        );
+        console.log(response);
+        setLove(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchData();
+    setLove(!love);
   };
 
   const formatCurrency = (amount) => {
@@ -51,7 +69,9 @@ const Cards = ({ room }) => {
     });
     return formatter.format(amount);
   };
-
+  const closeModal = () => {
+    setPopup(false);
+  };
   console.log(love);
 
   return (
@@ -91,10 +111,10 @@ const Cards = ({ room }) => {
                   }}
                 >
                   <h1>{room.roomName}</h1>
-                  {/* {love || love1 ? (
+                  {love === true ? (
                     <img
-                      onClick={() => changeLove(room.id)}
-                      src="https://webstockreview.net/images/hearts-vector-png-7.png"
+                      onClick={changeLove}
+                      src="https://clipground.com/images/clipart-heart-icon-2.png"
                       style={{
                         width: 30,
                         height: 30,
@@ -102,14 +122,14 @@ const Cards = ({ room }) => {
                     ></img>
                   ) : (
                     <img
-                      onClick={() => changeLove(room.id)}
-                      src="https://clipground.com/images/clipart-heart-icon-2.png"
+                      onClick={changeLove}
+                      src="https://webstockreview.net/images/hearts-vector-png-7.png"
                       style={{
                         width: 30,
                         height: 30,
                       }}
                     ></img>
-                  )} */}
+                  )}
                 </div>
               </div>
               <hr />
