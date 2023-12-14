@@ -8,6 +8,7 @@ const Register = () => {
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [cpassword, setCpassword] = useState("");
   const [recValue, setRecValue] = useState([]);
   const [loading, setLoading] = useState(false); // Thêm trạng thái loading
@@ -32,6 +33,7 @@ const Register = () => {
       const newValue = {
         fullname: fullname,
         email: email,
+        phoneNumber: phoneNumber,
         password: password,
       };
       console.log("Payload: " + newValue);
@@ -67,17 +69,14 @@ const Register = () => {
         <ToastContainer />
         <div className="container">
           <div className="sign-box">
-            <p>
-              Don't have an account? Create your account, it takes less than a
-              minute.
-            </p>
+            <p>Bạn chưa có tài khoản? Hãy tạo cho mình một tài khoản mới!</p>
             <form action="" onSubmit={submitForm}>
               <input
                 type="text"
                 name="name"
                 value={fullname}
                 onChange={(e) => setFullname(e.target.value)}
-                placeholder="Name"
+                placeholder="Họ và tên"
                 required
               />
               <input
@@ -89,11 +88,19 @@ const Register = () => {
                 required
               />
               <input
+                type="text"
+                name="phoneNumber"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                placeholder="Số điện thoại"
+                required
+              />
+              <input
                 type="password"
                 name="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
+                placeholder="Mật khẩu"
                 required
               />
               <input
@@ -101,7 +108,7 @@ const Register = () => {
                 name="cpassword"
                 value={cpassword}
                 onChange={(e) => setCpassword(e.target.value)}
-                placeholder="Confirm Password"
+                placeholder="Xác nhận mật khẩu"
                 required
               />
 

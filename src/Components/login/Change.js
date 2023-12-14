@@ -50,6 +50,7 @@ const ChangePassword = () => {
       if (response.status === 200) {
         console.log("API call successful");
         toast.success("Mật khẩu đã được thay đổi thành công!");
+        window.location.href = "/sign-in";
       } else {
         console.log("API call failed");
         toast.error("Đổi mật khẩu thất bại. Vui lòng kiểm tra lại thông tin!");

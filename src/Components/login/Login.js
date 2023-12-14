@@ -72,8 +72,7 @@ const Login = () => {
         <div className="container">
           <div className="sign-box">
             <p>
-              Enter your e-email and password below to log in to your account
-              and use the benefits of our website.
+              Nhập E-mail và Mật khẩu để truy cập vào Website của chúng tôi!
             </p>
             <form action="" onSubmit={submitForm}>
               <input
@@ -81,31 +80,24 @@ const Login = () => {
                 name="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
+                placeholder="E-mail"
               />
               <input
                 type="password"
                 name="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
+                placeholder="Mật khẩu"
               />
 
-              <div className="flex_space">
-                <div className="flex">
-                  <input type="checkbox" />
-                  <label>Remember Me</label>
-                </div>
-                <div className="flex">
-                  <span>I forgot my password</span>
-                </div>
-              </div>
-
               <button type="submit" className="primary-btn">
-                Sign In
+                Đăng Nhập
               </button>
               <p>
-                Don't have account? <Link to="/Register">Signup!</Link>
+                Bạn chưa có tài khoản?{" "}
+                <Link to="/Register" style={{ color: "black" }}>
+                  Đăng ký!
+                </Link>
               </p>
             </form>
           </div>
