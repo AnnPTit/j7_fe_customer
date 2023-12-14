@@ -108,7 +108,7 @@ function Gallery() {
     }
     fetchData();
   };
-
+console.log("ROOM", rooms);
   return (
     <section className="gallery top">
       <div
@@ -116,10 +116,13 @@ function Gallery() {
           display: "flex",
         }}
       >
-        <div>
-          <div>
-            Tên phòng:{" "}
+        <div className="search-container">
+          <div className="input-container">
+            <label htmlFor="roomName">Tên phòng:</label>
             <input
+              className="form-control"
+              type="text"
+              id="roomName"
               onChange={(e) => {
                 setRoomname(e.target.value);
               }}
@@ -127,15 +130,17 @@ function Gallery() {
               value={roomname}
             />
           </div>
-          <div>
-            Loại phòng:{" "}
+
+          <div className="input-container">
+            <label htmlFor="typeRoom">Loại phòng:</label>
             <select
-              className={cx("select")}
+              className="form-control select"
+              id="typeRoom"
               onChange={(e) => {
                 setTypeRoomChose(e.target.value);
               }}
             >
-              <option className={cx("option")} value={""}>
+              <option className="option" value={""}>
                 Loại phòng
               </option>
               {typeRoom.map((type) => (
@@ -151,47 +156,55 @@ function Gallery() {
               ))}
             </select>
           </div>
-          <div>
-            Giá tiền:{" "}
+
+          <div className="input-container">
+            <label htmlFor="priceRange">Giá tiền:</label>
             <PriceRangeSlider
+              className="price-range-slider"
               priceRange={priceRange}
               setPriceRange={setPriceRange}
             />
           </div>
-          <div>
-            Tiện ích:
+
+          <div className="input-container">
+            <label>Tiện ích:</label>
             {facility.map((type) => (
-              <div key={type.id}>
+              <div key={type.id} className="checkbox-container">
                 <input
                   type="checkbox"
+                  className="form-check-input"
                   checked={selectedFacilities.includes(type)}
                   onChange={() => handleCheckboxChange(type)}
                 />
-                <label>{type.facilityName}</label>
+                <label className="form-check-label">{type.facilityName}</label>
               </div>
             ))}
           </div>
 
-          <div>
-            Trẻ em:{" "}
+          <div className="input-container">
+            <label htmlFor="selectedChildren">Trẻ em:</label>
             <select
+              className="form-control"
+              id="selectedChildren"
               value={selectedChildren}
               onChange={(e) => {
                 setSelectedChildren(e.target.value);
               }}
             >
-              <option value={0}>0</option>
-              <option value={1}>1</option>
-              <option value={2}>2</option>
-              <option value={3}>3</option>
-              <option value={4}>4</option>
+              {[0, 1, 2, 3, 4].map((value) => (
+                <option key={value} value={value}>
+                  {value}
+                </option>
+              ))}
             </select>
             <p>Đã chọn: {selectedChildren}</p>
           </div>
 
-          <div>
-            Sắp xếp theo:{" "}
+          <div className="input-container">
+            <label htmlFor="isCrease">Sắp xếp theo:</label>
             <select
+              className="form-control"
+              id="isCrease"
               value={isCrease}
               onChange={(e) => {
                 setIsCrease(e.target.value);
@@ -202,9 +215,12 @@ function Gallery() {
               <option value={true}>Đơn giá giảm dần</option>
             </select>
           </div>
-          <div>
-            Sắp xếp theo:{" "}
+
+          <div className="input-container">
+            <label htmlFor="isCreaseBook">Sắp xếp theo:</label>
             <select
+              className="form-control"
+              id="isCreaseBook"
               value={isCreaseBook}
               onChange={(e) => {
                 setIsCreaseBook(e.target.value);
@@ -215,10 +231,12 @@ function Gallery() {
               <option value={true}>Số lượng đặt tăng dần</option>
             </select>
           </div>
+
           <button className="btn btn-primary" onClick={handleSubmit}>
             Tìm kiếm
           </button>
         </div>
+
         <div className="container grid">
           {rooms.map((room) => (
             <Cards key={room.index} room={room} />

@@ -10,21 +10,21 @@ const Tdata = [
     id: 2,
     desc: "Bùi Thành Đạt là một người tài năng và tận tâm, luôn âm thầm hỗ trợ và giúp đỡ Leader Phạm Thành An. Anh là một người đồng đội đáng tin cậy, là một cánh tay đắc lực của Leader.",
     name: "BUI THANH DAT",
-    profile: "/images/profile/profile2.jpg",
+    profile: "/images/profile/dat.png",
     post: "Developer",
   },
   {
     id: 3,
     desc: "Nguyễn Văn Tuân là một người có trái tim nhiệt huyết và luôn sẵn sàng giúp đỡ mọi người. Anh là một người đồng đội đáng tin cậy, là một người bạn tốt của chúng ta.",
     name: "NGUYEN VAN TUAN",
-    profile: "/images/profile/profile3.jpg",
+    profile: "/images/profile/tuan.jpg",
     post: "Developer",
   },
   {
     id: 4,
     desc: "Nguyễn Hữu Quang là một người có tư duy logic và khả năng phân tích tốt. Anh là một người đồng đội đáng tin cậy.",
     name: "NGUYEN HUU QUANG",
-    profile: "/images/profile/profile4.jpg",
+    profile: "/images/profile/quang.jpg",
     post: "Developer",
   }
 ]

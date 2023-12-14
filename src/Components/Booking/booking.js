@@ -69,6 +69,8 @@ function Booking() {
     ids: [],
   });
   const [disabledDates, setDisabledDates] = useState([]);
+  const [disabledDates1, setDisabledDates1] = useState([]);
+  const [disabledDates2, setDisabledDates2] = useState([]);
   let ids;
   let url = id;
   function isValidEmail(email) {
@@ -116,8 +118,19 @@ function Booking() {
 
   function disabledDate(current) {
     const formattedDate = current.format("YYYY-MM-DD");
-    return (current && current < dayjs().endOf('day') ) || (disabledDates.includes(formattedDate));
-  }
+    const combinedDisabledDates = disabledDates.concat(disabledDates1);
+    return (
+      (current && current < dayjs().endOf('day')) ||
+      combinedDisabledDates.includes(formattedDate)
+    );}
+  function disabledDate2(current) {
+    const formattedDate = current.format("YYYY-MM-DD");
+    // console.log(disabledDates2)
+    const combinedDisabledDates = disabledDates.concat(disabledDates2);
+    return (
+      (current && current < dayjs().endOf('day')) ||
+      combinedDisabledDates.includes(formattedDate)
+    );}
   // Tạo payload
   const roomData = room.map((room) => ({
     id: room.id,
@@ -280,16 +293,19 @@ function Booking() {
         const status = data.body; // Lấy nội dung từ tin nhắn
         console.log("11111111111111", status);
         const message = JSON.parse(status);
-        // Sử dụng biến containsElements để kiểm tra và alert status.body
+        console.log(message);
         setIsBook(message);
+  
         if (message.message.includes("Đặt phòng thành công")) {
           setSuccess(true);
-          var dateMatches = message.message.match(/\[(.*?)\]/);
-          if (dateMatches) {
-            var date_string = dateMatches[1];
-            var date_array = date_string.split(", ");
-            console.log(date_array);
-            setDisabledDates(date_array);
+          const dateArrays = parseDateArrays(message.message);
+  
+          if (dateArrays.length > 0) {
+            console.log(dateArrays);
+            setDisabledDates(dateArrays[0]);
+            setDisabledDates1(dateArrays[1]);
+            console.log(dateArrays[2])
+            setDisabledDates2(dateArrays[2]);
           } else {
             console.log("Không tìm thấy ngày trong chuỗi.");
           }
@@ -299,6 +315,23 @@ function Booking() {
       });
     });
   };
+  
+  const parseDateArrays = (message) => {
+    const dateMatches = message.match(/\[(.*?)\]/g);
+  
+    if (dateMatches) {
+      const dateArrays = dateMatches.map(match => {
+        const date_string = match.substring(1, match.length - 1); 
+        return date_string.split(", ");
+      });
+  
+      return dateArrays;
+    } else {
+      console.log("Không tìm thấy ngày trong chuỗi.");
+      return [];
+    }
+  };
+  
   function checkMatchingIds() {
     let isMatched = false;
     const roomIds = room.map((room) => room.id);
@@ -500,9 +533,9 @@ function Booking() {
                 Email
               </label>
               <div className="input-group">
-                <span className="input-group-text" id="basic-addon3">
+                {/* <span className="input-group-text" id="basic-addon3">
                   @
-                </span>
+                </span> */}
                 <input
                   type="email"
                   className="form-control"
@@ -516,7 +549,7 @@ function Booking() {
             </div>
             <p>Số điện thoại</p>
             <div className="input-group mb-3">
-              <span className="input-group-text">+84</span>
+              {/* <span className="input-group-text">+84</span> */}
               <input
                 type="text"
                 onChange={(e) => {
@@ -555,7 +588,7 @@ function Booking() {
                   selected={dayEnd}
                   onChange={handleDateChange2}
                   // dateFormat="dd/MM/yyyy"
-                  disabledDate={disabledDate}
+                  disabledDate={disabledDate2}
                   placeholder="Chọn ngày"
                 />
               </div>
