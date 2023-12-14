@@ -82,7 +82,7 @@ function Cart() {
     }
 
     result[orderCode].data.push(room1);
-    result[orderCode].totalPrice += room1.deposit;
+    result[orderCode].totalPrice = room1.deposit;
     return result;
   }, {});
 
