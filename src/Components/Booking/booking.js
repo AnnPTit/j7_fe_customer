@@ -186,7 +186,6 @@ function Booking() {
         return;
       }
     }
-
     sendMessage(JSON.stringify(payload));
   };
 
@@ -197,7 +196,7 @@ function Booking() {
       ...prevCounts,
       [roomId]: count,
     }));
-    if (count < 0) {
+    if (count < 1) {
       toast.error("Số khách lớn hơn 0 !");
       return;
     }
@@ -398,38 +397,29 @@ function Booking() {
   }, [customer]);
 
   const handleDateChange = (date) => {
-    console.log("today", today);
-    console.log("today2", date);
-    if (date < today) {
-      alert("Ngày đặt không thể nhỏ hơn ngày hôm nay.");
-      setDayStart(null);
-      return;
-    }
     if (date > dayEnd) {
-      alert("Ngày đặt không thể lớn hơn ngày trả.");
-      setDayStart(null);
-      return;
+      toast.error("Ngày đặt không thể lớn hơn ngày trả.");
+    } else {
+      setDayStart(date);
+      const startDate = new Date(date);
+      const endDate = new Date(dayEnd);
+      const timeDiff = endDate.getTime() - startDate.getTime();
+      const numberOfDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+      subPriceRoom(numberOfDays, roomPrice);
     }
-    setDayStart(date);
-    const startDate = new Date(date);
-    const endDate = new Date(dayEnd);
-    const timeDiff = endDate.getTime() - startDate.getTime();
-    const numberOfDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-    subPriceRoom(numberOfDays, roomPrice);
   };
 
   const handleDateChange2 = (date) => {
     const startDate = new Date(dayStart);
-    const endDate = new Date(date); // Convert the date string to a Date object
+    const endDate = new Date(date);
     const timeDiff = endDate.getTime() - startDate.getTime();
     const numberOfDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
     if (numberOfDays < 0) {
-      alert("Vui lòng chọn lại ngày ");
-      setDayEnd(null);
-      return;
+      toast.error("Vui lòng chọn lại ngày ");
+    } else {
+      setDayEnd(date);
+      subPriceRoom(numberOfDays, roomPrice);
     }
-    setDayEnd(date);
-    subPriceRoom(numberOfDays, roomPrice);
   };
 
   return (
@@ -581,7 +571,7 @@ function Booking() {
                 }}
               >
                 <DatePicker
-                  selected={dayStart}
+                  selected={dayStart ? dayStart : null}
                   onChange={handleDateChange}
                   // dateFormat="dd/MM/yyyy"
                   disabledDate={disabledDate}

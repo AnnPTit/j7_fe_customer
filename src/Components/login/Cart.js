@@ -276,23 +276,19 @@ function Cart() {
             <div
               className={cx("group-order")}
               onClick={() => {
-                const ids = [];
-
-                for (let index = 0; index < arr.data.length; index++) {
-                  const element = arr.data[index];
-                  let id = element.roomId;
-                  ids.push(id);
-                }
-
-                let resultString = ids[0];
-
-                if (ids.length >= 2) {
-                  resultString = ids.join("&");
-                }
-
-                console.log(resultString);
-                let url = `http://localhost:3000/booking/${resultString}`;
-                window.location.href = url;
+                // const ids = [];
+                // for (let index = 0; index < arr.data.length; index++) {
+                //   const element = arr.data[index];
+                //   let id = element.roomId;
+                //   ids.push(id);
+                // }
+                // let resultString = ids[0];
+                // if (ids.length >= 2) {
+                //   resultString = ids.join("&");
+                // }
+                // console.log(resultString);
+                // let url = `http://localhost:3001/booking/${resultString}`;
+                // window.location.href = url;
               }}
             >
               <div className={cx("order-title")}>
@@ -319,6 +315,7 @@ function Cart() {
                   <button
                     style={{
                       borderRadius: 10,
+                      width: 200,
                     }}
                     className="btn btn-primary"
                     // onClick={() => cancelOrder(arr.data[0].orderCode)}
