@@ -50,10 +50,10 @@ const BlogCard = ({
             <i class="fa fa-eye"></i>
             <span> {countView}</span>
           </p>
-          <p>
+          {/* <p>
             <i class="fa fa-thumbs-up"></i>
             <span> {countLike}</span>
-          </p>
+          </p> */}
         </div>
 
         <Link to={`/blogsingle/${id}`} className="blogItem-link">

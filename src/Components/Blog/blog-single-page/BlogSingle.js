@@ -31,7 +31,7 @@ const BlogSingle = () => {
   const fetchDataFromAPI = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:2003/api/home/load/blog"
+        "http://localhost:2003/api/home/load/blog?total=1000"
       );
       const data = response.data.content;
       console.log(response);
@@ -48,7 +48,6 @@ const BlogSingle = () => {
     let item = items.find((item) => item.id === id);
     if (item) {
       setItem(item);
-      setLike(item.countLike);
     }
   }, [id, items]);
 
@@ -81,10 +80,10 @@ const BlogSingle = () => {
     const ws = new SockJS(`http://localhost:2003/ws`);
     stompClient = Stomp.over(ws);
     stompClient.connect({}, () => {
-      stompClient.subscribe("/topic/like", (data) => {
-        const status = data.body;
-        setLike(status);
-      });
+      // stompClient.subscribe("/topic/like", (data) => {
+      //   const status = data.body;
+      //   setLike(status);
+      // });
 
       stompClient.subscribe("/topic/comment", (data) => {
         const status2 = data.body;
