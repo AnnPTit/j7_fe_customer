@@ -273,7 +273,28 @@ function Cart() {
           </div>
         ) : (
           groupedArray.map((arr) => (
-            <div className={cx("group-order")}>
+            <div
+              className={cx("group-order")}
+              onClick={() => {
+                const ids = [];
+
+                for (let index = 0; index < arr.data.length; index++) {
+                  const element = arr.data[index];
+                  let id = element.roomId;
+                  ids.push(id);
+                }
+
+                let resultString = ids[0];
+
+                if (ids.length >= 2) {
+                  resultString = ids.join("&");
+                }
+
+                console.log(resultString);
+                let url = `http://localhost:3000/booking/${resultString}`;
+                window.location.href = url;
+              }}
+            >
               <div className={cx("order-title")}>
                 <h2 className={cx("order-name")}>
                   {arr.data[0].orderCode} -{" "}
