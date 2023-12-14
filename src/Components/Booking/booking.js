@@ -12,7 +12,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import BasicTabs from "../Tab/CustomTabPanel";
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 import { DatePicker } from "antd";
 // import 'antd/lib/date-picker/style/css';  // Import DatePicker styles
 
@@ -31,8 +31,9 @@ const sendMessage = (message) => {
 const { RangePicker } = DatePicker;
 
 function generateRandomString(length) {
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let result = '';
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
   for (let i = 0; i < length; i++) {
     const randomIndex = Math.floor(Math.random() * characters.length);
     result += characters.charAt(randomIndex);
@@ -60,8 +61,8 @@ function Booking() {
   const today = new Date();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [guestCounts, setGuestCounts] = useState({}); 
-  const [keyCheck, setKeyCheck] = useState(""); 
+  const [guestCounts, setGuestCounts] = useState({});
+  const [keyCheck, setKeyCheck] = useState("");
 
   const [isBook, setIsBook] = useState({
     message: null,
@@ -106,7 +107,9 @@ function Booking() {
         );
 
         console.log(response.data);
-        setDisabledDates(response.data);
+        setDisabledDates(response.data[0]);
+        setDisabledDates1(response.data[1]);
+        setDisabledDates2(response.data[2]);
         console.log(id);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -120,21 +123,23 @@ function Booking() {
     const formattedDate = current.format("YYYY-MM-DD");
     const combinedDisabledDates = disabledDates.concat(disabledDates1);
     return (
-      (current && current < dayjs().endOf('day')) ||
+      (current && current < dayjs().endOf("day")) ||
       combinedDisabledDates.includes(formattedDate)
-    );}
+    );
+  }
   function disabledDate2(current) {
     const formattedDate = current.format("YYYY-MM-DD");
     // console.log(disabledDates2)
     const combinedDisabledDates = disabledDates.concat(disabledDates2);
     return (
-      (current && current < dayjs().endOf('day')) ||
+      (current && current < dayjs().endOf("day")) ||
       combinedDisabledDates.includes(formattedDate)
-    );}
+    );
+  }
   // Tạo payload
   const roomData = room.map((room) => ({
     id: room.id,
-    guestCount: guestCounts[room.id] || 0, 
+    guestCount: guestCounts[room.id] || 0,
   }));
   const handleSubmit = () => {
     const hoVaTenValue = fullname;
@@ -170,7 +175,7 @@ function Booking() {
       deposit,
       totalPriceRoom,
       note,
-      keyToken : keyToken
+      keyToken: keyToken,
     };
     setLoading(true);
     console.log(payload);
@@ -295,16 +300,16 @@ function Booking() {
         const message = JSON.parse(status);
         console.log(message);
         setIsBook(message);
-  
+
         if (message.message.includes("Đặt phòng thành công")) {
           setSuccess(true);
           const dateArrays = parseDateArrays(message.message);
-  
+
           if (dateArrays.length > 0) {
             console.log(dateArrays);
             setDisabledDates(dateArrays[0]);
             setDisabledDates1(dateArrays[1]);
-            console.log(dateArrays[2])
+            console.log(dateArrays[2]);
             setDisabledDates2(dateArrays[2]);
           } else {
             console.log("Không tìm thấy ngày trong chuỗi.");
@@ -315,23 +320,23 @@ function Booking() {
       });
     });
   };
-  
+
   const parseDateArrays = (message) => {
     const dateMatches = message.match(/\[(.*?)\]/g);
-  
+
     if (dateMatches) {
-      const dateArrays = dateMatches.map(match => {
-        const date_string = match.substring(1, match.length - 1); 
+      const dateArrays = dateMatches.map((match) => {
+        const date_string = match.substring(1, match.length - 1);
         return date_string.split(", ");
       });
-  
+
       return dateArrays;
     } else {
       console.log("Không tìm thấy ngày trong chuỗi.");
       return [];
     }
   };
-  
+
   function checkMatchingIds() {
     let isMatched = false;
     const roomIds = room.map((room) => room.id);
@@ -349,16 +354,16 @@ function Booking() {
     if (checkMatchingIds()) {
       // toast.info(isBook.message);
       const message = isBook.message;
-      const result = message.substring(0,  5);
+      const result = message.substring(0, 5);
       console.log(result); // Kết quả: Ay5UL
-      console.log(keyToken)
-      if(result === keyToken){
-         const stringWithoutFirstFiveChars = message.substring(5);
-         const endIndex = stringWithoutFirstFiveChars.indexOf('[');
-         const result = stringWithoutFirstFiveChars.substring(0, endIndex);
-        toast.info(result );
-        if(result.includes("Đặt phòng thành công")){
-          window.location.href="http://localhost:3001/cart"
+      console.log(keyToken);
+      if (result === keyToken) {
+        const stringWithoutFirstFiveChars = message.substring(5);
+        const endIndex = stringWithoutFirstFiveChars.indexOf("[");
+        const result = stringWithoutFirstFiveChars.substring(0, endIndex);
+        toast.info(result);
+        if (result.includes("Đặt phòng thành công")) {
+          window.location.href = "http://localhost:3001/cart";
         }
         setKeyCheck(keyToken);
       }
@@ -633,7 +638,10 @@ function Booking() {
             />
             <br />
 
-            {checkMatchingIds() && isBook.status === 1 && success && keyToken === keyCheck ? (
+            {checkMatchingIds() &&
+            isBook.status === 1 &&
+            success &&
+            keyToken === keyCheck ? (
               <div>
                 <button type="button" className="btn btn-success">
                   Phòng đã được đặt
