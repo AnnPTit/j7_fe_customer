@@ -105,6 +105,9 @@ const Navbar = () => {
             )}
             {Object.keys(customer).length > 0 ? (
               <li>
+                <Link to="/profile">
+                  <i className="far fa-chevron-right"></i>Trang cá nhân
+                </Link>
                 <Link to="/change">
                   <i className="far fa-chevron-right"></i>Đổi mật khẩu
                 </Link>

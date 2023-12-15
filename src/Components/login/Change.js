@@ -70,22 +70,14 @@ const ChangePassword = () => {
         <ToastContainer />
         <div className="container">
           <div className="sign-box">
-            <h3>Change your password below.</h3>
+            <h3>Thay đổi mật khẩu của bạn tại đây!</h3>
             <form action="" onSubmit={submitForm}>
-              <input
-                type="password"
-                name="currentPassword"
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-                placeholder="Current Password"
-                required
-              />
               <input
                 type="password"
                 name="newPassword"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="New Password"
+                placeholder="Mật khẩu mới"
                 required
               />
               <input
@@ -93,12 +85,12 @@ const ChangePassword = () => {
                 name="confirmNewPassword"
                 value={confirmNewPassword}
                 onChange={(e) => setConfirmNewPassword(e.target.value)}
-                placeholder="Confirm New Password"
+                placeholder="Xác nhận lại mật"
                 required
               />
 
               <button type="submit" className="primary-btn" disabled={loading}>
-                {loading ? "Changing Password..." : "Change Password"}
+                {loading ? "Vui lòng chờ trong giây lát..." : "Đổi mật khẩu"}
               </button>
             </form>
           </div>

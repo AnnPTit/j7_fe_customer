@@ -66,7 +66,6 @@ const Login = () => {
   };
   return (
     <>
-      <ToastContainer></ToastContainer>
       <HeadTitle />
       <section className="forms top">
         <div className="container">
@@ -74,7 +73,6 @@ const Login = () => {
             <p>
               Nhập E-mail và Mật khẩu để truy cập vào Website của chúng tôi!
             </p>
-            <p>Nhập Email và mật khẩu để đăng nhập</p>
             <form action="" onSubmit={submitForm}>
               <input
                 type="text"

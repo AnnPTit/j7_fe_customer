@@ -9,8 +9,8 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [citizenId, setCitizenId] = useState("");
   const [cpassword, setCpassword] = useState("");
-  const [recValue, setRecValue] = useState([]);
   const [loading, setLoading] = useState(false); // Thêm trạng thái loading
 
   const submitForm = async (e) => {
@@ -34,6 +34,7 @@ const Register = () => {
         fullname: fullname,
         email: email,
         phoneNumber: phoneNumber,
+        citizenId: citizenId,
         password: password,
       };
       console.log("Payload: " + newValue);
@@ -57,6 +58,11 @@ const Register = () => {
     } catch (error) {
       console.error("API call failed:", error);
       // Xử lý khi có lỗi xảy ra trong quá trình gọi API, có thể hiển thị thông báo cho người dùng
+      if (error.response.status === 400) {
+        console.log(error.response.data);
+
+        toast.error(error.response.data);
+      }
     } finally {
       setLoading(false);
     }
@@ -97,7 +103,15 @@ const Register = () => {
                 required
               />
               <input
-                type="password" 
+                type="text"
+                name="citizenId"
+                value={citizenId}
+                onChange={(e) => setCitizenId(e.target.value)}
+                placeholder="Căn cước công dân"
+                required
+              />
+              <input
+                type="password"
                 name="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
