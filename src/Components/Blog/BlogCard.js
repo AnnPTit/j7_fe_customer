@@ -57,7 +57,7 @@ const BlogCard = ({
         </div>
 
         <Link to={`/blogsingle/${id}`} className="blogItem-link">
-          READ MORE <i className="fa fa-long-arrow-right"></i>
+          Đọc Thêm <i className="fa fa-long-arrow-right"></i>
         </Link>
       </div>
     </>

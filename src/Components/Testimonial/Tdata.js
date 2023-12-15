@@ -3,7 +3,7 @@ const Tdata = [
     id: 1,
     desc: "Anh An là một người lãnh đạo có tầm nhìn và khả năng dẫn dắt đội ngũ xuất sắc. Anh luôn đặt ra những mục tiêu cao cho team và truyền cảm hứng cho mọi người cùng nhau nỗ lực để đạt được mục tiêu đó. Anh cũng là một người rất tận tâm với công việc, luôn sẵn sàng giúp đỡ và hỗ trợ đồng đội.",
     name: "PHAM THANH AN",
-    profile: "/images/profile/EIVEE0940.JPG",
+    profile: "/images/profile/an.png",
     post: "Developer",
   },
   {

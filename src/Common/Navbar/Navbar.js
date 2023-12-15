@@ -40,7 +40,11 @@ const Navbar = () => {
                 width: 100,
               }}
             >
-              <Logo></Logo>
+              <div onClick={()=>{
+               window.location.href="http://localhost:3001/"
+              }}>
+              <Logo ></Logo>
+              </div>
             </li>
             <li>
               <Link to="/" onClick={closeMobileMenu}>
