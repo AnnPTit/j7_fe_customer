@@ -365,8 +365,8 @@ function Cart() {
                             arr.data[0].orderCode
                           );
                           if (isSubmitSuccess) {
-                            Swal.fire("Thêm thành công !", "success");
-                            toast.success("Thêm Thành Công !");
+                            Swal.fire("Hủy thành công !", "success");
+                            toast.success("Hủy Thành Công !");
                           }
                         }
                       });

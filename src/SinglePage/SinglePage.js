@@ -25,7 +25,7 @@ const SinglePage = () => {
         <section className="single-page top">
           <div className="container">
             <Link to="/destinations" className="primary-btn back">
-              <i className="fas fa-long-arrow-alt-left"></i> Go Back
+              <i className="fas fa-long-arrow-alt-left"></i> Trở lại
             </Link>
 
             {/* --------- main-content--------- */}

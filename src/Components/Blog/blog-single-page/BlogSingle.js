@@ -176,7 +176,7 @@ const BlogSingle = () => {
         <section className="single-page top">
           <div className="container">
             <Link to="/blog" className="primary-btn back">
-              <i className="fas fa-long-arrow-alt-left"></i> Go Back
+              <i className="fas fa-long-arrow-alt-left"></i> Trở lại
             </Link>
 
             {/* --------- main-content--------- */}
