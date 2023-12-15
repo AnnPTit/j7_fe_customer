@@ -590,6 +590,7 @@ function Booking() {
             </div>
             <p>Nhận phòng từ : 2:00 PM</p>
             <p>Trả phòng trước : 12:00 AM</p>
+            {/* <p>Vui lòng đến đúng thời gian đã đặt ! Xin cảm ơn</p> */}
             <p>Tiền Phòng </p>
             <input
               type="text"
