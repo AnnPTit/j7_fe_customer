@@ -29,7 +29,7 @@ const Login = () => {
         // console.warn(Api);
         console.log(payload);
         if (email === "") {
-          toast.error("Mật khẩu không được để trống !");
+          toast.error("Email không được để trống !");
           return;
         }
         if (password === "") {
@@ -49,12 +49,13 @@ const Login = () => {
         window.location.href = "/cart";
       } catch (error) {
         if (error.response) {
+          console.log(error);
           // Xử lý response lỗi
           if (error.response.status === 403) {
             alert("Bạn không có quyền truy cập vào trang này");
             window.location.href = "/auth/login"; // Thay đổi "/dang-nhap" bằng đường dẫn đến trang đăng nhập của bạn
           } else {
-            alert("Có lỗi xảy ra trong quá trình gọi API");
+            alert("Tài khoản hoặc mật khẩu không đúng !");
           }
         } else {
           toast.error("Tên đăng nhập hoặc mật khẩu không chính xác !");

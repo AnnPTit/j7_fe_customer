@@ -203,7 +203,7 @@ const BlogSingle = () => {
                 </div>
                 <h1> {item.title} </h1>
                 <p>{item.content}</p>
-                <p>{item.content}</p>
+                {/* <p>{item.content}</p> */}
                 <div className="para flex_space">
                   {/* <button
                     style={{

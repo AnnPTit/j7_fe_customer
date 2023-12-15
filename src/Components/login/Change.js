@@ -57,7 +57,7 @@ const ChangePassword = () => {
       }
     } catch (error) {
       console.error("API call failed:", error);
-      toast.error("Có lỗi xảy ra trong quá trình thay đổi mật khẩu!");
+      toast.error(error.response.data);
     } finally {
       setLoading(false);
     }
