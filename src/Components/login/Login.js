@@ -66,26 +66,27 @@ const Login = () => {
   };
   return (
     <>
-      <ToastContainer></ToastContainer>
       <HeadTitle />
       <section className="forms top">
         <div className="container">
           <div className="sign-box">
-            <p>Nhập Email và mật khẩu để đăng nhập</p>
+            <p>
+              Nhập E-mail và Mật khẩu để truy cập vào Website của chúng tôi!
+            </p>
             <form action="" onSubmit={submitForm}>
               <input
                 type="text"
                 name="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
+                placeholder="E-mail"
               />
               <input
                 type="password"
                 name="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
+                placeholder="Mật khẩu"
               />
 
               <div className="flex_space">

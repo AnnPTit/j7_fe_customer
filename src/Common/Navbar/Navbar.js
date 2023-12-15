@@ -3,6 +3,7 @@ import "./Navbar.css";
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Tippy from "@tippyjs/react";
+import "bootstrap/dist/css/bootstrap.min.css";
 import { Logo } from "../../Components/logo";
 
 const Navbar = () => {
@@ -102,13 +103,11 @@ const Navbar = () => {
                 </Link>
               </li>
             )}
-            <li>
-              <Link to="/register">
-                <i className="far fa-chevron-right"></i>Đăng ký
-              </Link>
-            </li>
             {Object.keys(customer).length > 0 ? (
               <li>
+                <Link to="/profile">
+                  <i className="far fa-chevron-right"></i>Trang cá nhân
+                </Link>
                 <Link to="/change">
                   <i className="far fa-chevron-right"></i>Đổi mật khẩu
                 </Link>
@@ -116,6 +115,13 @@ const Navbar = () => {
             ) : (
               <div></div>
             )}
+            {/* <select class="form-select" aria-label="Default select example">
+              <option selected>Quản lý tài khoản</option>
+              <option>Thông tin cá nhân</option>
+              <option>Đăng ký</option>
+              <option>Đăng nhập</option>
+              <option>Đăng xuất</option>
+            </select> */}
 
             <li>
               <Tippy interactive={true} interactiveBorder={20} delay={100}>
@@ -129,12 +135,6 @@ const Navbar = () => {
                 </Link>
               </Tippy>
             </li>
-
-            {/* <li>
-              <Link to="/contact">
-                <button className="primary-btn">Request a Quote</button>
-              </Link>
-            </li> */}
           </div>
         </div>
       </nav>
