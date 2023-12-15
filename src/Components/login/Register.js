@@ -8,8 +8,9 @@ const Register = () => {
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [citizenId, setCitizenId] = useState("");
   const [cpassword, setCpassword] = useState("");
-  const [recValue, setRecValue] = useState([]);
   const [loading, setLoading] = useState(false); // Thêm trạng thái loading
 
   const submitForm = async (e) => {
@@ -32,6 +33,8 @@ const Register = () => {
       const newValue = {
         fullname: fullname,
         email: email,
+        phoneNumber: phoneNumber,
+        citizenId: citizenId,
         password: password,
       };
       console.log("Payload: " + newValue);
@@ -55,6 +58,11 @@ const Register = () => {
     } catch (error) {
       console.error("API call failed:", error);
       // Xử lý khi có lỗi xảy ra trong quá trình gọi API, có thể hiển thị thông báo cho người dùng
+      if (error.response.status === 400) {
+        console.log(error.response.data);
+
+        toast.error(error.response.data);
+      }
     } finally {
       setLoading(false);
     }
@@ -67,6 +75,7 @@ const Register = () => {
         <ToastContainer />
         <div className="container">
           <div className="sign-box">
+            <p>Bạn chưa có tài khoản? Hãy tạo cho mình một tài khoản mới!</p>
             <p>Vui lòng điền đầy đủ thông tin để tạo tài khoản</p>
             <form action="" onSubmit={submitForm}>
               <input
@@ -74,7 +83,7 @@ const Register = () => {
                 name="name"
                 value={fullname}
                 onChange={(e) => setFullname(e.target.value)}
-                placeholder="Name"
+                placeholder="Họ và tên"
                 required
               />
               <input
@@ -86,11 +95,27 @@ const Register = () => {
                 required
               />
               <input
+                type="text"
+                name="phoneNumber"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                placeholder="Số điện thoại"
+                required
+              />
+              <input
+                type="text"
+                name="citizenId"
+                value={citizenId}
+                onChange={(e) => setCitizenId(e.target.value)}
+                placeholder="Căn cước công dân"
+                required
+              />
+              <input
                 type="password"
                 name="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
+                placeholder="Mật khẩu"
                 required
               />
               <input
@@ -98,7 +123,7 @@ const Register = () => {
                 name="cpassword"
                 value={cpassword}
                 onChange={(e) => setCpassword(e.target.value)}
-                placeholder="Confirm Password"
+                placeholder="Xác nhận mật khẩu"
                 required
               />
 

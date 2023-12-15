@@ -20,6 +20,7 @@ import Contact from "./Components/Contact/Contact";
 import Footer from "./Common/footer/Footer";
 import Login from "./Components/login/Login";
 import Register from "./Components/login/Register";
+import Profile from "./Components/login/Profile";
 import Change from "./Components/login/Change";
 import Detail from "./Components/detail/detail";
 import Booking from "./Components/Booking/booking";
@@ -45,6 +46,7 @@ function App() {
           <Route path="/contact" component={Contact} />
           <Route path="/sign-in" component={Login} />
           <Route path="/Register" component={Register} />
+          <Route path="/Profile" component={Profile} />
           <Route path="/change" component={Change} />
           <Route path="/cart" component={Cart} />
           <Route path="/detail/:id" component={Detail} />
