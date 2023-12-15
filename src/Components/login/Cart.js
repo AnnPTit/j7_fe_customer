@@ -74,15 +74,24 @@ function Cart() {
     return number.toString().padStart(2, "0"); // Thêm số 0 phía trước nếu cần
   }
 
+  let total = 0;
   const groupedData = data.reduce((result, room1) => {
     const orderCode = room1.orderCode;
 
     if (!result[orderCode]) {
       result[orderCode] = { data: [], totalPrice: 0 };
     }
-
     result[orderCode].data.push(room1);
-    result[orderCode].totalPrice += room1.deposit;
+    result[orderCode].totalPrice = room1.deposit;
+    let start = room1.bookingStart;
+    let end = room1.bookingEnd;
+    let startDate = new Date(start);
+    let endDate = new Date(end);
+    let timeDiff = endDate - startDate;
+    let daysDiff = timeDiff / (1000 * 60 * 60 * 24);
+    total = total + room1.price;
+    result[orderCode].total = total * daysDiff;
+    console.log(daysDiff);
     return result;
   }, {});
 
@@ -233,6 +242,21 @@ function Cart() {
           <li className={cx("nav-item")}>
             <button
               style={
+                odStt === 9
+                  ? { color: "white", background: "black", borderRadius: 20 }
+                  : null
+              }
+              className={cx("nav-link")}
+              onClick={() => {
+                setOdStt(9);
+              }}
+            >
+              Hết hạn checkin
+            </button>
+          </li>
+          <li className={cx("nav-item")}>
+            <button
+              style={
                 odStt === 7
                   ? { color: "white", background: "black", borderRadius: 20 }
                   : null
@@ -273,14 +297,37 @@ function Cart() {
           </div>
         ) : (
           groupedArray.map((arr) => (
-            <div className={cx("group-order")}>
+            <div
+              className={cx("group-order")}
+              onClick={() => {
+                // const ids = [];
+                // for (let index = 0; index < arr.data.length; index++) {
+                //   const element = arr.data[index];
+                //   let id = element.roomId;
+                //   ids.push(id);
+                // }
+                // let resultString = ids[0];
+                // if (ids.length >= 2) {
+                //   resultString = ids.join("&");
+                // }
+                // console.log(resultString);
+                // let url = `http://localhost:3001/booking/${resultString}`;
+                // window.location.href = url;
+                console.log(arr);
+              }}
+            >
               <div className={cx("order-title")}>
                 <h2 className={cx("order-name")}>
-                  {arr.data[0].orderCode} -{" "}
+                  {arr.data[0].orderCode} - {"Tiền cọc : "}
                   {arr.totalPrice.toLocaleString("vi-VN", {
                     style: "currency",
                     currency: "VND",
                   })}
+                  {/* {"-"}
+                  {arr.total.toLocaleString("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                  })} */}
                 </h2>
 
                 {arr.data[0].orderStatus === 4 ? (
@@ -288,6 +335,7 @@ function Cart() {
                     style={{
                       borderRadius: 10,
                       backgroundColor: "#b84d84",
+                      width: 200,
                     }}
                     className="btn btn-primary"
                     onClick={() => createPaymentMomo(arr.data[0].orderCode)}
@@ -298,6 +346,7 @@ function Cart() {
                   <button
                     style={{
                       borderRadius: 10,
+                      width: 200,
                     }}
                     className="btn btn-primary"
                     // onClick={() => cancelOrder(arr.data[0].orderCode)}

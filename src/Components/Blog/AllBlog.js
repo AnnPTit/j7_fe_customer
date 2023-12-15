@@ -18,7 +18,6 @@ const AllBlog = () => {
         console.log(response.data);
         if (response.data) {
           setTotalPages(response.data.totalPages);
-          console.log(response.data);
           setIems(response.data.content);
         }
       } catch (error) {
