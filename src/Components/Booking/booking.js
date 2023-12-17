@@ -166,6 +166,12 @@ function Booking() {
     } else if (cancuoc === "") {
       toast.error("Căn cước công dân không được để trống");
       return;
+    } else if (!/^\d+$/.test(cancuoc)) {
+      toast.error("Căn cước công dân chỉ được chứa ký tự số!");
+      return;
+    } else if (!/^[0]\d{11}$/.test(cancuoc)) {
+      toast.error("Căn cước công dân phải bắt đầu bằng số 0 và có đúng 12 số!");
+      return;
     }
 
     const payload = {
