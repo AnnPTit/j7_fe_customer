@@ -458,6 +458,15 @@ function Booking() {
                   <span className={cx("capacity")}>
                     <i class="fa fa-user"></i> {room1.typeRoom.capacity}
                   </span>
+                  <span className={cx("capacity")}>
+                    <i
+                      style={{
+                        marginRight: 5,
+                      }}
+                      class="fa fa-child"
+                    ></i>
+                    {room1.typeRoom.children}
+                  </span>
                 </p>
               )}
 

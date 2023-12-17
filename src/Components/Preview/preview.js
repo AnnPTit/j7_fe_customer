@@ -97,6 +97,7 @@ function Preview() {
           // setRoom([response.data]);
           const room = {
             capacity: response.data.typeRoom.capacity,
+            children: response.data.typeRoom.children,
             id: response.data.id,
             note: response.data.note,
             pricePerDay: response.data.typeRoom.pricePerDay,
@@ -219,6 +220,10 @@ function Preview() {
                     Số Khách :{" "}
                     <span>
                       {roomItem.capacity} <i class="fa fa-user"></i>
+                    </span>
+                    -
+                    <span>
+                      {roomItem.children} <i class="fa fa-child"></i>
                     </span>
                   </p>
                 )}

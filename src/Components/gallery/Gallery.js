@@ -108,7 +108,7 @@ function Gallery() {
     }
     fetchData();
   };
-console.log("ROOM", rooms);
+  console.log("ROOM", rooms);
   return (
     <section className="gallery top">
       <div
@@ -197,7 +197,6 @@ console.log("ROOM", rooms);
                 </option>
               ))}
             </select>
-            <p>Đã chọn: {selectedChildren}</p>
           </div>
 
           <div className="input-container">
@@ -211,8 +210,8 @@ console.log("ROOM", rooms);
                 setIsCreaseBook(null);
               }}
             >
-              <option value={false}>Đơn giá tăng dần</option>
-              <option value={true}>Đơn giá giảm dần</option>
+              <option value={true}>Đơn giá tăng dần</option>
+              <option value={false}>Đơn giá giảm dần</option>
             </select>
           </div>
 
