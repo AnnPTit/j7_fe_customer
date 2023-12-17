@@ -53,6 +53,7 @@ function Booking() {
   const [deposit, setDeposit] = useState();
   const [customer, setCustomer] = useState({});
   const [fullname, setFullname] = useState("");
+  const [cccd, setCccd] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [vat, setVat] = useState();
@@ -145,6 +146,7 @@ function Booking() {
     const hoVaTenValue = fullname;
     const emailValue = email;
     const soDienThoaiValue = phone;
+    const cancuoc = cccd;
     const note = document.getElementById("note").value;
     if (hoVaTenValue === "") {
       toast.error("Họ và tên không được để trống");
@@ -161,6 +163,9 @@ function Booking() {
     } else if (!isPhoneNumberValid(soDienThoaiValue)) {
       toast.error("Số điện thoại không đúng định dạng !");
       return;
+    } else if (cancuoc === "") {
+      toast.error("Căn cước công dân không được để trống");
+      return;
     }
 
     const payload = {
@@ -169,6 +174,7 @@ function Booking() {
         hoVaTen: hoVaTenValue,
         email: emailValue,
         soDienThoai: soDienThoaiValue,
+        cccd: cancuoc,
       },
       dayStart,
       dayEnd,
@@ -362,7 +368,12 @@ function Booking() {
         const result = stringWithoutFirstFiveChars.substring(0, endIndex);
         toast.info(result);
         if (result.includes("Đặt phòng thành công")) {
-          window.location.href = "http://localhost:3001/cart";
+          const storedData = localStorage.getItem("idCustom");
+
+          if (storedData) {
+            // Nếu dữ liệu tồn tại trong localStorage
+            window.location.href = "http://localhost:3001/cart";
+          }
         }
         setKeyCheck(keyToken);
       }
@@ -560,6 +571,19 @@ function Booking() {
                   setPhone(e.target.value);
                 }}
                 value={phone}
+                className="form-control"
+                aria-label="Amount (to the nearest dollar)"
+              />
+            </div>
+            <p>Căn cước công dân</p>
+            <div className="input-group mb-3">
+              {/* <span className="input-group-text">+84</span> */}
+              <input
+                type="text"
+                onChange={(e) => {
+                  setCccd(e.target.value);
+                }}
+                value={cccd}
                 className="form-control"
                 aria-label="Amount (to the nearest dollar)"
               />
