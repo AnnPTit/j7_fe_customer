@@ -45,8 +45,8 @@ const Cards2 = () => {
         let Api = `http://localhost:2003/api/home/room/top?total_page=5&current_page=${pageNumber}`;
         // console.warn(Api);
         const response = await axios.get(Api); // Thay đổi URL API của bạn tại đây
-    
-        console.log("Toprooom",response.data)
+
+        console.log("Toprooom", response.data);
         setTotalPages(response.data.totalPages);
         setData(response.data.content);
       } catch (error) {
@@ -95,7 +95,7 @@ const Cards2 = () => {
                 <div className="details">
                   <h2>{value.roomName}</h2>
                   <i
-                  // <i class="fa-solid fa-people-roof"></i>
+                    // <i class="fa-solid fa-people-roof"></i>
                     className="fas fa-map-marker-alt"
                     style={{
                       color: "red",
@@ -111,6 +111,15 @@ const Cards2 = () => {
                     {value.capacity}
                   </span>
                   <i className="fa fa-user"></i>
+                  <span
+                    style={{
+                      marginRight: 5,
+                      marginLeft: 5,
+                    }}
+                  >
+                    {value.children}
+                  </span>
+                  <i className="fa fa-child"></i>
                   <h3>
                     {value && (
                       <span
@@ -126,18 +135,17 @@ const Cards2 = () => {
                       </span>
                     )}
                   </h3>
-                  Số lượt đặt:  <t/>
+                  Số lượt đặt: <t />
                   {value && (
-                      <span
-                        style={{
-                          color: "red",
-                          fontWeight: 700,
-                        }}
-                      >
-                        {value.countBook}
-                      </span>
-                    )}
-                  
+                    <span
+                      style={{
+                        color: "red",
+                        fontWeight: 700,
+                      }}
+                    >
+                      {value.countBook}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>

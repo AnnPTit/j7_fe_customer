@@ -94,7 +94,7 @@ const Cards = () => {
                 <div className="details">
                   <h2>{value.roomName}</h2>
                   <i
-                  // <i class="fa-solid fa-people-roof"></i>
+                    // <i class="fa-solid fa-people-roof"></i>
                     className="fas fa-map-marker-alt"
                     style={{
                       color: "red",
@@ -110,6 +110,15 @@ const Cards = () => {
                     {value.capacity}
                   </span>
                   <i className="fa fa-user"></i>
+                  <span
+                    style={{
+                      marginRight: 5,
+                      marginLeft: 5,
+                    }}
+                  >
+                    {value.children}
+                  </span>
+                  <i className="fa fa-child"></i>
                   <h3>
                     {value && (
                       <span

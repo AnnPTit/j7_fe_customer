@@ -154,6 +154,17 @@ function Detail() {
             </span>
             <i class="fa fa-user"></i>
           </span>
+          -
+          <span className={cx("item-capacity-wrapper")}>
+            <span className={cx("item-capacity")}>
+              {room.typeRoom && room.typeRoom.children}
+            </span>
+            <i class="fa fa-child"></i>
+          </span>
+          {/* <span className={cx("capacity")}>
+            {room.typeRoom.children}
+            <i class="fa fa-child"></i>
+          </span> */}
         </div>
         <br />
         <div className="item-text-item">

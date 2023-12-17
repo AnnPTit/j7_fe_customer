@@ -401,6 +401,18 @@ function Cart() {
                       <p>
                         Sức chứa :
                         <span className={cx("capacity")}>
+                          <i class="fa fa-user"></i> {room1.capacity}
+                        </span>
+                        <span className={cx("capacity")}>
+                          <i class="fa fa-child"></i>
+                          {room1.children}
+                        </span>
+                      </p>
+                    )}
+                    {room1.typeRoom && (
+                      <p>
+                        Số khách :
+                        <span className={cx("capacity")}>
                           <i class="fa fa-user"></i> {room1.numberCustom}
                         </span>
                       </p>
