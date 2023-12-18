@@ -9,7 +9,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Slider, Typography } from "@mui/material";
-import DatePicker from "react-datepicker";
+import { DatePicker } from "antd";
 import { ToastContainer, toast } from "react-toastify";
 
 const cx = classNames.bind(Style);
@@ -30,14 +30,14 @@ function Preview() {
   const price1 = priceRange[0];
   const price2 = priceRange[1];
 
-  const formatDate = (date) => {
-    const day = date.getDate().toString().padStart(2, "0");
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const year = date.getFullYear();
-    return `${year}-${month}-${day}`;
-  };
-  const formattedStartDate = formatDate(selectedDateStart);
-  const formattedEndDate = formatDate(selectedDateEnd);
+  // const formatDate = (date) => {
+  //   const day = date.getDate().toString().padStart(2, "0");
+  //   const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  //   const year = date.getFullYear();
+  //   return `${year}-${month}-${day}`;
+  // };
+  // const formattedStartDate = formatDate(selectedDateStart);
+  // const formattedEndDate = formatDate(selectedDateEnd);
 
   const handleOpenDialog = () => {
     setOpen(true);
@@ -52,8 +52,8 @@ function Preview() {
     typeRoom: typeRoomChose,
     numberCustom: numberCustom,
     pricePerDays: [price1, price2],
-    checkIn: formattedStartDate,
-    checkOut: formattedEndDate,
+    checkIn: selectedDateStart,
+    checkOut: selectedDateEnd,
   };
 
   useEffect(() => {
@@ -296,6 +296,9 @@ function Preview() {
             maxHeight: "90%",
           },
         }}
+        style={{
+          zIndex: 1,
+        }}
       >
         <DialogTitle>Thêm Phòng </DialogTitle>
         <DialogContent>
@@ -358,49 +361,26 @@ function Preview() {
             </div>
             <div className={cx("search-date")}>
               <div className={cx("date-picker")}>
-                {/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <DatePicker
-                    style={{
-                      marginRight: 40,
-                      marginLeft: 10,
-                    }}
-                    value={selectedDateStart}
-                    disablePast
-                    onChange={setSelectedDateStart}
-                    label="Checkin"
-                    showTodayButton
-                  />
-
-                  <DatePicker
-                    value={selectedDateEnd}
-                    disablePast
-                    onChange={setSelectedDateEnd}
-                    label="Checkout"
-                    showTodayButton
-                  />
-               </MuiPickersUtilsProvider> */}
                 <div
                   className={cx("input-group-date")}
                   style={{
-                    border: "1px solid #ccc",
+                    marginRight: 100,
                   }}
                 >
                   <DatePicker
                     selected={selectedDateStart}
                     onChange={setSelectedDateStart}
-                    dateFormat="dd/MM/yyyy"
+                    // dateFormat="dd/MM/yyyy"
+                    placeholder="Ngày checkIn"
+                    style={{ zIndex: 100000000000000 }} // Chọn giá trị zIndex phù hợp với trang của bạn
                   />
                 </div>
-                <div
-                  className={cx("input-group-date")}
-                  style={{
-                    border: "1px solid #ccc",
-                  }}
-                >
+                <div className={cx("input-group-date")} style={{}}>
                   <DatePicker
                     selected={selectedDateEnd}
                     onChange={setSelectedDateEnd}
-                    dateFormat="dd/MM/yyyy"
+                    // dateFormat="dd/MM/yyyy"
+                    placeholder="Ngày checkOut"
                   />
                 </div>
               </div>
