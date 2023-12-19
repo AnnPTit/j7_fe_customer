@@ -26,6 +26,7 @@ function Preview() {
   const [click, setClick] = useState(false);
   const [roomName, setRoomName] = useState("");
   const [numberCustom, setNumberCustom] = useState("");
+  const [children, setChildren] = useState("");
   const [priceRange, setPriceRange] = useState([0, 5000000]);
   const price1 = priceRange[0];
   const price2 = priceRange[1];
@@ -54,6 +55,7 @@ function Preview() {
     pricePerDays: [price1, price2],
     checkIn: selectedDateStart,
     checkOut: selectedDateEnd,
+    children: children,
   };
 
   useEffect(() => {
@@ -305,27 +307,34 @@ function Preview() {
           <div>
             <div className={cx("filter")}>
               <div>
-                Tên Phòng :
                 <input
                   className={cx("input-search")}
                   type="text"
+                  placeholder="Tên phòng"
                   value={roomName}
                   onChange={(e) => setRoomName(e.target.value)}
                 />
               </div>
-              <div>
-                Số khách :
-                <br />
+
+              <input
+                className={cx("input-search-number")}
+                type="number"
+                placeholder="Số khách"
+                value={numberCustom}
+                onChange={(e) => setNumberCustom(e.target.value)}
+              />
+
+              
                 <input
                   className={cx("input-search-number")}
                   type="number"
-                  value={numberCustom}
-                  onChange={(e) => setNumberCustom(e.target.value)}
+                  placeholder="Trẻ em"
+                  value={children}
+                  onChange={(e) => setChildren(e.target.value)}
                 />
-              </div>
+          
+
               <div>
-                Loại phòng :
-                <br />
                 <select
                   className={cx("input-search-type")}
                   onChange={(e) => {
@@ -341,9 +350,7 @@ function Preview() {
                 </select>
               </div>
               <div className={cx("price-range")}>
-                <Typography id="range-slider" gutterBottom>
-                  Khoảng giá :
-                </Typography>
+                <Typography id="range-slider" gutterBottom></Typography>
                 <Slider
                   value={priceRange}
                   onChange={handleChange}
@@ -364,7 +371,8 @@ function Preview() {
                 <div
                   className={cx("input-group-date")}
                   style={{
-                    marginRight: 100,
+                    marginRight: 10,
+                    marginLeft: 10,
                   }}
                 >
                   <DatePicker
@@ -404,7 +412,12 @@ function Preview() {
                     <p>-</p>
                     {room1.typeRoom && <p> {room1.typeRoom}</p>}
                   </div>
-                  {room1.typeRoom && <p> Số Khách : {room1.capacity}</p>}
+                  {room1.typeRoom && (
+                    <p>
+                      {" "}
+                      Sức chứa : {room1.capacity} | Trẻ em : {room1.children}
+                    </p>
+                  )}
                   <div className={cx("room-price")}>
                     {/* Đơn giá theo giờ :
                     <p>

@@ -410,6 +410,7 @@ function Booking() {
       setFullname(customer.fullname);
       setEmail(customer.email);
       setPhone(customer.phoneNumber);
+      setCccd(customer.citizenId);
     }
   }, [customer]);
 
