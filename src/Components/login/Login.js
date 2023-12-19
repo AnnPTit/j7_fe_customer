@@ -43,6 +43,7 @@ const Login = () => {
           fullname: response.data.fullname,
           email: response.data.email,
           phoneNumber: response.data.phoneNumber,
+          citizenId:response.data.citizenId,
         };
         // luu thong tin dang nhap len localstorage
         localStorage.setItem("idCustom", JSON.stringify(customer));
