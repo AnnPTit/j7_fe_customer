@@ -159,6 +159,8 @@ const Cards = ({ room }) => {
                 className="btn btn-primary"
                 style={{
                   marginTop: 50,
+                  width: "150px",
+                  height: "45px"
                 }}
               >
                 Đặt Ngay
