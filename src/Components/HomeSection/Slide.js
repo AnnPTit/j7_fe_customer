@@ -83,7 +83,7 @@ const Home = ({ slides }) => {
         })}
       </section>
 
-      <section className="slide-form">
+      {/* <section className="slide-form">
         <div className="container">
           <h2>ARMANI Hotel - Thanh lịch Hoàn Hảo, Khám Phá Phong Cách Armani.</h2>
           <span> Tìm kiếm phòng </span>
@@ -142,15 +142,6 @@ const Home = ({ slides }) => {
                   setPriceRange={setPriceRange}
                 />
               </div>
-              {/* <input
-                className={cx("home-input")}
-                type="number"
-                placeholder="Số khách"
-                value={numberCustom}
-                onChange={(e) => {
-                  setNumberCustom(e.target.value);
-                }}
-              /> */}
             </div>
             <div className={cx("btn-search")}>
               <Link
@@ -159,10 +150,24 @@ const Home = ({ slides }) => {
                   setClick(!click);
                 }}
               >
-                Search
+                Tìm kiếm
               </Link>
             </div>
           </form>
+        </div>
+      </section> */}
+      <section className="slide-form">
+        <div className="display-flex">
+          <div className="flex-item">
+            <p>hello</p>
+            <input type="date"/>
+          </div>
+          <div className="flex-item">
+            <span span>hello</span>
+          </div>
+          <div className="flex-item">
+            <span>hello</span>
+          </div>
         </div>
       </section>
     </>

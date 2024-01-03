@@ -42,9 +42,9 @@ const Cards = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let Api = `http://localhost:2003/api/home/room/search?current_page=${pageNumber}&total_page=5`;
+        let Api = `http://localhost:2003/api/home/type-room/search?current_page=${pageNumber}`;
         // console.warn(Api);
-        const response = await axios.post(Api, payload); // Thay đổi URL API của bạn tại đây
+        const response = await axios.get(Api); // Thay đổi URL API của bạn tại đây
         console.log(response.data);
         setTotalPages(response.data.totalPages);
         setData(response.data.content);
@@ -78,7 +78,7 @@ const Cards = () => {
                   <Link to={detailUrl}>
                     <img
                       className={cx("image-item")}
-                      src={value.urls?.[0] ?? ""}
+                      src={value.urls?.[0] ?? "https://th.bing.com/th/id/OIP.uQVNaCMS9q5-UWXUHe1jmQHaE7?rs=1&pid=ImgDetMain"}
                       alt=""
                     />
                   </Link>
@@ -92,16 +92,16 @@ const Cards = () => {
                 </div> */}
                 <br></br>
                 <div className="details">
-                  <h2>{value.roomName}</h2>
-                  <i
+                  <h2>{value.typeRoomName}</h2>
+                  {/* <i
                     // <i class="fa-solid fa-people-roof"></i>
                     className="fas fa-map-marker-alt"
                     style={{
                       color: "red",
                     }}
                   ></i>
-                  <label>{value.typeRoom}</label>
-                  <br />
+                  <label>{value.children}</label> */}
+                  {/* <br /> */}
                   <span
                     style={{
                       marginRight: 5,
@@ -130,8 +130,10 @@ const Cards = () => {
                         {value.pricePerDay?.toLocaleString("vi-VN", {
                           style: "currency",
                           currency: "VND",
-                        })}
+                        })} 
+                        <span> /<i class="fa fa-moon"></i></span>
                       </span>
+                     
                     )}
                   </h3>
                 </div>
