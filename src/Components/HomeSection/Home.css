@@ -38,13 +38,14 @@
 }
 .slide-form {
   position: absolute;
-  top: 30%;
-  left: 10%;
-  background-color: rgba(0, 0, 0, 0.7);
-  width: 35%;
-  height: 65vh;
+  top: 40%;
+  left: 25%;
+  background-color: rgba(255, 250, 250, 0.925);
+  width: 50%;
+  height:500px;
   border-radius: 5px;
-  color: white;
+  /* color: white; */
+  box-shadow: 0px 5px 5px 5px rgba(0, 0, 0, 0.26);
 }
 .slide-form input {
   margin-top: 20px;
@@ -55,6 +56,15 @@
 .slide-form .submit {
   background: #000000;
   color: white;
+}
+.display-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 10px 20px   ;
+}
+.flex-item{
+  color: #000000 !important;
 }
 /*--------form-----------*/
 @media screen and (max-width: 768px) {
@@ -70,4 +80,5 @@
     width: 90%;
     height: 55vh;
   }
+  
 }
