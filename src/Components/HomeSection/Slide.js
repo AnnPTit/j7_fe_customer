@@ -94,39 +94,39 @@ const Home = ({ slides }) => {
     console.log(numberCustom);
     console.log(numberChildren);
     console.log(typeRoomChose);
-    window.location=`/book/${formattedDate}/${formattedDate2}/${numberNight}/${numberRoom}/${numberCustom}/${numberChildren}/${typeRoomChose}`
+    window.location = `/book/${formattedDate}/${formattedDate2}/${numberNight}/${numberRoom}/${numberCustom}/${numberChildren}/${typeRoomChose}`;
   };
   const dArr = [
-    { value: 1, label: "1 Đêm" },
-    { value: 2, label: "2 Đêm" },
-    { value: 3, label: "3 Đêm" },
-    { value: 4, label: "4 Đêm" },
-    { value: 5, label: "5 Đêm" },
-    { value: 6, label: "6 Đêm" },
-    { value: 7, label: "7 Đêm" },
-    { value: 8, label: "8 Đêm" },
-    { value: 9, label: "9 Đêm" },
-    { value: 10, label: "10 Đêm" },
-    { value: 11, label: "11 Đêm" },
-    { value: 12, label: "12 Đêm" },
-    { value: 13, label: "13 Đêm" },
-    { value: 14, label: "14 Đêm" },
-    { value: 15, label: "15 Đêm" },
-    { value: 16, label: "16 Đêm" },
-    { value: 17, label: "17 Đêm" },
-    { value: 18, label: "18 Đêm" },
-    { value: 19, label: "19 Đêm" },
-    { value: 20, label: "20 Đêm" },
-    { value: 21, label: "21 Đêm" },
-    { value: 22, label: "22 Đêm" },
-    { value: 23, label: "23 Đêm" },
-    { value: 24, label: "24 Đêm" },
-    { value: 25, label: "25 Đêm" },
-    { value: 26, label: "26 Đêm" },
-    { value: 27, label: "27 Đêm" },
-    { value: 28, label: "28 Đêm" },
-    { value: 29, label: "29 Đêm" },
-    { value: 30, label: "30 Đêm" },
+    { value: 1, label: "1 Ngày" },
+    { value: 2, label: "2 Ngày" },
+    { value: 3, label: "3 Ngày" },
+    { value: 4, label: "4 Ngày" },
+    { value: 5, label: "5 Ngày" },
+    { value: 6, label: "6 Ngày" },
+    { value: 7, label: "7 Ngày" },
+    { value: 8, label: "8 Ngày" },
+    { value: 9, label: "9 Ngày" },
+    { value: 10, label: "10 Ngày" },
+    { value: 11, label: "11 Ngày" },
+    { value: 12, label: "12 Ngày" },
+    { value: 13, label: "13 Ngày" },
+    { value: 14, label: "14 Ngày" },
+    { value: 15, label: "15 Ngày" },
+    { value: 16, label: "16 Ngày" },
+    { value: 17, label: "17 Ngày" },
+    { value: 18, label: "18 Ngày" },
+    { value: 19, label: "19 Ngày" },
+    { value: 20, label: "20 Ngày" },
+    { value: 21, label: "21 Ngày" },
+    { value: 22, label: "22 Ngày" },
+    { value: 23, label: "23 Ngày" },
+    { value: 24, label: "24 Ngày" },
+    { value: 25, label: "25 Ngày" },
+    { value: 26, label: "26 Ngày" },
+    { value: 27, label: "27 Ngày" },
+    { value: 28, label: "28 Ngày" },
+    { value: 29, label: "29 Ngày" },
+    { value: 30, label: "30 Ngày" },
   ];
 
   return (
@@ -170,7 +170,7 @@ const Home = ({ slides }) => {
             />
           </div>
           <div className="flex-item">
-            <p span>Số đêm</p>
+            <p span>Số Ngày</p>
             <Select
               value={numberNight}
               style={{ width: "80%", height: "52%" }}
@@ -284,11 +284,11 @@ const Home = ({ slides }) => {
             <p>
               {" "}
               Khách đến nhận phòng vào{" "}
-              <span className="text-red">12h00 {formattedDate}</span>
+              <span className="text-red">14h00 {formattedDate}</span>
             </p>
             <p>
               {" "}
-              và trả phòng vào{" "}
+              trả phòng vào{" "}
               <span className="text-red">12h00 {formattedDate2}</span>
             </p>
           </div>
