@@ -38,7 +38,7 @@
 }
 .slide-form {
   position: absolute;
-  top: 50%;
+  top: 45%;
   left: 25%;
   background-color: rgba(255, 250, 250, 0.925);
   width: 50%;
@@ -85,5 +85,8 @@
     top: 32%;
     width: 90%;
     height: 55vh;
+  }
+  .btn-custom{
+    width: 200px !important;
   }
 }

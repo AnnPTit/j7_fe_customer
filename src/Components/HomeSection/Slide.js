@@ -1,41 +1,27 @@
 import React, { useState } from "react";
 import Data from "./Data";
 import axios from "axios";
-import style from "./Slide.module.scss";
-import classNames from "classnames/bind";
-import PriceRangeSlider from "./PriceRangeSlider/PriceRangeSlider";
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
 import { DatePicker } from "antd";
 import dayjs from "dayjs";
-import { Select, Space } from "antd";
-import moment from "moment";
+import { Select } from "antd";
 import { InputNumber } from "antd";
 
-const cx = classNames.bind(style);
 const Home = ({ slides }) => {
   const [current, setCurrent] = useState(0);
   const length = slides.length;
-  const [priceRange, setPriceRange] = useState([0, 5000000]);
   const [typeRoomChose, setTypeRoomChose] = useState("");
-  const [checkIn, setCheckIn] = useState();
-  const [checkOut, setCheckOut] = useState();
   const [typeRoom, setTypeRoom] = useState([]);
-  const [numberCustom, setNumberCustom] = useState(0);
-  const [click, setClick] = useState(false);
-  const text = `/?search=true&typeRoom=${typeRoomChose}&checkIn=${checkIn}&checkOut=${checkOut}&priceTo=${priceRange[1]}&priceFrom=${priceRange[0]}&numberCustom=${numberCustom}&click=${click}`;
-  const [dayStart, setDayStart] = useState(moment());
-
-  useEffect(() => {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
-    const day = currentDate.getDate().toString().padStart(2, "0");
-    const initialDate = `${year}-${month}-${day}`;
-    setCheckIn(initialDate);
-    setCheckOut(initialDate);
-    setDayStart(initialDate);
-  }, []);
+  // const text = `/?search=true&typeRoom=${typeRoomChose}&checkIn=${checkIn}&checkOut=${checkOut}&priceTo=${priceRange[1]}&priceFrom=${priceRange[0]}&numberCustom=${numberCustom}&click=${click}`;
+  const [dayStart, setDayStart] = useState(dayjs());
+  const [defaultDate, setDefaultDate] = useState(dayjs().add(1, "day"));
+  const [numberNight, setNumberNight] = useState(1);
+  const [numberRoom, setNumberRoom] = useState(1);
+  const [numberCustom, setNumberCustom] = useState(1);
+  const [numberChildren, setNumberChidren] = useState(1);
+  const formattedDate = dayStart.format("DD-MM-YYYY");
+  const formattedDate2 = defaultDate.format("DD-MM-YYYY");
+  const today = dayjs();
   // Hàm get loại phòng
   useEffect(() => {
     async function fetchData() {
@@ -45,6 +31,8 @@ const Home = ({ slides }) => {
         );
         if (response.data) {
           setTypeRoom(response.data);
+          console.log(response.data);
+          setTypeRoomChose(response.data[0].typeRoomName);
         }
       } catch (error) {
         console.log(error);
@@ -70,28 +58,43 @@ const Home = ({ slides }) => {
   }
   const handleChange = (value) => {
     console.log(`selected ${value}`);
+    setDefaultDate(dayStart.add(value, "day"));
+    setNumberNight(value);
   };
+
+  const handleChange2 = (value) => {
+    console.log(`selected ${value}`);
+    setTypeRoomChose(value);
+  };
+
   const handleDateChange = (selectedDate) => {
-    // Chuyển đổi ngày chọn thành đối tượng Date
+    setNumberNight(1);
+    setDefaultDate(dayStart.add(2, "day"));
     const selectedDateTime = new Date(selectedDate);
-
-    // Lấy ngày hiện tại
     const currentDate = new Date();
-
-    // Tính toán ngày trong vòng 30 ngày tính từ ngày hiện tại
     const thirtyDaysLater = new Date(currentDate);
     thirtyDaysLater.setDate(currentDate.getDate() + 30);
 
-    // So sánh ngày chọn với khoảng thời gian 30 ngày trong tương lai
     if (
       selectedDateTime >= currentDate &&
       selectedDateTime <= thirtyDaysLater
     ) {
       console.log("Ngày hợp lệ");
-      setDayStart(selectedDateTime);
+      const dayjsSelectedDateTime = dayjs(selectedDateTime);
+      setDayStart(dayjsSelectedDateTime);
     } else {
       console.log("Vui lòng chọn ngày trong vòng 30 ngày trong tương lai");
     }
+  };
+  const handleSearch = () => {
+    console.log(formattedDate);
+    console.log(formattedDate2);
+    console.log(numberNight);
+    console.log(numberRoom);
+    console.log(numberCustom);
+    console.log(numberChildren);
+    console.log(typeRoomChose);
+    window.location=`/book/${formattedDate}/${formattedDate2}/${numberNight}/${numberRoom}/${numberCustom}/${numberChildren}/${typeRoomChose}`
   };
   const dArr = [
     { value: 1, label: "1 Đêm" },
@@ -125,6 +128,7 @@ const Home = ({ slides }) => {
     { value: 29, label: "29 Đêm" },
     { value: 30, label: "30 Đêm" },
   ];
+
   return (
     <>
       <section className="slider">
@@ -157,9 +161,9 @@ const Home = ({ slides }) => {
                 width: "80%",
                 padding: "10px",
               }}
-              selected={dayStart}
+              defaultValue={today}
+              selected={dayStart ? dayStart : today}
               onChange={handleDateChange}
-              startDate={dayStart} // Đặt giá trị mặc định cho DatePicker
               dateFormat="dd/MM/yyyy"
               disabledDate={disabledDate}
               placeholder="Chọn ngày"
@@ -168,7 +172,7 @@ const Home = ({ slides }) => {
           <div className="flex-item">
             <p span>Số đêm</p>
             <Select
-              defaultValue={1}
+              value={numberNight}
               style={{ width: "80%", height: "52%" }}
               size={"middle"}
               onChange={handleChange}
@@ -182,10 +186,7 @@ const Home = ({ slides }) => {
                 width: "80%",
                 padding: "10px",
               }}
-              selected={dayStart ? dayStart : null}
-              onChange={handleDateChange}
-              // dateFormat="dd/MM/yyyy"
-              disabledDate={disabledDate}
+              value={defaultDate ? defaultDate : null}
               placeholder="Chọn ngày"
               disabled={true}
             />
@@ -198,9 +199,11 @@ const Home = ({ slides }) => {
               min={1}
               max={10}
               defaultValue={1}
-              onChange={() => {}}
+              onChange={(value) => {
+                setNumberRoom(value);
+              }}
               style={{
-                padding: "5px 0",
+                padding: "5px 10px",
                 fontSize: 14,
               }}
             />
@@ -211,9 +214,11 @@ const Home = ({ slides }) => {
               min={1}
               max={5}
               defaultValue={1}
-              onChange={() => {}}
+              onChange={(value) => {
+                setNumberCustom(value);
+              }}
               style={{
-                padding: "5px 0",
+                padding: "5px 10px",
                 fontSize: 14,
               }}
             />
@@ -224,9 +229,11 @@ const Home = ({ slides }) => {
               min={1}
               max={5}
               defaultValue={1}
-              onChange={() => {}}
+              onChange={(value) => {
+                setNumberChidren(value);
+              }}
               style={{
-                padding: "5px 0",
+                padding: "5px 10px",
                 fontSize: 14,
               }}
             />
@@ -237,17 +244,20 @@ const Home = ({ slides }) => {
           <div className="flex-item">
             <p>Loại phòng</p>
             <Select
-              defaultValue={1}
-              style={{ width: "100%", height: "52%" }}
+              value={typeRoomChose}
+              style={{ width: "160%", height: "52%" }}
               size={"middle"}
-              onChange={handleChange}
-              options={dArr}
-            />
+              onChange={handleChange2}
+            >
+              {typeRoom.map((option) => (
+                <Select.Option key={option.id} value={option.typeRoomName}>
+                  {option.name}
+                </Select.Option>
+              ))}
+            </Select>
           </div>
           <div className="flex-item">
             <p></p>
-            {/* <br />
-            <button className="btn btn-success">Lựa chọn</button> */}
           </div>
         </div>
         <div className="display-flex">
@@ -258,7 +268,15 @@ const Home = ({ slides }) => {
             {/* <button className="btn btn-success">Lựa chọn 2</button> */}
           </div>
           <div className="flex-item">
-            <button className="btn btn-success">Lựa chọn</button>
+            <button
+              className="btn btn-success btn-custom"
+              style={{
+                width: 235,
+              }}
+              onClick={() => handleSearch()}
+            >
+              Lựa chọn
+            </button>
           </div>
         </div>
         <div className="display-flex">
@@ -266,12 +284,12 @@ const Home = ({ slides }) => {
             <p>
               {" "}
               Khách đến nhận phòng vào{" "}
-              <span className="text-red">12h00 {dayStart + ""}</span>
+              <span className="text-red">12h00 {formattedDate}</span>
             </p>
             <p>
               {" "}
               và trả phòng vào{" "}
-              <span className="text-red">12h00 {dayStart + ""}</span>
+              <span className="text-red">12h00 {formattedDate2}</span>
             </p>
           </div>
           <div className="flex-item center-item "></div>
