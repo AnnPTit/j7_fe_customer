@@ -26,6 +26,7 @@ import Detail from "./Components/detail/detail";
 import Booking from "./Components/Booking/booking";
 import Preview from "./Components/Preview/preview";
 import Cart from "./Components/login/Cart";
+import Book from "./Components/pages/Book";
 /*-------------blog------------ */
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
           <Route path="/Profile" component={Profile} />
           <Route path="/change" component={Change} />
           <Route path="/cart" component={Cart} />
+          <Route path="/book" component={Book} />
           <Route path="/detail/:id" component={Detail} />
           <Route path="/booking/:id" component={Booking} />
           <Route path="/preview/:id" component={Preview} />
