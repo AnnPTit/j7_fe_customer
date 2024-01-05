@@ -1,0 +1,32 @@
+.container-book {
+  display: flex;
+  margin: 30px 200px;
+  justify-content: space-evenly;
+  /* text-align: center; */
+  height: 100vh;
+}
+.side-left {
+  flex: 2;
+  background-color: rgb(255, 255, 255);
+}
+.side-right {
+  flex: 1;
+  background-color: rgb(255, 255, 255);
+  margin-left: 30px;
+}
+.display-flex-1 {
+  display: flex;
+  justify-content: space-between;
+  margin: 30px 0;
+}
+.flex-item-1 {
+  margin: 0;
+}
+.type-room-img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+.facility {
+  margin: 10px 0 20px 0;
+}
