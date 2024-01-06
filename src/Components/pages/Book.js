@@ -6,10 +6,9 @@ import { useEffect } from "react";
 import { DatePicker } from "antd";
 import dayjs from "dayjs";
 import { Select } from "antd";
-import { InputNumber } from "antd";
+// import { InputNumber } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { Input } from "antd";
-import { type } from "@testing-library/user-event/dist/type";
 
 const Book = () => {
   const [typeRoomChose, setTypeRoomChose] = useState("");
@@ -22,6 +21,10 @@ const Book = () => {
   const [numberCustom, setNumberCustom] = useState(1);
   const [numberChildren, setNumberChidren] = useState(1);
   const [typeRoomDetail, setTypeRoomDetail] = useState({});
+  const [fullName, setFullName] = useState();
+  const [phoneNumber, setPhoneNumber] = useState();
+  const [email, setEmail] = useState();
+  const [payment, setPayment] = useState(0);
 
   const [text, setText] = useState(
     "Số phòng : 0 , Số người lớn 0 , Số trẻ em : 0"
@@ -64,6 +67,18 @@ const Book = () => {
     var text = `Số phòng : ${room} , Số người lớn  ${custom} , Số trẻ em :  ${children}`;
     setText(text);
     setTypeRoomChose(decodeURIComponent(typeRoom));
+
+    // Check login
+
+    const storedData = localStorage.getItem("idCustom");
+
+    if (storedData) {
+      // Nếu dữ liệu tồn tại trong localStorage
+      const customer = JSON.parse(storedData);
+      setFullName(customer.fullname);
+      setPhoneNumber(customer.phoneNumber);
+      setEmail(customer.email);
+    }
   }, []);
   // Hàm get loại phòng
   useEffect(() => {
@@ -114,6 +129,20 @@ const Book = () => {
   const handleChange2 = (value) => {
     console.log(`selected ${value}`);
     setTypeRoomChose(value);
+
+    try {
+      const response = axios.get(
+        `http://localhost:2003/api/home/type-room/getByName?name=${decodeURIComponent(
+          typeRoomChose
+        )}`
+      );
+      if (response.data) {
+        console.log("11111", response.data);
+        setTypeRoomDetail(response.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleDateChange = (selectedDate) => {
@@ -145,6 +174,71 @@ const Book = () => {
     console.log(typeRoomChose);
     window.location = `/book/${formattedDate}/${formattedDate2}/${numberNight}/${numberRoom}/${numberCustom}/${numberChildren}/${typeRoomChose}`;
   };
+
+  function caculateRoomPrice() {
+    let originalPrice = typeRoomDetail.pricePerDay;
+    let totalPrice = originalPrice * numberNight;
+    return totalPrice;
+  }
+
+  function formatCurrency(value) {
+    let currencyFormatter = new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
+    return currencyFormatter.format(value);
+  }
+  function caculateVAT(value) {
+    let vat = value * 0.1;
+    let currencyFormatter = new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
+    return currencyFormatter.format(vat);
+  }
+
+  function caculatePayment(value) {
+    let total = value * 0.1 + value;
+    let currencyFormatter = new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
+    // setPayment(total);
+    return currencyFormatter.format(total);
+  }
+
+
+
+  const handleFullNameChange = (event) => {
+    const { value } = event.target;
+    setFullName(value);
+  };
+  const handlePhoneChange = (event) => {
+    const { value } = event.target;
+    setPhoneNumber(value);
+  };
+  const handleEmailChange = (event) => {
+    const { value } = event.target;
+    setEmail(value);
+  };
+
+  const createPayment = async () => {
+    console.log("hell")
+      let total = (typeRoomDetail.pricePerDay * 0.1 + typeRoomDetail.pricePerDay)*numberNight;
+    try {
+      const response = await axios.post(
+        `http://localhost:2003/api/payment-method/payment-vnpay`,
+        {
+          amount: total,
+        }
+      );
+      const { finalUrl } = response.data;
+      window.location.href = finalUrl;
+    } catch (error) {
+      console.error("Error creating payment:", error);
+    }
+  };
+
   const dArr = [
     { value: 1, label: "1 Đêm" },
     { value: 2, label: "2 Đêm" },
@@ -287,6 +381,8 @@ const Book = () => {
             <Input
               size="large"
               placeholder="Họ và tên"
+              value={fullName ? fullName : null}
+              onChange={handleFullNameChange}
               prefix={<UserOutlined />}
             />
             <div className="display-flex-1">
@@ -294,6 +390,8 @@ const Book = () => {
                 <p>Số điện thoại</p>
                 <Input
                   size="large"
+                  value={phoneNumber ? phoneNumber : null}
+                  onChange={handlePhoneChange}
                   placeholder="số điện thoại"
                   prefix={<UserOutlined />}
                 />
@@ -302,10 +400,13 @@ const Book = () => {
                 <p>Email</p>
                 <Input
                   size="large"
+                  value={email ? email : null}
+                  onChange={handleEmailChange}
                   placeholder="Email"
                   prefix={<UserOutlined />}
                 />
               </div>
+              <div className="flex-item-1"></div>
             </div>
           </div>
         </div>
@@ -344,10 +445,38 @@ const Book = () => {
             <p> Thanh toán trực tiếp</p>
           </div>
           <p>Chi tiết giá</p>
-          <p>Thanh toán : {typeRoomDetail.pricePerDay} </p>
-          <p>Tiền phòng : {typeRoomDetail.pricePerDay} </p>
-          <p>Thuế ( 10 % VAT) :{typeRoomDetail.pricePerDay} </p>
-          <p>Phí phục vụ : MIỄN PHÍ </p>
+          <p>
+            Thanh toán :{" "}
+            <span className="text-red">
+              {caculatePayment(caculateRoomPrice())}
+            </span>{" "}
+          </p>
+          <p>
+            Tiền phòng :{" "}
+            <span className="text-red">
+              {formatCurrency(caculateRoomPrice())}
+            </span>{" "}
+          </p>
+          <p>
+            Thuế ( 10 % VAT) :
+            <span className="text-red">{caculateVAT(caculateRoomPrice())}</span>{" "}
+          </p>
+          <p>
+            Phí phục vụ :{" "}
+            <span
+              style={{
+                fontWeight: 700,
+              }}
+            >
+              MIỄN PHÍ
+            </span>{" "}
+          </p>
+          <button
+            className="btn btn-outline-success"
+            onClick={createPayment}
+          >
+            Thanh Toán{" "}
+          </button>
         </div>
       </div>
     </>
