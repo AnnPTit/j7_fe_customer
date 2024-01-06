@@ -207,8 +207,6 @@ const Book = () => {
     return currencyFormatter.format(total);
   }
 
-
-
   const handleFullNameChange = (event) => {
     const { value } = event.target;
     setFullName(value);
@@ -223,8 +221,10 @@ const Book = () => {
   };
 
   const createPayment = async () => {
-    console.log("hell")
-      let total = (typeRoomDetail.pricePerDay * 0.1 + typeRoomDetail.pricePerDay)*numberNight;
+    console.log("hell");
+    let total =
+      (typeRoomDetail.pricePerDay * 0.1 + typeRoomDetail.pricePerDay) *
+      numberNight;
     try {
       const response = await axios.post(
         `http://localhost:2003/api/payment-method/payment-vnpay`,
@@ -471,10 +471,7 @@ const Book = () => {
               MIỄN PHÍ
             </span>{" "}
           </p>
-          <button
-            className="btn btn-outline-success"
-            onClick={createPayment}
-          >
+          <button className="btn btn-outline-success" onClick={createPayment}>
             Thanh Toán{" "}
           </button>
         </div>
