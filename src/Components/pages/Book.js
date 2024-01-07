@@ -24,11 +24,16 @@ const Book = () => {
   const [fullName, setFullName] = useState();
   const [phoneNumber, setPhoneNumber] = useState();
   const [email, setEmail] = useState();
-  const [payment, setPayment] = useState(0);
+  const [note, setNote] = useState();
+  const [accountNumber, setAccountNumber] = useState();
+  const [banks, setBanks] = useState([]);
+  const [bankChose, setBankChose] = useState(17);
 
   const [text, setText] = useState(
     "Số phòng : 0 , Số người lớn 0 , Số trẻ em : 0"
   );
+  const { TextArea } = Input;
+  const { Option } = Select;
   const formattedDate = dayStart.format("DD-MM-YYYY");
   const formattedDate2 = defaultDate.format("DD-MM-YYYY");
   const today = dayjs();
@@ -79,6 +84,22 @@ const Book = () => {
       setPhoneNumber(customer.phoneNumber);
       setEmail(customer.email);
     }
+  }, []);
+
+  //GET ngan hang
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await axios.get(`https://api.vietqr.io/v2/banks`);
+        if (response.data) {
+          setBanks(response.data.data);
+          console.log(response.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchData();
   }, []);
   // Hàm get loại phòng
   useEffect(() => {
@@ -225,11 +246,27 @@ const Book = () => {
     let total =
       (typeRoomDetail.pricePerDay * 0.1 + typeRoomDetail.pricePerDay) *
       numberNight;
+    let bankRoomName = banks.find((value) => value.id === bankChose);
+    let price = typeRoomDetail.pricePerDay * numberNight;
     try {
       const response = await axios.post(
         `http://localhost:2003/api/payment-method/payment-vnpay`,
         {
           amount: total,
+          roomPrice: price,
+          email: email,
+          checkIn: dayStart,
+          checkOut: defaultDate,
+          numberNight: numberNight,
+          numberRoom: numberRoom,
+          numberCustomer: numberCustom,
+          numberChildren: numberChildren,
+          typeRoomChose: typeRoomChose,
+          note: note,
+          fullName: fullName,
+          phoneNumber: phoneNumber,
+          accountNumber: accountNumber,
+          bankChose: bankRoomName.name,
         }
       );
       const { finalUrl } = response.data;
@@ -238,7 +275,6 @@ const Book = () => {
       console.error("Error creating payment:", error);
     }
   };
-
   const dArr = [
     { value: 1, label: "1 Đêm" },
     { value: 2, label: "2 Đêm" },
@@ -271,6 +307,11 @@ const Book = () => {
     { value: 29, label: "29 Đêm" },
     { value: 30, label: "30 Đêm" },
   ];
+  const options = banks.map((bank) => (
+    <Option key={bank.id} value={bank.id}>
+      {bank.name}
+    </Option>
+  ));
   return (
     <>
       <div className="container-book">
@@ -294,7 +335,7 @@ const Book = () => {
                 />
               </div>
               <div className="flex-item">
-                <p span>Số đêm</p>
+                <p span>Số ngày</p>
                 <Select
                   value={numberNight}
                   style={{ width: "80%", height: "52%" }}
@@ -337,9 +378,7 @@ const Book = () => {
               </div>
               <div className="flex-item"></div>
               <div className="flex-item"></div>
-              <div className="flex-item">
-                <p></p>
-              </div>
+              <div className="flex-item"></div>
               <div className="flex-item">
                 <p>Loại phòng</p>
                 <Select
@@ -355,8 +394,15 @@ const Book = () => {
                   ))}
                 </Select>
               </div>
+              <div className="flex-item"></div>
+            </div>
+            <div className="display-flex">
               <div className="flex-item">
-                <p></p>
+                <p>Ghi chú</p>
+                <TextArea
+                  onChange={(value) => setNote(value.target.value)}
+                  rows={4}
+                />
               </div>
             </div>
             <div className="display-flex">
@@ -405,6 +451,44 @@ const Book = () => {
                   placeholder="Email"
                   prefix={<UserOutlined />}
                 />
+              </div>
+              <div className="flex-item-1"></div>
+            </div>
+            <div className="display-flex-1">
+              <div className="flex-item">
+                <p>Số tài khoản</p>
+                <Input
+                  size="large"
+                  value={accountNumber}
+                  onChange={(e) => {
+                    setAccountNumber(e.target.value);
+                  }}
+                  placeholder="Số tài khoản"
+                  prefix={<UserOutlined />}
+                />
+              </div>
+              <div className="flex-item-1"></div>
+            </div>
+            <div className="display-flex-1">
+              <div className="flex-item">
+                <p>Ngân hàng</p>
+                <Select
+                  showSearch
+                  value={bankChose}
+                  style={{ width: "100%", height: "52%" }}
+                  size={"middle"}
+                  onChange={(e) => {
+                    setBankChose(e);
+                  }}
+                  optionFilterProp="children" // Specify which property of option will be used for filter
+                  filterOption={(input, option) =>
+                    option.children
+                      .toLowerCase()
+                      .indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  {options}
+                </Select>
               </div>
               <div className="flex-item-1"></div>
             </div>
