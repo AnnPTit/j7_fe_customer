@@ -9,9 +9,10 @@ import { Select } from "antd";
 // import { InputNumber } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { Input } from "antd";
+import { ToastContainer, toast } from "react-toastify";
 
 const Book = () => {
-  const [typeRoomChose, setTypeRoomChose] = useState("");
+  const [typeRoomChose, setTypeRoomChose] = useState();
   const [typeRoom, setTypeRoom] = useState([]);
   // const text = `/?search=true&typeRoom=${typeRoomChose}&checkIn=${checkIn}&checkOut=${checkOut}&priceTo=${priceRange[1]}&priceFrom=${priceRange[0]}&numberCustom=${numberCustom}&click=${click}`;
   const [dayStart, setDayStart] = useState(dayjs());
@@ -28,6 +29,7 @@ const Book = () => {
   const [accountNumber, setAccountNumber] = useState();
   const [banks, setBanks] = useState([]);
   const [bankChose, setBankChose] = useState(17);
+  const [numberRoomCanbeBook, setNumberRoomCanbeBook] = useState(0);
 
   const [text, setText] = useState(
     "Số phòng : 0 , Số người lớn 0 , Số trẻ em : 0"
@@ -37,6 +39,8 @@ const Book = () => {
   const formattedDate = dayStart.format("DD-MM-YYYY");
   const formattedDate2 = defaultDate.format("DD-MM-YYYY");
   const today = dayjs();
+  //------------------------------------------------------------------------------
+
   useEffect(() => {
     var currentUrl = window.location.href;
     // window.location=`/book/${formattedDate}/${formattedDate2}/${numberNight}/${numberRoom}/${numberCustom}/${numberChildren}/${typeRoomChose}`
@@ -74,9 +78,7 @@ const Book = () => {
     setTypeRoomChose(decodeURIComponent(typeRoom));
 
     // Check login
-
     const storedData = localStorage.getItem("idCustom");
-
     if (storedData) {
       // Nếu dữ liệu tồn tại trong localStorage
       const customer = JSON.parse(storedData);
@@ -150,6 +152,7 @@ const Book = () => {
   const handleChange2 = (value) => {
     console.log(`selected ${value}`);
     setTypeRoomChose(value);
+    // checkRoomBook(value, dayStart, defaultDate);
 
     try {
       const response = axios.get(
@@ -242,12 +245,12 @@ const Book = () => {
   };
 
   const createPayment = async () => {
-    console.log("hell");
     let total =
       (typeRoomDetail.pricePerDay * 0.1 + typeRoomDetail.pricePerDay) *
       numberNight;
     let bankRoomName = banks.find((value) => value.id === bankChose);
     let price = typeRoomDetail.pricePerDay * numberNight;
+
     try {
       const response = await axios.post(
         `http://localhost:2003/api/payment-method/payment-vnpay`,
@@ -255,8 +258,8 @@ const Book = () => {
           amount: total,
           roomPrice: price,
           email: email,
-          checkIn: dayStart,
-          checkOut: defaultDate,
+          checkIn: dayStart.format("YYYY-MM-DD"), // Format the date as needed
+          checkOut: defaultDate.format("YYYY-MM-DD"),
           numberNight: numberNight,
           numberRoom: numberRoom,
           numberCustomer: numberCustom,
@@ -269,10 +272,12 @@ const Book = () => {
           bankChose: bankRoomName.name,
         }
       );
+
       const { finalUrl } = response.data;
       window.location.href = finalUrl;
     } catch (error) {
       console.error("Error creating payment:", error);
+      toast.error(error.response.data);
     }
   };
   const dArr = [
@@ -312,8 +317,29 @@ const Book = () => {
       {bank.name}
     </Option>
   ));
+
+  useEffect(() => {
+    async function checkRoomBook() {
+      let api = `http://localhost:2003/api/home/booking/check-room`;
+      console.warn(api);
+      try {
+        const response = await axios.post(api, {
+          checkIn: dayStart.format("YYYY-MM-DD"), // Format the date as needed
+          checkOut: defaultDate.format("YYYY-MM-DD"),
+          typeRoomChose: typeRoomChose,
+        });
+        if (response) {
+          setNumberRoomCanbeBook(response.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    checkRoomBook();
+  }, [typeRoomChose, dayStart, defaultDate]);
   return (
     <>
+      <ToastContainer></ToastContainer>
       <div className="container-book">
         <div className="side-left">
           <h2>Đặt phòng khách sạn</h2>
@@ -509,7 +535,11 @@ const Book = () => {
           <br></br>
           <div className="type-room">
             <p>
-              x{numberRoom} {typeRoomChose}
+              <span className="text-red">x{numberRoom}</span> {typeRoomChose}
+            </p>
+            <p>
+              Số phòng có thể đặt :{" "}
+              <span className="text-red"> {numberRoomCanbeBook}</span>
             </p>
             <div className="display-flex-1">
               <div className="flex-item-1">
