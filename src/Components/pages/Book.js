@@ -201,7 +201,7 @@ const Book = () => {
 
   function caculateRoomPrice() {
     let originalPrice = typeRoomDetail.pricePerDay;
-    let totalPrice = originalPrice * numberNight;
+    let totalPrice = originalPrice * numberNight*numberRoom;
     return totalPrice;
   }
 
