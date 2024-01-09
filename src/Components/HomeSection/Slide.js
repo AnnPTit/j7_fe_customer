@@ -170,7 +170,7 @@ const Home = ({ slides }) => {
             />
           </div>
           <div className="flex-item">
-            <p span>Số Ngày</p>
+            <p span>Số Đêm</p>
             <Select
               value={numberNight}
               style={{ width: "80%", height: "52%" }}

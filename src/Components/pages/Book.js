@@ -10,6 +10,7 @@ import { Select } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { Input } from "antd";
 import { ToastContainer, toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 const Book = () => {
   const [typeRoomChose, setTypeRoomChose] = useState();
@@ -251,34 +252,47 @@ const Book = () => {
     let bankRoomName = banks.find((value) => value.id === bankChose);
     let price = typeRoomDetail.pricePerDay * numberNight;
 
-    try {
-      const response = await axios.post(
-        `http://localhost:2003/api/payment-method/payment-vnpay`,
-        {
-          amount: total,
-          roomPrice: price,
-          email: email,
-          checkIn: dayStart.format("YYYY-MM-DD"), // Format the date as needed
-          checkOut: defaultDate.format("YYYY-MM-DD"),
-          numberNight: numberNight,
-          numberRoom: numberRoom,
-          numberCustomer: numberCustom,
-          numberChildren: numberChildren,
-          typeRoomChose: typeRoomChose,
-          note: note,
-          fullName: fullName,
-          phoneNumber: phoneNumber,
-          accountNumber: accountNumber,
-          bankChose: bankRoomName.name,
+    Swal.fire({
+      title: "Bạn chắc chắn đã đọc điều khoản và muốn đặt phòng ? ",
+      text: "",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Tôi đã đọc ! Thanh Toán Ngay",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await axios.post(
+            `http://localhost:2003/api/payment-method/payment-vnpay`,
+            {
+              amount: total,
+              roomPrice: price,
+              email: email,
+              checkIn: dayStart.format("YYYY-MM-DD"), // Format the date as needed
+              checkOut: defaultDate.format("YYYY-MM-DD"),
+              numberNight: numberNight,
+              numberRoom: numberRoom,
+              numberCustomer: numberCustom,
+              numberChildren: numberChildren,
+              typeRoomChose: typeRoomChose,
+              note: note,
+              fullName: fullName,
+              phoneNumber: phoneNumber,
+              accountNumber: accountNumber,
+              bankChose: bankRoomName.name,
+            }
+          );
+    
+          const { finalUrl } = response.data;
+          window.location.href = finalUrl;
+        } catch (error) {
+          console.error("Error creating payment:", error);
+          toast.error(error.response.data);
         }
-      );
-
-      const { finalUrl } = response.data;
-      window.location.href = finalUrl;
-    } catch (error) {
-      console.error("Error creating payment:", error);
-      toast.error(error.response.data);
-    }
+      }
+    });
+    
   };
   const dArr = [
     { value: 1, label: "1 Đêm" },
@@ -361,7 +375,7 @@ const Book = () => {
                 />
               </div>
               <div className="flex-item">
-                <p span>Số ngày</p>
+                <p span>Số đêm</p>
                 <Select
                   value={numberNight}
                   style={{ width: "80%", height: "52%" }}
@@ -482,7 +496,7 @@ const Book = () => {
             </div>
             <div className="display-flex-1">
               <div className="flex-item">
-                <p>Số tài khoản</p>
+                <p>Số tài khoản <span className="rule-item-small text-red">(*Vui lòng cung cấp số tài khoản để khách sạn hoàn tiền trong trường hợp bạn hủy phòng)</span></p> 
                 <Input
                   size="large"
                   value={accountNumber}
@@ -588,6 +602,13 @@ const Book = () => {
           <button className="btn btn-outline-success" onClick={createPayment}>
             Thanh Toán{" "}
           </button>
+          <div className="rule">
+            <h4 className="rule-heading">Quy định hủy đặt phòng</h4>
+            <p className="rule-item">- Hủy đặt phòng hoặc thay đổi đặt phòng nên được thông báo <span className="text-red">trước 14:00 chiều (UCT + 7 Giờ Việt Nam) hai (02) ngày trước ngày nhận phòng</span>.</p>
+            <p className="rule-item">- Nếu quý khách hủy đặt phòng hoặc thay đổi đặt phòng sau thời điểm nói trên, xin lưu ý khách sạn sẽ<span className="text-red"> tính phí đêm lưu trú đầu tiên</span>.</p>
+            <p className="rule-item">- Nếu quý khách không đến nhận phòng vào ngày đã đặt, xin lưu ý khách sạn sẽ tính booking là ‘Không nhận phòng’ (No-Show) và tính phí <span className="text-red"> 100%</span> booking.</p>
+            <p className="rule-item-small">* Một số chương trình khuyến mãi có chính sách hủy đặc biệt. Các chương trình khuyến mãi này sẽ tuân theo chính sách hủy được công bố trên trang web chính thức của khách sạn.</p>
+          </div>
         </div>
       </div>
     </>
