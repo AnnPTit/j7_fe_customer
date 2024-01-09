@@ -30,3 +30,17 @@
 .facility {
   margin: 10px 0 20px 0;
 }
+.rule {
+margin: 20px 0;
+}
+.rule-heading{
+
+}
+.rule-item{
+  font-size: 12px;
+}
+.rule-item-small{
+  font-size: 10px;
+  font-style: italic;
+}
+
