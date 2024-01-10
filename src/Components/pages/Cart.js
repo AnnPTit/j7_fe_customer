@@ -58,15 +58,12 @@ function Cart() {
   }, [status]);
 
   const cancel = (id) => {
-    alert(id);
     try {
-      const response = axios
-        .get
-        // `http://localhost:2003/api/home/booking/get-by-status/${status}/${customer.id}`
-        ();
-      if (response.data) {
-        setBooks(response.data);
-        console.log(response.data);
+      const response = axios.get(
+        `http://localhost:2003/api/home/booking/cancel/${id}`
+      );
+      if (response) {
+        console.log(response);
       }
     } catch (error) {
       console.log(error);
@@ -84,26 +81,32 @@ function Cart() {
           Đã đặt
         </p>
         <p
-          onClick={() => setStatus(2)}
-          className={status === 2 ? "active" : ""}
+          onClick={() => setStatus(5)}
+          className={status === 5 ? "active" : ""}
         >
-          Đã Check-In
+          Yêu cầu hủy
         </p>
         <p
           onClick={() => setStatus(3)}
           className={status === 3 ? "active" : ""}
         >
-          Đã Trả Phòng
+          Đã Check-In
         </p>
         <p
           onClick={() => setStatus(4)}
           className={status === 4 ? "active" : ""}
         >
+          Đã Trả Phòng
+        </p>
+        <p
+          onClick={() => setStatus(6)}
+          className={status === 6 ? "active" : ""}
+        >
           Đã Hủy
         </p>
         <p
-          onClick={() => setStatus(5)}
-          className={status === 5 ? "active" : ""}
+          onClick={() => setStatus(0)}
+          className={status === 0 ? "active" : ""}
         >
           Bị từ chối
         </p>
@@ -170,12 +173,16 @@ function Cart() {
                     </span>
                   </p>
                 </div>
-                <button
-                  className="btn btn-danger"
-                  onClick={() => cancel(book.id)}
-                >
-                  Hủy đặt phòng
-                </button>
+                {status === 1 ? (
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => cancel(book.id)}
+                  >
+                    Hủy đặt phòng
+                  </button>
+                ) : (
+                  <p className="text-red">* Yêu cầu của bạn đang được xử lý</p>
+                )}
                 <hr />
               </div>
             </div>

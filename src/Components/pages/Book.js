@@ -78,7 +78,7 @@ const Book = () => {
     setText(text);
     setTypeRoomChose(decodeURIComponent(typeRoom));
 
-    // Check login
+    // Check loginF
     const storedData = localStorage.getItem("idCustom");
     if (storedData) {
       // Nếu dữ liệu tồn tại trong localStorage
