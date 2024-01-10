@@ -1,0 +1,42 @@
+.img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+.text-align-left {
+  text-align: left;
+}
+.flex-1 {
+  flex: 1;
+}
+.flex-2 {
+  flex: 2;
+}
+.nav {
+  background-color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
+  padding: 20px 20px 0 20px;
+  border-radius: 20px;
+}
+.nav p {
+  padding: 0;
+  margin: 0;
+}
+.active {
+  font-weight: 900;
+  text-decoration: underline;
+}
+.display-flex-5 {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.display-flex-5 p {
+  margin-right: 20px;
+}
+.in-dam {
+  font-weight: 700;
+}
+.body-item {
+  height: 30vh;
+}

@@ -25,7 +25,7 @@ import Change from "./Components/login/Change";
 import Detail from "./Components/detail/detail";
 import Booking from "./Components/Booking/booking";
 import Preview from "./Components/Preview/preview";
-import Cart from "./Components/login/Cart";
+import Cart from "./Components/pages/Cart";
 import Book from "./Components/pages/Book";
 /*-------------blog------------ */
 
