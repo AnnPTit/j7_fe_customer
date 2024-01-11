@@ -73,8 +73,8 @@ const Footer = () => {
           <div className="box">
             <h2>KẾT NỐI VỚI ARMANI</h2>
             <p>
-              Armani luôn luôn lắng nghe những đóng góp, phàn hồi từ khách hàng.
-              Qua đó, nắm bắt được nhu cầu tâm tư khách hàng.
+              {/* Armani luôn luôn lắng nghe những đóng góp, phàn hồi từ khách hàng.
+              Qua đó, nắm bắt được nhu cầu tâm tư khách hàng. */}
             </p>
 
             {/* <input type="text" name="" id="" />

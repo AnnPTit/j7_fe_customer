@@ -1,13 +1,69 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
-import Swal from "sweetalert2";
 import "./Cart.css";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import "react-toastify/dist/ReactToastify.css";
+import {
+  Button,
+  IconButton,
+  TextareaAutosize,
+  DialogTitle,
+} from "@mui/material";
+import React from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import CloseIcon from "@mui/icons-material/Close";
 
 function Cart() {
   const [status, setStatus] = useState(1);
   const [books, setBooks] = useState([]);
-  //   const [customer, setCustomer] = useState();
+  const [idChose, setIdChose] = useState({});
+  const [noteCancelBooking, setNoteCancelBooking] = useState("");
+  const [openRefund, setOpenRefund] = React.useState(false);
+  const [refundMoney, setRefundMoney] = React.useState(0);
+  const [showPreview, setShowPreview] = useState(false);
+
+  const handlePreviewClick = () => {
+    setShowPreview(true);
+  };
+
+  const handleClosePreview = () => {
+    setShowPreview(false);
+  };
+
+  const formatPrice = (price) => {
+    if (typeof price !== "number" || isNaN(price)) {
+      return "N/A"; // Return a default value when price is not a valid number
+    }
+
+    return price
+      .toLocaleString({ style: "currency", currency: "VND" })
+      .replace(/\D00(?=\D*$)/, "");
+  };
+
+  const handleCancelBooking2 = async () => {
+    try {
+      const response = axios.get(
+        `http://localhost:2003/api/home/booking/cancel/${idChose}?reason=${noteCancelBooking}`
+      );
+      if (response) {
+        console.log(response);
+        toast.success("Hủy thành công !");
+        window.location.reload();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleOpenRefund = () => {
+    console.log("okk");
+    setOpenRefund(true);
+  };
+  const handleCloseRefund = () => {
+    setOpenRefund(false);
+  };
 
   const formatDate = (createAt) => {
     const createDate = new Date(createAt);
@@ -58,21 +114,102 @@ function Cart() {
   }, [status]);
 
   const cancel = (id) => {
-    try {
-      const response = axios.get(
-        `http://localhost:2003/api/home/booking/cancel/${id}`
-      );
-      if (response) {
-        console.log(response);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    setIdChose(id);
+    setOpenRefund(true);
+    console.log(id);
   };
 
   return (
     <div className="container">
       <ToastContainer></ToastContainer>
+
+      <Dialog
+        open={openRefund}
+        onClose={handleCloseRefund}
+        fullWidth
+        PaperProps={{
+          style: {
+            maxWidth: "40%",
+            maxHeight: "100%",
+          },
+        }}
+      >
+        <DialogTitle
+          sx={{ m: 0, p: 2, display: "flex", justifyContent: "center" }}
+          id="customized-dialog-title"
+        >
+          Xác nhận hủy đặt phòng
+        </DialogTitle>
+        <IconButton
+          aria-label="close"
+          onClick={handleCloseRefund}
+          sx={{
+            position: "absolute",
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[900],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+        <DialogContent>
+          <h6 style={{ marginLeft: 5 }}> Lí do hủy đặt phòng: </h6>
+          <TextareaAutosize
+            className="form-control"
+            placeholder="Lí do hủy đặt phòng"
+            name="note"
+            cols={80}
+            style={{ height: 150 }}
+            variant="outlined"
+            value={noteCancelBooking}
+            onChange={(e) => setNoteCancelBooking(e.target.value)}
+          />
+          <br />
+          <div className="rule">
+            <h4 className="rule-heading">Quy định hủy đặt phòng</h4>
+            <p className="rule-item">
+              - Hủy đặt phòng hoặc thay đổi đặt phòng nên được thông báo{" "}
+              <span className="text-red">
+                trước 14:00 chiều (UCT + 7 Giờ Việt Nam) hai (02) ngày trước
+                ngày nhận phòng
+              </span>
+              .
+            </p>
+            <p className="rule-item">
+              - Nếu quý khách hủy đặt phòng hoặc thay đổi đặt phòng sau thời
+              điểm nói trên, xin lưu ý khách sạn sẽ
+              <span className="text-red"> tính phí đêm lưu trú đầu tiên</span>.
+            </p>
+            <p className="rule-item">
+              - Nếu quý khách không đến nhận phòng vào ngày đã đặt, xin lưu ý
+              khách sạn sẽ tính booking là ‘Không nhận phòng’ (No-Show) và tính
+              phí <span className="text-red"> 100%</span> booking.
+            </p>
+            <p className="rule-item-small">
+              * Một số chương trình khuyến mãi có chính sách hủy đặc biệt. Các
+              chương trình khuyến mãi này sẽ tuân theo chính sách hủy được công
+              bố trên trang web chính thức của khách sạn.
+            </p>
+          </div>
+          <br />
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <Button
+              variant="outlined"
+              onClick={handleCloseRefund}
+              color="error"
+            >
+              Đóng
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={handleCancelBooking2}
+              style={{ marginLeft: 20 }}
+            >
+              Xác nhận
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
       <div className="nav display-flex">
         <p
           onClick={() => setStatus(1)}
@@ -180,6 +317,32 @@ function Cart() {
                   >
                     Hủy đặt phòng
                   </button>
+                ) : status === 6 ? (
+                  <div>
+                    <p className="text-green">
+                      * Yêu cầu hủy đã được chấp thuận
+                    </p>
+                    <p>Hình ảnh hoàn trả</p>
+                    <button onClick={handlePreviewClick}>
+                      Xem trước hình ảnh
+                    </button>
+
+                    {showPreview && (
+                      <div className="image-preview-overlay">
+                        <div className="image-preview-container">
+                          <img
+                            style={{
+                              height: "auto",
+                              maxWidth: "100%",
+                            }}
+                            src={book.url}
+                            alt="Preview"
+                          />
+                          <button onClick={handleClosePreview}>Đóng</button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 ) : (
                   <p className="text-red">* Yêu cầu của bạn đang được xử lý</p>
                 )}

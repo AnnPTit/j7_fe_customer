@@ -27,6 +27,7 @@ import Booking from "./Components/Booking/booking";
 import Preview from "./Components/Preview/preview";
 import Cart from "./Components/pages/Cart";
 import Book from "./Components/pages/Book";
+import Success from "./Components/pages/Success";
 /*-------------blog------------ */
 
 function App() {
@@ -51,6 +52,7 @@ function App() {
           <Route path="/change" component={Change} />
           <Route path="/cart" component={Cart} />
           <Route path="/book" component={Book} />
+          <Route path="/success" component={Success} />
           <Route path="/detail/:id" component={Detail} />
           <Route path="/booking/:id" component={Booking} />
           <Route path="/preview/:id" component={Preview} />
