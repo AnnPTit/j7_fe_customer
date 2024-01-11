@@ -20,7 +20,7 @@ function Detail() {
     async function fetchData() {
       try {
         const response = await axios.get(
-          `http://localhost:2003/api/home/type-room/detail/${id}`
+          `http://localhost:2003/api/home/room/detail/${id}`
         );
         // console.log("Room", response.data);
         if (response.data) {
@@ -78,21 +78,6 @@ function Detail() {
     setLove(!love);
   };
 
-  var items = [
-    {
-      url: "https://katahome.com/wp-content/uploads/2018/10/thiet-ke-noi-that-phong-ngu-khach-san-5-sao-chuan-khong-can-chinh-4.jpg",
-    },
-    {
-      url: "https://th.bing.com/th/id/OIP.v1sG89BR8FJPikukpHJefgHaE8?rs=1&pid=ImgDetMain",
-    },
-    {
-      url: "https://i.pinimg.com/originals/09/80/48/0980481dc6a1e20d0b070a9fa50a9371.jpg",
-    },
-    {
-      url: "https://www.mypattayacondo.com/wp-content/uploads/2019/09/Once-Pattaya-Condo-For-Sale-Studio-Showroom-6.jpg",
-    },
-  ];
-
   function Item(props) {
     return (
       <Paper>
@@ -104,19 +89,19 @@ function Detail() {
     <div className={cx("wrapper")}>
       <ToastContainer></ToastContainer>
       <div className={cx("preview-img")}>
-        {/* {room.photoList && room.photoList.length > 0 && ( */}
-        <Carousel>
-          {items.map((item, i) => (
-            <Item
-              // key={i}
-              item={item}
-              style={{
-                width: "100%",
-              }}
-            />
-          ))}
-        </Carousel>
-        {/* )} */}
+        {room.photoList && room.photoList.length > 0 && (
+          <Carousel>
+            {room.photoList.map((item, i) => (
+              <Item
+                // key={i}
+                item={item}
+                style={{
+                  width: "100%",
+                }}
+              />
+            ))}
+          </Carousel>
+        )}
       </div>
       <div className={cx("item-infor")}>
         <div
@@ -126,7 +111,7 @@ function Detail() {
             justifyContent: "space-between",
           }}
         >
-          <h1 className={cx("item-name")}>{room.typeRoomName}</h1>
+          <h1 className={cx("item-name")}>{room.roomName}</h1>
 
           <span className={cx("item-text")}>
             {love === true ? (
@@ -163,7 +148,7 @@ function Detail() {
           <span>Sức chứa : </span>
           {/* <span className={cx("item-capacity-wrapper")}> */}
           {/* <span className={cx("item-capacity")}> */}
-          <span>{room && room.capacity}</span>
+          {/* <span>{room && room.typeRoom.capacity}</span> */}
           <i
             style={{
               marginRight: 10,
@@ -177,7 +162,7 @@ function Detail() {
               marginLeft: 10,
             }}
           >
-            {room && room.children}
+            {/* {room && room.typeRoom.children} */}
           </span>
           <i
             style={{
@@ -233,15 +218,6 @@ function Detail() {
           <span className={cx("")}>{room && room.note}</span>
         </div>
 
-        <Link
-          to={url}
-          className="btn btn-primary"
-          style={{
-            marginTop: 50,
-          }}
-        >
-          Đặt Ngay
-        </Link>
       </div>
     </div>
   );
