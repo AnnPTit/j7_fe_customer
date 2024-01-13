@@ -22,7 +22,8 @@ import Login from "./Components/login/Login";
 import Register from "./Components/login/Register";
 import Profile from "./Components/login/Profile";
 import Change from "./Components/login/Change";
-import Detail from "./Components/detail/detail";
+import DetailRoom from "./Components/detail/detail-room";
+import DetailTypeRoom from "./Components/detail/detail-type-room";
 import Booking from "./Components/Booking/booking";
 import Preview from "./Components/Preview/preview";
 import Cart from "./Components/pages/Cart";
@@ -51,7 +52,8 @@ function App() {
           <Route path="/change" component={Change} />
           <Route path="/cart" component={Cart} />
           <Route path="/book" component={Book} />
-          <Route path="/detail/:id" component={Detail} />
+          <Route path="/detail-room/:id" component={DetailRoom} />
+          <Route path="/detail-type-room/:id" component={DetailTypeRoom} />
           <Route path="/booking/:id" component={Booking} />
           <Route path="/preview/:id" component={Preview} />
         </Switch>

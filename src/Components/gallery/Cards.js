@@ -7,7 +7,7 @@ const Cards = ({ room }) => {
   const [popup, setPopup] = useState(false);
   const [love1, setLove1] = useState(false);
   let love = false;
-  const detailUrl = `/detail/${room.id}`;
+  const detailUrl = `/detail-room/${room.id}`;
 
   const changeLove = (id) => {
     console.log("ok");
