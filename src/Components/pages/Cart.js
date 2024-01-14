@@ -21,10 +21,13 @@ function Cart() {
   const [idChose, setIdChose] = useState({});
   const [noteCancelBooking, setNoteCancelBooking] = useState("");
   const [openRefund, setOpenRefund] = React.useState(false);
-  const [refundMoney, setRefundMoney] = React.useState(0);
+  const [typeRoomPhoto, setTypeRoomPhoto] = React.useState([]);
   const [showPreview, setShowPreview] = useState(false);
+  const [isChose, setIsChose] = useState("");
 
-  const handlePreviewClick = () => {
+  const handlePreviewClick = (id) => {
+    console.log(id);
+    setIsChose(id);
     setShowPreview(true);
   };
 
@@ -111,6 +114,20 @@ function Cart() {
       }
     }
     fetchData();
+    async function fetchData2() {
+      try {
+        const response = await axios.get(
+          `http://localhost:2003/api/home/booking/get-photo`
+        );
+        if (response.data) {
+          setTypeRoomPhoto(response.data);
+          console.log(response.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchData2();
   }, [status]);
 
   const cancel = (id) => {
@@ -210,7 +227,7 @@ function Cart() {
           </div>
         </DialogContent>
       </Dialog>
-      <div className="nav display-flex">
+      <div className="nav display-flex" style={{ cursor: "pointer" }}>
         <p
           onClick={() => setStatus(1)}
           className={status === 1 ? "active" : ""}
@@ -253,16 +270,22 @@ function Cart() {
         {books.map((book) => (
           <div className="display-flex body-item">
             <div className="flex-1">
-              <img
-                className="img"
-                src="https://th.bing.com/th/id/R.6a56319455b67d0d6c7e8eee6ddcc695?rik=3%2fOjuEYJyGxpHA&pid=ImgRaw&r=0"
-              />
+              {typeRoomPhoto.map(
+                (roomPhoto) =>
+                  roomPhoto.id === book.typeRoom.id && (
+                    <img
+                      key={roomPhoto.id}
+                      className="img"
+                      src={roomPhoto.photoDTOS ? roomPhoto.photoDTOS[0] : ""}
+                    />
+                  )
+              )}
             </div>
 
             <div className="flex-2">
               <div className=".text-align-left">
                 <h3>
-                  Đơn đặt hàng : x{book.numberRooms}{" "}
+                  Đơn đặt phòng : x{book.numberRooms}{" "}
                   {book.typeRoom.typeRoomName}
                   <span
                     style={{
@@ -310,6 +333,29 @@ function Cart() {
                     </span>
                   </p>
                 </div>
+
+                <div className="display-flex-5">
+                  <p>
+                    <span className="in-dam">Check - In </span> :{" "}
+                    <span className="text-red">
+                      {new Date(book.checkInDate).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      })}
+                    </span>
+                  </p>
+                  <p>
+                    <span className="in-dam"> Check - Out </span> :{" "}
+                    <span className="text-red">
+                      {new Date(book.checkOutDate).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      })}
+                    </span>
+                  </p>
+                </div>
                 {status === 1 ? (
                   <button
                     className="btn btn-danger"
@@ -323,11 +369,16 @@ function Cart() {
                       * Yêu cầu hủy đã được chấp thuận
                     </p>
                     <p>Hình ảnh hoàn trả</p>
-                    <button onClick={handlePreviewClick}>
-                      Xem trước hình ảnh
-                    </button>
+                    <Button
+                      color="primary"
+                      onClick={() => {
+                        handlePreviewClick(book.id);
+                      }}
+                    >
+                      Xem hình ảnh
+                    </Button>
 
-                    {showPreview && (
+                    {showPreview && isChose === book.id ? (
                       <div className="image-preview-overlay">
                         <div className="image-preview-container">
                           <img
@@ -341,7 +392,7 @@ function Cart() {
                           <button onClick={handleClosePreview}>Đóng</button>
                         </div>
                       </div>
-                    )}
+                    ) : null}
                   </div>
                 ) : (
                   <p className="text-red">* Yêu cầu của bạn đang được xử lý</p>

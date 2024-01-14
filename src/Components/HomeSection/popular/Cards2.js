@@ -71,7 +71,7 @@ const Cards2 = () => {
     <>
       <div className={cx("image")}>
         {data.map((value) => {
-          const detailUrl = `/detail/${value.id}`; // Tạo đường dẫn chi tiết với ID của value
+          const detailUrl = `/detail-room/${value.id}`; // Tạo đường dẫn chi tiết với ID của value
           return (
             <div key={value.id} className="cards">
               <div className="item">

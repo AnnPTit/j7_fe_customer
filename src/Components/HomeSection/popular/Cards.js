@@ -70,7 +70,7 @@ const Cards = () => {
     <>
       <div className={cx("image")}>
         {data.map((value) => {
-          const detailUrl = `/detail/${value.id}`; // Tạo đường dẫn chi tiết với ID của value
+          const detailUrl = `/detail-type-room/${value.id}`; // Tạo đường dẫn chi tiết với ID của value
           return (
             <div key={value.id} className="cards">
               <div className="item">
@@ -78,7 +78,7 @@ const Cards = () => {
                   <Link to={detailUrl}>
                     <img
                       className={cx("image-item")}
-                      src={value.urls?.[0] ?? "https://th.bing.com/th/id/OIP.uQVNaCMS9q5-UWXUHe1jmQHaE7?rs=1&pid=ImgDetMain"}
+                      src={value.photoDTOS?.[0]}
                       alt=""
                     />
                   </Link>
@@ -130,10 +130,12 @@ const Cards = () => {
                         {value.pricePerDay?.toLocaleString("vi-VN", {
                           style: "currency",
                           currency: "VND",
-                        })} 
-                        <span> /<i class="fa fa-moon"></i></span>
+                        })}
+                        <span>
+                          {" "}
+                          /<i class="fa fa-moon"></i>
+                        </span>
                       </span>
-                     
                     )}
                   </h3>
                 </div>

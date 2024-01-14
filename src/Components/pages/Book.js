@@ -3,10 +3,10 @@ import "./Book.css";
 import React, { useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
-import { DatePicker } from "antd";
+import { DatePicker, InputNumber } from "antd";
 import dayjs from "dayjs";
 import { Select } from "antd";
-// import { InputNumber } from "antd";
+
 import { UserOutlined } from "@ant-design/icons";
 import { Input } from "antd";
 import { ToastContainer, toast } from "react-toastify";
@@ -31,10 +31,6 @@ const Book = () => {
   const [banks, setBanks] = useState([]);
   const [bankChose, setBankChose] = useState(17);
   const [numberRoomCanbeBook, setNumberRoomCanbeBook] = useState(0);
-
-  const [text, setText] = useState(
-    "Số phòng : 0 , Số người lớn 0 , Số trẻ em : 0"
-  );
   const { TextArea } = Input;
   const { Option } = Select;
   const formattedDate = dayStart.format("DD-MM-YYYY");
@@ -74,8 +70,9 @@ const Book = () => {
     setNumberRoom(room);
     setNumberCustom(custom);
     setNumberChidren(children);
-    var text = `Số phòng : ${room} , Số người lớn  ${custom} , Số trẻ em :  ${children}`;
-    setText(text);
+    setNumberRoom(room);
+    setNumberCustom(custom);
+    setNumberChidren(children);
     setTypeRoomChose(decodeURIComponent(typeRoom));
 
     // Check loginF
@@ -202,7 +199,7 @@ const Book = () => {
 
   function caculateRoomPrice() {
     let originalPrice = typeRoomDetail.pricePerDay;
-    let totalPrice = originalPrice * numberNight*numberRoom;
+    let totalPrice = originalPrice * numberNight * numberRoom;
     return totalPrice;
   }
 
@@ -283,7 +280,7 @@ const Book = () => {
               bankChose: bankRoomName.name,
             }
           );
-    
+
           const { finalUrl } = response.data;
           window.location.href = finalUrl;
         } catch (error) {
@@ -292,7 +289,6 @@ const Book = () => {
         }
       }
     });
-    
   };
   const dArr = [
     { value: 1, label: "1 Đêm" },
@@ -399,20 +395,47 @@ const Book = () => {
             </div>
             <div className="display-flex">
               <div className="flex-item">
-                <p
-                  style={{
-                    width: "200%",
+                <p>Số phòng</p>
+                <InputNumber
+                  min={1}
+                  max={10}
+                  value={numberRoom}
+                  onChange={(value) => {
+                    setNumberRoom(value);
                   }}
-                >
-                  Số phòng , Số người lớn , Số trẻ em
-                </p>
-                <Input
-                  value={text}
-                  disabled={true}
                   style={{
-                    padding: "9px 10px",
+                    padding: "5px 10px",
                     fontSize: 14,
-                    width: "360%",
+                  }}
+                />
+              </div>
+              <div className="flex-item">
+                <p span>Số người lớn </p>
+                <InputNumber
+                  min={1}
+                  max={5}
+                  value={numberCustom}
+                  onChange={(value) => {
+                    setNumberCustom(value);
+                  }}
+                  style={{
+                    padding: "5px 10px",
+                    fontSize: 14,
+                  }}
+                />
+              </div>
+              <div className="flex-item">
+                <p>Số trẻ em</p>
+                <InputNumber
+                  min={1}
+                  max={5}
+                  value={numberChildren}
+                  onChange={(value) => {
+                    setNumberChidren(value);
+                  }}
+                  style={{
+                    padding: "5px 10px",
+                    fontSize: 14,
                   }}
                 />
               </div>
@@ -496,7 +519,13 @@ const Book = () => {
             </div>
             <div className="display-flex-1">
               <div className="flex-item">
-                <p>Số tài khoản <span className="rule-item-small text-red">(*Vui lòng cung cấp số tài khoản để khách sạn hoàn tiền trong trường hợp bạn hủy phòng)</span></p> 
+                <p>
+                  Số tài khoản{" "}
+                  <span className="rule-item-small text-red">
+                    (*Vui lòng cung cấp số tài khoản để khách sạn hoàn tiền
+                    trong trường hợp bạn hủy phòng)
+                  </span>
+                </p>
                 <Input
                   size="large"
                   value={accountNumber}
@@ -559,7 +588,9 @@ const Book = () => {
               <div className="flex-item-1">
                 <img
                   className="type-room-img"
-                  src="https://studiochupanhdep.com/Upload/Newsimages/phong-khach-san-tt-studio.jpg"
+                  src={
+                    typeRoomDetail.photoDTOS ? typeRoomDetail.photoDTOS[0] : ""
+                  }
                 />
               </div>
               <div className="flex-item-1">
@@ -569,6 +600,7 @@ const Book = () => {
                   <li>Tắm nóng lạnh</li>
                 </ul>
               </div>
+              <div className="flex-item-1"></div>
             </div>
             <p> Thanh toán trực tiếp</p>
           </div>
@@ -604,10 +636,29 @@ const Book = () => {
           </button>
           <div className="rule">
             <h4 className="rule-heading">Quy định hủy đặt phòng</h4>
-            <p className="rule-item">- Hủy đặt phòng hoặc thay đổi đặt phòng nên được thông báo <span className="text-red">trước 14:00 chiều (UCT + 7 Giờ Việt Nam) hai (02) ngày trước ngày nhận phòng</span>.</p>
-            <p className="rule-item">- Nếu quý khách hủy đặt phòng hoặc thay đổi đặt phòng sau thời điểm nói trên, xin lưu ý khách sạn sẽ<span className="text-red"> tính phí đêm lưu trú đầu tiên</span>.</p>
-            <p className="rule-item">- Nếu quý khách không đến nhận phòng vào ngày đã đặt, xin lưu ý khách sạn sẽ tính booking là ‘Không nhận phòng’ (No-Show) và tính phí <span className="text-red"> 100%</span> booking.</p>
-            <p className="rule-item-small">* Một số chương trình khuyến mãi có chính sách hủy đặc biệt. Các chương trình khuyến mãi này sẽ tuân theo chính sách hủy được công bố trên trang web chính thức của khách sạn.</p>
+            <p className="rule-item">
+              - Hủy đặt phòng hoặc thay đổi đặt phòng nên được thông báo{" "}
+              <span className="text-red">
+                trước 14:00 chiều (UCT + 7 Giờ Việt Nam) hai (02) ngày trước
+                ngày nhận phòng
+              </span>
+              .
+            </p>
+            <p className="rule-item">
+              - Nếu quý khách hủy đặt phòng hoặc thay đổi đặt phòng sau thời
+              điểm nói trên, xin lưu ý khách sạn sẽ
+              <span className="text-red"> tính phí đêm lưu trú đầu tiên</span>.
+            </p>
+            <p className="rule-item">
+              - Nếu quý khách không đến nhận phòng vào ngày đã đặt, xin lưu ý
+              khách sạn sẽ tính booking là ‘Không nhận phòng’ (No-Show) và tính
+              phí <span className="text-red"> 100%</span> booking.
+            </p>
+            <p className="rule-item-small">
+              * Một số chương trình khuyến mãi có chính sách hủy đặc biệt. Các
+              chương trình khuyến mãi này sẽ tuân theo chính sách hủy được công
+              bố trên trang web chính thức của khách sạn.
+            </p>
           </div>
         </div>
       </div>

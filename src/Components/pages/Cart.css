@@ -45,16 +45,16 @@
 }
 /* CSS cho overlay/modal */
 .image-preview-overlay {
-  background: rgba(0, 0, 0, 0.7);
+  /* background: rgba(0, 0, 0, 0.7); */
   display: flex;
   justify-content: center;
-  align-items: center;
+  /* align-items: center; */
 }
 
 /* CSS cho container chứa hình ảnh và nút đóng */
 .image-preview-container {
   position: relative;
-  max-width: 80%;
+  max-width: 60%;
   max-height: 80%;
   overflow: hidden;
   border-radius: 8px;
