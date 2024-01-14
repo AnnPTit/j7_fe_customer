@@ -8,14 +8,19 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Paper } from "@mui/material";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import dayjs from "dayjs";
 const cx = classNames.bind(style);
 function Detail() {
   const { id } = useParams();
   const [room, setRoom] = useState({});
   const [love, setLove] = useState(false);
   const [typeRoomImages, setTypeRoomImages] = useState([]);
+  const [dayStart, setDayStart] = useState(dayjs().add(1, "day"));
+  const [defaultDate, setDefaultDate] = useState(dayjs().add(2, "day"));
+  const formattedDate = dayStart.format("DD-MM-YYYY");
+  const formattedDate2 = defaultDate.format("DD-MM-YYYY");
 
-  const url = `/book/11-01-2024/12-01-2024/4/1/2/1/${room.typeRoomName}`;
+  const url = `/book/${formattedDate}/${formattedDate2}/1/1/1/1/${room.typeRoomName}`;
   //Hàm detail
   useEffect(() => {
     // Định nghĩa hàm fetchData bên trong useEffect
