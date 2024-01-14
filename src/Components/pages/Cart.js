@@ -235,6 +235,12 @@ function Cart() {
           Đã đặt
         </p>
         <p
+          onClick={() => setStatus(2)}
+          className={status === 2 ? "active" : ""}
+        >
+          Đã xếp phòng
+        </p>
+        <p
           onClick={() => setStatus(5)}
           className={status === 5 ? "active" : ""}
         >
@@ -394,6 +400,8 @@ function Cart() {
                       </div>
                     ) : null}
                   </div>
+                ) : status === 4 ? (
+                  <p className="text-green">* Đã trả phòng</p>
                 ) : (
                   <p className="text-red">* Yêu cầu của bạn đang được xử lý</p>
                 )}
